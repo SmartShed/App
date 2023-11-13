@@ -1,0 +1,48 @@
+name: smartshed
+description: A new Flutter project.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.2 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  google_sign_in: ^6.1.6
+  fluttertoast: ^8.2.4
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: "AppIcon"
+  image_path: "assets/logo/icon.png"
+  min_sdk_version: 21
+  remove_alpha_ios: true
+
+  web:
+    generate: true
+    image_path: "assets/logo/icon.png"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
+  macos:
+    generate: true
+    image_path: "assets/logo/icon.png"
+
+flutter:
+  uses-material-design: true
+  assets: 
+    - assets/
+    - assets/images/
+    - assets/logo/
