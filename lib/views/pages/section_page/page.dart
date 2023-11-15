@@ -1,30 +1,53 @@
 import 'package:flutter/material.dart';
 
-import '../../pages.dart';
 import '../../../constants/colors.dart';
 
 import '../../../models/section.dart';
+import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
 
 import '../../widgets/drawer.dart';
-import '../../widgets/section_tile.dart';
+import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
-class DashboardPageMobile extends StatefulWidget {
-  const DashboardPageMobile({super.key});
+class SectionPage extends StatefulWidget {
+  static const String routeName = '/section';
+
+  final String sectionId;
+  final String sectionName;
+
+  const SectionPage({
+    Key? key,
+    required this.sectionId,
+    required this.sectionName,
+  }) : super(key: key);
+
+  factory SectionPage.fromSection(SmartShedSection section) {
+    return SectionPage(
+      sectionId: section.id,
+      sectionName: section.name,
+    );
+  }
+
+  factory SectionPage.fromSectionJson(Map<String, dynamic> json) {
+    return SectionPage.fromSection(SmartShedSection.fromJson(json));
+  }
 
   @override
-  State<DashboardPageMobile> createState() => _DashboardPageMobileState();
+  State<SectionPage> createState() => _SectionPageState();
 }
 
-class _DashboardPageMobileState extends State<DashboardPageMobile> {
-  List<SmartShedSection> _sections = [];
+class _SectionPageState extends State<SectionPage> {
+  List<SmartShedForm> _formsForSection = [];
   List<OpenedSmartShedForm> _recentlyOpenedForms = [];
-  bool _isSectionLoading = true;
+  List<OpenedSmartShedForm> _allOpenedForms = [];
+
+  bool _isFormsForSectionLoading = true;
   bool _isRecentlyOpenedFormsLoading = true;
+  bool _isAllOpenedFormsLoading = true;
 
   @override
   void initState() {
@@ -33,24 +56,34 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
     DashboardForAllController.init();
     DashboardForMeController.init();
 
-    _initSections();
+    _initFormsForSection();
     _initRecentlyOpenedForms();
+    _initAllOpenedForms();
   }
 
-  Future<void> _initSections() async {
-    _sections = await DashboardForAllController.getSections();
-
+  Future<void> _initFormsForSection() async {
+    _formsForSection =
+        await DashboardForAllController.getFormsForSection(widget.sectionId);
     setState(() {
-      _isSectionLoading = false;
+      _isFormsForSectionLoading = false;
     });
   }
 
   Future<void> _initRecentlyOpenedForms() async {
     _recentlyOpenedForms =
-        await DashboardForMeController.getRecentlyOpenedForms();
-
+        await DashboardForMeController.getRecentlyOpenedFormsForSection(
+            widget.sectionId);
     setState(() {
       _isRecentlyOpenedFormsLoading = false;
+    });
+  }
+
+  Future<void> _initAllOpenedForms() async {
+    _allOpenedForms =
+        await DashboardForMeController.getRecentlyOpenedFormsForSection(
+            widget.sectionId);
+    setState(() {
+      _isAllOpenedFormsLoading = false;
     });
   }
 
@@ -59,9 +92,9 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
     return Scaffold(
       backgroundColor: ColorConstants.bg,
       appBar: AppBar(
-        title: const Text(
-          'DASHBOARD',
-          style: TextStyle(
+        title: Text(
+          widget.sectionName,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -77,9 +110,11 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
           ),
           child: Column(
             children: [
-              _buildSectionsList(),
-              const SizedBox(height: 30),
+              _buildFormsList(),
+              const SizedBox(height: 20),
               _buildRecentlyOpenedFormsList(),
+              const SizedBox(height: 20),
+              _buildAllOpenedFormsList(),
             ],
           ),
         ),
@@ -87,35 +122,35 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
     );
   }
 
-  Widget _buildSectionsList() {
+  Widget _buildFormsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Sections',
+          'Forms',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
         ),
         const SizedBox(height: 20),
-        _isSectionLoading
+        _isFormsForSectionLoading
             ? ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return const SectionTileShimmer();
+                  return const FormTileShimmer();
                 },
               )
             : ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: _sections.length,
+                itemCount: _formsForSection.length,
                 itemBuilder: (context, index) {
-                  return SectionTile(
+                  return FormTile(
                     index: index,
-                    section: _sections[index],
+                    form: _formsForSection[index],
                   );
                 },
               ),
@@ -127,6 +162,7 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 20),
         const Text(
           'Recently Opened Forms',
           style: TextStyle(
@@ -152,6 +188,43 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
                   return OpenedFormTile(
                     index: index,
                     openedForm: _recentlyOpenedForms[index],
+                  );
+                },
+              ),
+      ],
+    );
+  }
+
+  Widget _buildAllOpenedFormsList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Text(
+          'All Opened Forms',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+        const SizedBox(height: 20),
+        _isAllOpenedFormsLoading
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return const OpenedFormTileShimmer();
+                },
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _allOpenedForms.length,
+                itemBuilder: (context, index) {
+                  return OpenedFormTile(
+                    index: index,
+                    openedForm: _allOpenedForms[index],
                   );
                 },
               ),

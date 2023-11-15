@@ -36,10 +36,8 @@ class UnknownRoutePage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                Pages.dashboard,
-              );
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Pages.dashboard, (Route<dynamic> route) => false);
             },
           ),
           ListTile(

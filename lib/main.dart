@@ -12,7 +12,6 @@ void main() async {
   ]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
-  await SmartShed.init();
-
+  SmartShed.init();
   runApp(const SmartShed());
 }

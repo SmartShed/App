@@ -9,6 +9,7 @@ class MyTextField extends StatelessWidget {
   final bool autoFocus;
   final FocusNode? focusNode;
   final IconButton? suffixIcon;
+  final void Function()? onEditingComplete;
 
   const MyTextField({
     Key? key,
@@ -18,6 +19,7 @@ class MyTextField extends StatelessWidget {
     this.autoFocus = false,
     this.focusNode,
     this.suffixIcon,
+    this.onEditingComplete,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class MyTextField extends StatelessWidget {
           ),
         ),
         obscureText: obscureText,
-        onEditingComplete: () => FocusScope.of(context).requestFocus(focusNode),
+        onEditingComplete: () => onEditingComplete?.call(),
       ),
     );
   }

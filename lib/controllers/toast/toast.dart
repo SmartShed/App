@@ -7,7 +7,20 @@ class ToastController {
   static void show(String message) {
     Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      textColor: Colors.white,
+      backgroundColor: Colors.black,
+      webShowClose: true,
+      webBgColor: ColorConstants.toHex(Colors.black),
+      timeInSecForIosWeb: 2,
+    );
+  }
+
+  static void success(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       textColor: Colors.white,
       backgroundColor: ColorConstants.success,
@@ -20,7 +33,7 @@ class ToastController {
   static void warning(String message) {
     Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       textColor: Colors.black,
       backgroundColor: ColorConstants.warning,
@@ -33,7 +46,7 @@ class ToastController {
   static void error(String message) {
     Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       textColor: Colors.white,
       backgroundColor: ColorConstants.error,

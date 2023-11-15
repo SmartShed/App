@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../pages.dart';
 import '../../../constants/images.dart';
+import '../../../controllers/auth/login.dart';
 
 class SplashPage extends StatefulWidget {
   static const String routeName = '/splash';
@@ -18,10 +19,11 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      // TODO: Check if user is logged in
-      // TODO: If user is logged in, navigate to dashboard
-      // TODO: If user is not logged in, navigate to login page
-      Navigator.pushReplacementNamed(context, Pages.login);
+      String routeName =
+          LoginController.isLoggedIn ? Pages.dashboard : Pages.login;
+
+      Navigator.pushNamedAndRemoveUntil(
+          context, routeName, (Route<dynamic> route) => false);
     });
   }
 

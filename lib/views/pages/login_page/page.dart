@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
 import '../../widgets/text_field.dart';
-import '../../../controllers/auth/google_sign_in.dart';
+import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
 import '../../responsive/dimensions.dart';
+import '../../pages.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
@@ -164,6 +165,12 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: "Email",
                                 obscureText: false,
                                 suffixIcon: _emailIcon(),
+                                onEditingComplete: () {
+                                  setState(() {
+                                    FocusScope.of(context)
+                                        .requestFocus(passwordFocusNode);
+                                  });
+                                },
                               ),
                               const SizedBox(height: 20),
                               MyTextField(
@@ -228,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     const SizedBox(height: 10),
                                     IconButton(
-                                      onPressed: signInWithGoogle,
+                                      onPressed: _loginWithGoogle,
                                       iconSize: 70,
                                       icon: Image.asset(
                                         ImageConstants.googleLogo,
@@ -248,7 +255,8 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // TODO: Navigate to register page
+                                      Navigator.pushReplacementNamed(
+                                          context, Pages.register);
                                     },
                                     child: Text(
                                       "Register",
@@ -298,10 +306,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {
-        // TODO: Login API call
-        ToastController.show("Login Successful");
-      },
+      onPressed: _login,
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
         elevation: 20,
@@ -318,5 +323,33 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future signInWithGoogle() async => await GoogleSignInAPI.signIn();
+  void _login() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ToastController.warning("Please fill all the fields");
+      return;
+    }
+
+    String message = await LoginController.login(email, password);
+
+    if (message == "Login successful") {
+      ToastController.success(message);
+      Navigator.pushReplacementNamed(context, Pages.dashboard);
+    } else {
+      ToastController.error(message);
+    }
+  }
+
+  void _loginWithGoogle() async {
+    String message = await LoginController.loginWithGoogle();
+
+    if (message == "Login successful") {
+      ToastController.success(message);
+      Navigator.pushReplacementNamed(context, Pages.dashboard);
+    } else {
+      ToastController.error(message);
+    }
+  }
 }
