@@ -360,6 +360,8 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    position = position.toLowerCase();
+
     if (!isGoogleSignIn && password != confirmPassword) {
       ToastController.warning("Passwords do not match");
 
@@ -370,16 +372,16 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    String message;
+    Map<String, dynamic>? response = {};
 
     if (isGoogleSignIn) {
-      message = await RegisterController.registerWithGoogle(
+      response = await RegisterController.registerWithGoogle(
         email,
         name,
         position,
       );
     } else {
-      message = await RegisterController.register(
+      response = await RegisterController.register(
         email,
         password,
         name,
@@ -387,13 +389,13 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     }
 
-    ToastController.show(message);
-
-    // if (message == "Registration successful") {
-    //   ToastController.success(message);
-    //   Navigator.pushReplacementNamed(context, Pages.dashboard);
-    // } else {
-    //   ToastController.error(message);
-    // }
+    if (response!['status'] == 'success') {
+      ToastController.success(response['message']);
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+          context, Pages.dashboard, (Route<dynamic> route) => false);
+    } else {
+      ToastController.error(response['message']);
+    }
   }
 }

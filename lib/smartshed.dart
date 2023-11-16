@@ -16,7 +16,7 @@ class SmartShed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SmartShed',
-      initialRoute: Pages.splash,
+      initialRoute: Pages.dashboard,
       onGenerateRoute: RouteController.generateRoute,
       theme: ColorConstants.themeData,
       debugShowCheckedModeBanner: false,

@@ -9,23 +9,19 @@ class RegisterController {
     await XAuthTokenHandler.init();
   }
 
-  static Future<String> register(
+  static Future<Map<String, dynamic>?> register(
       String email, String password, String name, String position) async {
     Map<String, dynamic> response =
         await _authAPIHandler.register(email, password, name, position);
 
-    print(response);
-
     if (response['status'] == 'success') {
       XAuthTokenHandler.saveToken(response['auth_token']);
-      print(response['auth_token']);
     }
 
-    print(response['message']);
-    return response['message'];
+    return response;
   }
 
-  static Future<String> registerWithGoogle(
+  static Future<Map<String, dynamic>?> registerWithGoogle(
       String email, String name, String position) async {
     Map<String, dynamic> response =
         await _authAPIHandler.registerWithGoogle(email, name, position);
@@ -34,7 +30,7 @@ class RegisterController {
       XAuthTokenHandler.saveToken(response['auth_token']);
     }
 
-    return response['message'];
+    return response;
   }
 
   // Show google sign in dialog and return the user json

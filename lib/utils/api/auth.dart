@@ -12,9 +12,6 @@ class AuthAPIHandler {
   Future<Map<String, dynamic>> register(
       String email, String password, String name, String position) async {
     try {
-      print("Registering with $email, $password, $name, $position at " +
-          APIConstants.register);
-
       final response = await _dio.post(
         APIConstants.register,
         data: {
@@ -24,8 +21,6 @@ class AuthAPIHandler {
           'position': position,
         },
       );
-
-      print(response.data);
 
       return {
         'status': 'success',

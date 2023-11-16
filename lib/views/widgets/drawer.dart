@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/colors.dart';
+import '../pages.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -38,7 +39,7 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/dashboard');
+              Navigator.pushNamed(context, Pages.dashboard);
             },
           ),
           ListTile(
@@ -66,7 +67,13 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/login');
+              // Show logout dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const LogoutPage();
+                },
+              );
             },
           ),
         ],

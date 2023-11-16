@@ -22,6 +22,9 @@ class RouteController {
       case Pages.section:
         return _getPageRoute(SectionPage.fromSectionJson(args!));
 
+      case Pages.logout:
+        return _getPageRoute(const LogoutPage());
+
       default:
         return _getPageRoute(const UnknownRoutePage());
     }

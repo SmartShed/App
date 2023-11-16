@@ -9,7 +9,8 @@ class LoginController {
     await XAuthTokenHandler.init();
   }
 
-  static Future<String> login(String email, String password) async {
+  static Future<Map<String, dynamic>?> login(
+      String email, String password) async {
     Map<String, dynamic> response =
         await _authAPIHandler.login(email, password);
 
@@ -17,13 +18,16 @@ class LoginController {
       XAuthTokenHandler.saveToken(response['auth_token']);
     }
 
-    return response['message'];
+    return response;
   }
 
-  static Future<String> loginWithGoogle() async {
+  static Future<Map<String, dynamic>?> loginWithGoogle() async {
     final account = await GoogleSignInAPI.signIn();
     if (account == null) {
-      return "Login failed";
+      return {
+        'status': 'error',
+        'message': 'Something went wrong. Please try again later.',
+      };
     }
 
     Map<String, dynamic> response =
@@ -33,7 +37,7 @@ class LoginController {
       XAuthTokenHandler.saveToken(response['auth_token']);
     }
 
-    return response['message'];
+    return response;
   }
 
   static Future<void> logout() async {

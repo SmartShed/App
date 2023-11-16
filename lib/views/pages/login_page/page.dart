@@ -332,24 +332,27 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    String message = await LoginController.login(email, password);
+    Map<String, dynamic>? response =
+        await LoginController.login(email, password);
 
-    if (message == "Login successful") {
-      ToastController.success(message);
+    if (response!['status'] == 'success') {
+      ToastController.success(response['message']);
+      if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, Pages.dashboard);
     } else {
-      ToastController.error(message);
+      ToastController.error(response['message']);
     }
   }
 
   void _loginWithGoogle() async {
-    String message = await LoginController.loginWithGoogle();
+    Map<String, dynamic>? response = await LoginController.loginWithGoogle();
 
-    if (message == "Login successful") {
-      ToastController.success(message);
+    if (response!['status'] == 'success') {
+      ToastController.success(response['message']);
+      if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, Pages.dashboard);
     } else {
-      ToastController.error(message);
+      ToastController.error(response['message']);
     }
   }
 }
