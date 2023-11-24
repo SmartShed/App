@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
 import '../../../controllers/auth/login.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../pages.dart';
+
+import '../../widgets/loading_dialog.dart';
+import './widgets/dialog_text_button.dart';
 
 class LogoutPage extends StatelessWidget {
   static const String routeName = '/logout';
@@ -11,7 +15,22 @@ class LogoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double paddingForBox;
+    double textButtonPaddingForBox;
+
+    if (width < 600) {
+      paddingForBox = 20;
+      textButtonPaddingForBox = 5;
+    } else {
+      paddingForBox = width * 0.2;
+      textButtonPaddingForBox = 10;
+    }
+
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: paddingForBox,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -29,93 +48,57 @@ class LogoutPage extends StatelessWidget {
               "Are you sure you want to logout?",
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w700,
               ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            DialogTextButton(
+              text: "No",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              paddingForBox: paddingForBox * 0.75,
+              textButtonPaddingForBox: textButtonPaddingForBox,
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: 70,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "No",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    LoginController.logout();
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, Pages.login);
-                  },
-                  child: Container(
-                    width: 70,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Yes",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            DialogTextButton(
+              text: "Yes",
+              onPressed: () {
+                _logout(context);
+              },
+              paddingForBox: paddingForBox * 0.75,
+              textButtonPaddingForBox: textButtonPaddingForBox,
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _logout(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (_) => const LoadingDialog(
+        title: "Logging out...",
+      ),
+    );
+
+    bool isLoggedOut = await LoginController.logout();
+
+    if (!context.mounted) return;
+    Navigator.pop(context);
+
+    if (isLoggedOut) {
+      ToastController.success("Logged out successfully.");
+      if (!context.mounted) return;
+      Navigator.pop(context);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Pages.login, (Route<dynamic> route) => false);
+    } else {
+      ToastController.error(
+        "Something went wrong. Please try again later.",
+      );
+    }
   }
 }

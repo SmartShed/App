@@ -10,6 +10,9 @@ class MyTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final IconButton? suffixIcon;
   final void Function()? onEditingComplete;
+  final bool? readOnly;
+  final TextInputType? keyboardType;
+  final void Function()? onTap;
 
   const MyTextField({
     Key? key,
@@ -20,6 +23,9 @@ class MyTextField extends StatelessWidget {
     this.focusNode,
     this.suffixIcon,
     this.onEditingComplete,
+    this.readOnly,
+    this.keyboardType,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -41,6 +47,9 @@ class MyTextField extends StatelessWidget {
         ),
         obscureText: obscureText,
         onEditingComplete: () => onEditingComplete?.call(),
+        readOnly: readOnly ?? false,
+        keyboardType: keyboardType ?? TextInputType.text,
+        onTap: () => onTap?.call(),
       ),
     );
   }

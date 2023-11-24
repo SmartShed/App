@@ -108,6 +108,25 @@ class AuthAPIHandler {
   }
 
   Future<Map<String, dynamic>> logout(String auth_token) async {
-    return {};
+    try {
+      final response = await _dio.post(
+        APIConstants.logout,
+        options: Options(
+          headers: {
+            'auth_token': auth_token,
+          },
+        ),
+      );
+
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+      };
+    } catch (e) {
+      return {
+        'status': 'error',
+        'message': 'Something went wrong. Please try again later.',
+      };
+    }
   }
 }

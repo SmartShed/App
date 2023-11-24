@@ -10,6 +10,7 @@ import '../../pages.dart';
 import '../../responsive/dimensions.dart';
 import './register_step1.dart';
 import './register_step2.dart';
+import '../../widgets/loading_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
   static const String routeName = '/register';
@@ -214,6 +215,10 @@ class _RegisterPageState extends State<RegisterPage> {
         passwordController: passwordController,
         confirmPasswordController: confirmPasswordController,
         registerWithGoogle: _registerWithGoogle,
+        isRegisterWithGoogle: isGoogleSignIn,
+        enableRegisterWithGoogle: enableRegisterWithGoogle,
+        disableRegisterWithGoogle: disableRegisterWithGoogle,
+        paddingForDialog: horizontalPadding + 40,
       ),
       isActive: currentStep >= 0,
       state: currentStep <= 0 ? StepState.editing : StepState.complete,
@@ -293,13 +298,13 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _registerWithGoogle() async {
+  Future<bool> _registerWithGoogle() async {
     Map<String, dynamic>? user =
         await RegisterController.showGoogleSignInDialog();
 
     if (user == null) {
       ToastController.error("Google sign in failed");
-      return;
+      return false;
     }
 
     nameController.text = user["name"];
@@ -311,6 +316,8 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       currentStep++;
     });
+
+    return true;
   }
 
   void _register() async {
@@ -372,6 +379,12 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingDialog(title: "Registering..."),
+    );
+
     Map<String, dynamic>? response = {};
 
     if (isGoogleSignIn) {
@@ -389,6 +402,9 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     }
 
+    if (!context.mounted) return;
+    Navigator.pop(context);
+
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
@@ -396,6 +412,22 @@ class _RegisterPageState extends State<RegisterPage> {
           context, Pages.dashboard, (Route<dynamic> route) => false);
     } else {
       ToastController.error(response['message']);
+    }
+  }
+
+  void enableRegisterWithGoogle() {
+    if (isGoogleSignIn == false) {
+      setState(() {
+        isGoogleSignIn = true;
+      });
+    }
+  }
+
+  void disableRegisterWithGoogle() {
+    if (isGoogleSignIn == true) {
+      setState(() {
+        isGoogleSignIn = false;
+      });
     }
   }
 }

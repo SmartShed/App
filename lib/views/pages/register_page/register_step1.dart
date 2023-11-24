@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/images.dart';
 import '../../widgets/text_field.dart';
+import './widgets/disable_google_sign_in.dart';
 
 class RegisterStep1 extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
+  final bool isRegisterWithGoogle;
 
   // Callbacks
-  final void Function() registerWithGoogle;
+  final Future<bool> Function() registerWithGoogle;
+  final void Function() enableRegisterWithGoogle;
+  final void Function() disableRegisterWithGoogle;
+
+  final double paddingForDialog;
 
   const RegisterStep1({
     Key? key,
@@ -17,6 +23,10 @@ class RegisterStep1 extends StatefulWidget {
     required this.passwordController,
     required this.confirmPasswordController,
     required this.registerWithGoogle,
+    required this.isRegisterWithGoogle,
+    required this.enableRegisterWithGoogle,
+    required this.disableRegisterWithGoogle,
+    required this.paddingForDialog,
   }) : super(key: key);
 
   @override
@@ -55,6 +65,8 @@ class _RegisterStep1State extends State<RegisterStep1> {
           obscureText: false,
           suffixIcon: _emailIcon(),
           onEditingComplete: changeFocusToPassword,
+          readOnly: widget.isRegisterWithGoogle,
+          onTap: disableRegisterWithGoogle,
         ),
         const SizedBox(height: 20),
         MyTextField(
@@ -65,6 +77,8 @@ class _RegisterStep1State extends State<RegisterStep1> {
           obscureText: hidePassword,
           suffixIcon: _passwordIcon(),
           onEditingComplete: changeFocusToConfirmPassword,
+          readOnly: widget.isRegisterWithGoogle,
+          onTap: disableRegisterWithGoogle,
         ),
         const SizedBox(height: 20),
         MyTextField(
@@ -74,6 +88,9 @@ class _RegisterStep1State extends State<RegisterStep1> {
           hintText: "Confirm Password",
           obscureText: hideConfirmPassword,
           suffixIcon: _confirmPasswordIcon(),
+          onEditingComplete: () {},
+          readOnly: widget.isRegisterWithGoogle,
+          onTap: disableRegisterWithGoogle,
         ),
         const SizedBox(height: 20),
         const SizedBox(height: 40),
@@ -89,7 +106,7 @@ class _RegisterStep1State extends State<RegisterStep1> {
               ),
               const SizedBox(height: 10),
               IconButton(
-                onPressed: widget.registerWithGoogle,
+                onPressed: _registerWithGoogle,
                 iconSize: 70,
                 icon: Image.asset(
                   ImageConstants.googleLogo,
@@ -100,6 +117,14 @@ class _RegisterStep1State extends State<RegisterStep1> {
         ),
       ],
     );
+  }
+
+  void _registerWithGoogle() async {
+    bool result = await widget.registerWithGoogle();
+
+    if (result) {
+      widget.enableRegisterWithGoogle();
+    }
   }
 
   IconButton _emailIcon() {
@@ -143,5 +168,19 @@ class _RegisterStep1State extends State<RegisterStep1> {
     setState(() {
       FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
     });
+  }
+
+  void disableRegisterWithGoogle() {
+    if (!widget.isRegisterWithGoogle) {
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => DisableGoogleSignInDialog(
+        onDisable: () => widget.disableRegisterWithGoogle(),
+        paddingForBox: widget.paddingForDialog,
+      ),
+    );
   }
 }

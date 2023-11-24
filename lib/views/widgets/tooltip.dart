@@ -37,6 +37,7 @@ class MyTooltip extends StatelessWidget {
           ),
         ],
       ),
+      waitDuration: const Duration(milliseconds: 500),
       child: Text(
         text,
         style: textStyle ?? const TextStyle(),

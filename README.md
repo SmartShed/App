@@ -5,4 +5,3 @@
 - Android
 - iOS
 - Web
-- macOS

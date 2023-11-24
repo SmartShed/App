@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
+import '../../widgets/loading_dialog.dart';
 import '../../widgets/text_field.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
@@ -332,8 +333,17 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingDialog(title: "Logging in..."),
+    );
+
     Map<String, dynamic>? response =
         await LoginController.login(email, password);
+
+    if (!context.mounted) return;
+    Navigator.pop(context);
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
@@ -345,7 +355,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginWithGoogle() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingDialog(title: "Logging in..."),
+    );
+
     Map<String, dynamic>? response = await LoginController.loginWithGoogle();
+
+    if (!context.mounted) return;
+    Navigator.pop(context);
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);

@@ -70,6 +70,7 @@ class MyDrawer extends StatelessWidget {
               // Show logout dialog
               showDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (BuildContext context) {
                   return const LogoutPage();
                 },
