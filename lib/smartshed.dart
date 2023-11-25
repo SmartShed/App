@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './views/pages.dart';
 import './constants/colors.dart';
 import './controllers/routes/controller.dart';
 import './controllers/auth/login.dart';
@@ -14,10 +13,13 @@ class SmartShed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    init();
+
+    return MaterialApp.router(
       title: 'SmartShed',
-      initialRoute: Pages.splash,
-      onGenerateRoute: RouteController.generateRoute,
+      // initialRoute: Pages.splash,
+      // onGenerateRoute: RouteController.generateRoute,
+      routerConfig: RouteController.generateRoute(),
       theme: ColorConstants.themeData,
       debugShowCheckedModeBanner: false,
     );

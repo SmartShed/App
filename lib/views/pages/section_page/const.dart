@@ -1,46 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
-import '../../../models/section.dart';
+import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
-import '../../widgets/section_tile.dart';
 
-AppBar buildAppBar() {
-  return AppBar(
-    title: const Text(
-      'DASHBOARD',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    centerTitle: true,
-  );
-}
-
-Widget buildSectionsList(
-  bool isSectionLoading,
-  List<SmartShedSection> sections,
+Widget buildFormsList(
+  bool isFormsForSectionLoading,
+  List<SmartShedForm> formsForSection,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        !isSectionLoading && sections.isEmpty
-            ? 'No Sections Found'
-            : 'Sections',
+        !isFormsForSectionLoading && formsForSection.isEmpty
+            ? 'No Forms Found'
+            : 'Forms',
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,
         ),
       ),
       const SizedBox(height: 20),
-      isSectionLoading
+      isFormsForSectionLoading
           ? ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: 6,
               itemBuilder: (context, index) {
-                return const SectionTileShimmer();
+                return const FormTileShimmer();
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 12);
@@ -49,11 +37,11 @@ Widget buildSectionsList(
           : ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: sections.length,
+              itemCount: formsForSection.length,
               itemBuilder: (context, index) {
-                return SectionTile(
+                return FormTile(
                   index: index,
-                  section: sections[index],
+                  form: formsForSection[index],
                 );
               },
               separatorBuilder: (context, index) {
@@ -71,9 +59,10 @@ Widget buildRecentlyOpenedFormsList(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      const SizedBox(height: 20),
       Text(
         !isRecentlyOpenedFormsLoading && recentlyOpenedForms.isEmpty
-            ? 'No Recently Opened Forms'
+            ? 'No Recently Opened Forms Found'
             : 'Recently Opened Forms',
         style: const TextStyle(
           fontWeight: FontWeight.w600,
@@ -101,6 +90,54 @@ Widget buildRecentlyOpenedFormsList(
                 return OpenedFormTile(
                   index: index,
                   openedForm: recentlyOpenedForms[index],
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 12);
+              },
+            ),
+    ],
+  );
+}
+
+Widget buildAllOpenedFormsList(
+  bool isAllOpenedFormsLoading,
+  List<OpenedSmartShedForm> allOpenedForms,
+) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 20),
+      Text(
+        !isAllOpenedFormsLoading && allOpenedForms.isEmpty
+            ? 'No Opened Forms Found'
+            : 'All Opened Forms',
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
+      ),
+      const SizedBox(height: 20),
+      isAllOpenedFormsLoading
+          ? ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return const OpenedFormTileShimmer();
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 12);
+              },
+            )
+          : ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: allOpenedForms.length,
+              itemBuilder: (context, index) {
+                return OpenedFormTile(
+                  index: index,
+                  openedForm: allOpenedForms[index],
                 );
               },
               separatorBuilder: (context, index) {

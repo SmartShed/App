@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
 import '../../pages.dart';
@@ -14,7 +15,7 @@ class UnknownRoutePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: ColorConstants.primary,
         title: const Text(
-          'Unknown Route',
+          'Route not found',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -36,8 +37,9 @@ class UnknownRoutePage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Pages.dashboard, (Route<dynamic> route) => false);
+              // Navigator.pushNamedAndRemoveUntil(
+              // context, Pages.dashboard, (Route<dynamic> route) => false);
+              GoRouter.of(context).go(Pages.dashboard);
             },
           ),
           ListTile(
@@ -51,7 +53,8 @@ class UnknownRoutePage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/settings');
+              // Navigator.pushNamed(context, '/settings');
+              GoRouter.of(context).go('/settings');
             },
           ),
           ListTile(
@@ -65,7 +68,8 @@ class UnknownRoutePage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/login');
+              // Navigator.pushNamed(context, '/login');
+              GoRouter.of(context).go('/login');
             },
           ),
         ],

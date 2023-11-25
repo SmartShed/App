@@ -7,4 +7,7 @@ class APIConstants {
   static const String register = '$baseUrl/api/auth/register';
   static const String registerWithGoogle = '$baseUrl/api/auth/register/google';
   static const String logout = '$baseUrl/api/auth/logout';
+
+  // Dashboard
+  static const String sections = '$baseUrl/api/sections';
 }

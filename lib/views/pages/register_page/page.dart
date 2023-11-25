@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
@@ -179,8 +180,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pushReplacementNamed(
-                                          context, Pages.login);
+                                      // Navigator.pushReplacementNamed(
+                                      // context, Pages.login);
+                                      GoRouter.of(context).go(Pages.login);
                                     },
                                     child: Text(
                                       "Login",
@@ -403,13 +405,15 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     if (!context.mounted) return;
-    Navigator.pop(context);
+    // Navigator.pop(context);
+    GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-          context, Pages.dashboard, (Route<dynamic> route) => false);
+      // Navigator.pushNamedAndRemoveUntil(
+      // context, Pages.dashboard, (Route<dynamic> route) => false);
+      GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);
     }

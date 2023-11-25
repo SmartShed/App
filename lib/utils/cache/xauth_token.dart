@@ -21,5 +21,10 @@ class XAuthTokenHandler {
     await _box.delete(_tokenKey);
   }
 
-  static bool get hasToken => _box.containsKey(_tokenKey);
+  // static bool get hasToken => _box.containsKey(_tokenKey);
+
+  static Future<bool> get hasToken async {
+    await init();
+    return _box.containsKey(_tokenKey);
+  }
 }

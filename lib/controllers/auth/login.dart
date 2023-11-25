@@ -59,7 +59,7 @@ class LoginController {
           await _authAPIHandler.logout(XAuthTokenHandler.token!);
 
       if (response['status'] != 'success') {
-        return false;
+        print(response['message']);
       }
 
       await XAuthTokenHandler.deleteToken();
@@ -72,7 +72,10 @@ class LoginController {
     }
   }
 
-  static bool get isLoggedIn => XAuthTokenHandler.hasToken;
+  static Future<bool> get isLoggedIn async {
+    await init();
+    return XAuthTokenHandler.hasToken;
+  }
 
   static String? get token => XAuthTokenHandler.token;
 }

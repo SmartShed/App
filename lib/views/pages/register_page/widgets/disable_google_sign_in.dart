@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../controllers/toast/toast.dart';
@@ -50,7 +51,8 @@ class DisableGoogleSignInDialog extends StatelessWidget {
             DialogTextButton(
               text: "No, I want to keep it",
               onPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                GoRouter.of(context).pop();
               },
               paddingForBox: paddingForBox,
             ),
@@ -58,7 +60,8 @@ class DisableGoogleSignInDialog extends StatelessWidget {
             DialogTextButton(
               text: "Yes, disable it",
               onPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                GoRouter.of(context).pop();
                 ToastController.show(
                   "Google Sign In disabled successfully.",
                 );

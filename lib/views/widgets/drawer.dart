@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../constants/colors.dart';
+import '../../constants/images.dart';
 import '../pages.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -8,8 +10,11 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String currentRoute =
+        GoRouter.of(context).routeInformationProvider.value.uri.toString();
+
     double height = MediaQuery.of(context).size.height;
-    double startHeight = height * 0.1;
+    double startHeight = height * 0.05;
 
     return Drawer(
       backgroundColor: ColorConstants.bg,
@@ -19,6 +24,10 @@ class MyDrawer extends StatelessWidget {
         children: [
           SizedBox(height: startHeight),
           ListTile(
+            leading: Image.asset(
+              ImageConstants.logo,
+              height: 40,
+            ),
             title: Text(
               "SmartShed",
               style: TextStyle(
@@ -27,19 +36,38 @@ class MyDrawer extends StatelessWidget {
                 color: ColorConstants.primary,
               ),
             ),
+            onTap: () {
+              GoRouter.of(context).go(Pages.dashboard);
+            },
+          ),
+          Divider(
+            color: ColorConstants.primary,
+            thickness: 2,
+            indent: 10,
+            endIndent: 10,
+            height: 40,
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.dashboard,
+              color: currentRoute.startsWith(Pages.dashboard) ||
+                      currentRoute.startsWith(Pages.section)
+                  ? ColorConstants.primary
+                  : Colors.black,
             ),
-            title: const Text(
+            title: Text(
               "Dashboard",
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: currentRoute.startsWith(Pages.dashboard) ||
+                        currentRoute.startsWith(Pages.section)
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, Pages.dashboard);
+              // Navigator.pushNamed(context, Pages.dashboard);
+              GoRouter.of(context).go(Pages.dashboard);
             },
           ),
           ListTile(
@@ -53,7 +81,8 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/settings');
+              // Navigator.pushNamed(context, '/settings');
+              GoRouter.of(context).go('/settings');
             },
           ),
           ListTile(

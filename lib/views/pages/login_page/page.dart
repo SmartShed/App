@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
@@ -256,8 +257,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pushReplacementNamed(
-                                          context, Pages.register);
+                                      // Navigator.pushReplacementNamed(
+                                      //     context, Pages.register);
+                                      GoRouter.of(context).go(Pages.register);
                                     },
                                     child: Text(
                                       "Register",
@@ -343,12 +345,15 @@ class _LoginPageState extends State<LoginPage> {
         await LoginController.login(email, password);
 
     if (!context.mounted) return;
-    Navigator.pop(context);
+    // Navigator.pop(context);
+    GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, Pages.dashboard);
+      // Navigator.pushReplacementNamed(context, Pages.dashboard);
+
+      GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);
     }
@@ -364,12 +369,14 @@ class _LoginPageState extends State<LoginPage> {
     Map<String, dynamic>? response = await LoginController.loginWithGoogle();
 
     if (!context.mounted) return;
-    Navigator.pop(context);
+    // Navigator.pop(context);
+    GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, Pages.dashboard);
+      // Navigator.pushReplacementNamed(context, Pages.dashboard);
+      GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);
     }

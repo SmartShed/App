@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../pages.dart';
 import '../../../constants/colors.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
-import '../../pages.dart';
-
 import '../../widgets/loading_dialog.dart';
 import './widgets/dialog_text_button.dart';
 
@@ -56,7 +56,8 @@ class LogoutPage extends StatelessWidget {
             DialogTextButton(
               text: "No",
               onPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                GoRouter.of(context).pop();
               },
               paddingForBox: paddingForBox * 0.75,
               textButtonPaddingForBox: textButtonPaddingForBox,
@@ -87,18 +88,23 @@ class LogoutPage extends StatelessWidget {
     bool isLoggedOut = await LoginController.logout();
 
     if (!context.mounted) return;
-    Navigator.pop(context);
+    // Navigator.pop(context);
+    GoRouter.of(context).pop();
 
     if (isLoggedOut) {
       ToastController.success("Logged out successfully.");
       if (!context.mounted) return;
-      Navigator.pop(context);
-      Navigator.pushNamedAndRemoveUntil(
-          context, Pages.login, (Route<dynamic> route) => false);
+      // Navigator.pop(context);
+      GoRouter.of(context).pop();
+      // Navigator.pushNamedAndRemoveUntil(
+      // context, Pages.login, (Route<dynamic> route) => false);
+      GoRouter.of(context).go(Pages.login);
     } else {
       ToastController.error(
         "Something went wrong. Please try again later.",
       );
+      // Navigator.pop(context);
+      GoRouter.of(context).pop();
     }
   }
 }

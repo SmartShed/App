@@ -1,28 +1,44 @@
-import 'dart:math';
-
 import '../../models/section.dart';
 import '../../models/form.dart';
 
-// Dummy data
-import '../../dummy/data.dart';
+import '../../utils/api/sections.dart';
+import '../toast/toast.dart';
 
 class DashboardForAllController {
-  static Future<void> init() async {
-    // Initialize any required data
-  }
+  static final SectionsAPIHandler _sectionsAPIHandler = SectionsAPIHandler();
+
+  static Future<void> init() async {}
 
   static Future<List<SmartShedSection>> getSections() async {
-    return await Future.delayed(Duration(milliseconds: Random().nextInt(2000)),
-        () {
-      return DummyData.getSections();
-    });
+    final response = await _sectionsAPIHandler.getAllSections();
+
+    List<SmartShedSection> sections = [];
+
+    if (response['status'] == 'success') {
+      for (var section in response['sections']) {
+        sections.add(SmartShedSection.fromJson(section));
+      }
+    } else {
+      ToastController.error(response['message']);
+    }
+
+    return sections;
   }
 
   static Future<List<SmartShedForm>> getFormsForSection(
       String sectionId) async {
-    return await Future.delayed(Duration(milliseconds: Random().nextInt(2000)),
-        () {
-      return DummyData.getFormsForSection(sectionId);
-    });
+    final response = await _sectionsAPIHandler.getFormsBySectionId(sectionId);
+
+    List<SmartShedForm> forms = [];
+
+    if (response['status'] == 'success') {
+      for (var form in response['forms']) {
+        forms.add(SmartShedForm.fromJson(form));
+      }
+    } else {
+      ToastController.error(response['message']);
+    }
+
+    return forms;
   }
 }

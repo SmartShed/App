@@ -9,7 +9,7 @@ class SmartShedSection {
 
   factory SmartShedSection.fromJson(Map<String, dynamic> json) {
     return SmartShedSection(
-      id: json['id'],
+      id: json['sectionID'],
       name: json['name'],
     );
   }

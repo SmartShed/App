@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/section.dart';
@@ -6,7 +7,7 @@ import '../../constants/colors.dart';
 import '../../views/pages.dart';
 import './tooltip.dart';
 
-class SectionTile extends StatelessWidget {
+class SectionTile extends StatefulWidget {
   final int index;
   final SmartShedSection section;
 
@@ -17,21 +18,28 @@ class SectionTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _SectionTileState createState() => _SectionTileState();
+}
+
+class _SectionTileState extends State<SectionTile> {
+  bool isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        margin: const EdgeInsets.symmetric(vertical: 6),
+        // margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isHovered ? Colors.grey[100] : Colors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: const [
             BoxShadow(
               color: ColorConstants.shadow,
               offset: Offset(0, 1),
               blurRadius: 3,
-            ),
+            )
           ],
         ),
         child: Row(
@@ -47,6 +55,11 @@ class SectionTile extends StatelessWidget {
         ),
       ),
       onTap: () => _onTap(context),
+      onHover: (value) {
+        setState(() {
+          isHovered = value;
+        });
+      },
     );
   }
 
@@ -72,7 +85,7 @@ class SectionTile extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          '${index + 1}',
+          '${widget.index + 1}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -85,7 +98,7 @@ class SectionTile extends StatelessWidget {
 
   Widget _buildName() {
     return MyTooltip(
-      text: section.name,
+      text: widget.section.name,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -94,7 +107,10 @@ class SectionTile extends StatelessWidget {
   }
 
   void _onTap(BuildContext context) {
-    Navigator.of(context).pushNamed(Pages.section, arguments: section.toJson());
+    // Navigator.of(context).pushNamed(Pages.section, arguments: section.toJson());
+    GoRouter.of(context).go(
+      "${Pages.section}/${widget.section.id}/${widget.section.name}",
+    );
   }
 }
 
@@ -109,7 +125,6 @@ class SectionTileShimmer extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),

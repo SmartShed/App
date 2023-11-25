@@ -27,11 +27,10 @@ class AuthAPIHandler {
         'auth_token': response.data['auth_token'],
         'message': response.data['message'],
       };
-    } catch (e) {
+    } on DioException catch (e) {
       return {
         'status': 'error',
-        'message': 'Something went wrong. Please try again later.',
-        'error': e,
+        'message': e.response!.data['message'],
       };
     }
   }
@@ -53,10 +52,10 @@ class AuthAPIHandler {
         'auth_token': response.data['auth_token'],
         'message': response.data['message'],
       };
-    } catch (e) {
+    } on DioException catch (e) {
       return {
         'status': 'error',
-        'message': 'Something went wrong. Please try again later.',
+        'message': e.response!.data['message'],
       };
     }
   }
@@ -76,10 +75,10 @@ class AuthAPIHandler {
         'auth_token': response.data['auth_token'],
         'message': response.data['message'],
       };
-    } catch (e) {
+    } on DioException catch (e) {
       return {
         'status': 'error',
-        'message': 'Something went wrong. Please try again later.',
+        'message': e.response!.data['message'],
       };
     }
   }
@@ -98,22 +97,21 @@ class AuthAPIHandler {
         'auth_token': response.data['auth_token'],
         'message': response.data['message'],
       };
-    } catch (e) {
+    } on DioException catch (e) {
       return {
         'status': 'error',
-        'message': 'Something went wrong. Please try again later.',
-        'error': e,
+        'message': e.response!.data['message'],
       };
     }
   }
 
-  Future<Map<String, dynamic>> logout(String auth_token) async {
+  Future<Map<String, dynamic>> logout(String authToken) async {
     try {
       final response = await _dio.post(
         APIConstants.logout,
         options: Options(
           headers: {
-            'auth_token': auth_token,
+            'auth_token': authToken,
           },
         ),
       );
@@ -122,10 +120,10 @@ class AuthAPIHandler {
         'status': 'success',
         'message': response.data['message'],
       };
-    } catch (e) {
+    } on DioException catch (e) {
       return {
         'status': 'error',
-        'message': 'Something went wrong. Please try again later.',
+        'message': e.response!.data['message'],
       };
     }
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../pages.dart';
 import '../../../constants/images.dart';
-import '../../../controllers/auth/login.dart';
 
 class SplashPage extends StatefulWidget {
   static const String routeName = '/splash';
@@ -18,12 +18,10 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      String routeName =
-          LoginController.isLoggedIn ? Pages.dashboard : Pages.login;
-
-      Navigator.pushNamedAndRemoveUntil(
-          context, routeName, (Route<dynamic> route) => false);
+    Future.delayed(const Duration(seconds: 2), () async {
+      // Navigator.pushNamedAndRemoveUntil(
+      //     context, routeName, (Route<dynamic> route) => false);
+      GoRouter.of(context).go(Pages.dashboard);
     });
   }
 

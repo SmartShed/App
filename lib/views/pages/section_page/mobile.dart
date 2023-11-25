@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-
 import '../../../models/section.dart';
 import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
-
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
-
 import '../../widgets/drawer.dart';
-import '../../widgets/form_tile.dart';
-import '../../widgets/opened_form_tile.dart';
+import './const.dart';
 
 class SectionPageMobile extends StatefulWidget {
   final String sectionId;
@@ -108,125 +104,24 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
           ),
           child: Column(
             children: [
-              _buildFormsList(),
+              buildFormsList(
+                _isFormsForSectionLoading,
+                _formsForSection,
+              ),
               const SizedBox(height: 20),
-              _buildRecentlyOpenedFormsList(),
+              buildRecentlyOpenedFormsList(
+                _isRecentlyOpenedFormsLoading,
+                _recentlyOpenedForms,
+              ),
               const SizedBox(height: 20),
-              _buildAllOpenedFormsList(),
+              buildAllOpenedFormsList(
+                _isAllOpenedFormsLoading,
+                _allOpenedForms,
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildFormsList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Forms',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
-        const SizedBox(height: 20),
-        _isFormsForSectionLoading
-            ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return const FormTileShimmer();
-                },
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _formsForSection.length,
-                itemBuilder: (context, index) {
-                  return FormTile(
-                    index: index,
-                    form: _formsForSection[index],
-                  );
-                },
-              ),
-      ],
-    );
-  }
-
-  Widget _buildRecentlyOpenedFormsList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        const Text(
-          'Recently Opened Forms',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
-        const SizedBox(height: 20),
-        _isRecentlyOpenedFormsLoading
-            ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return const OpenedFormTileShimmer();
-                },
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _recentlyOpenedForms.length,
-                itemBuilder: (context, index) {
-                  return OpenedFormTile(
-                    index: index,
-                    openedForm: _recentlyOpenedForms[index],
-                  );
-                },
-              ),
-      ],
-    );
-  }
-
-  Widget _buildAllOpenedFormsList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        const Text(
-          'All Opened Forms',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
-        const SizedBox(height: 20),
-        _isAllOpenedFormsLoading
-            ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return const OpenedFormTileShimmer();
-                },
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _allOpenedForms.length,
-                itemBuilder: (context, index) {
-                  return OpenedFormTile(
-                    index: index,
-                    openedForm: _allOpenedForms[index],
-                  );
-                },
-              ),
-      ],
     );
   }
 }
