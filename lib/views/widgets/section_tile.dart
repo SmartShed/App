@@ -18,7 +18,7 @@ class SectionTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SectionTileState createState() => _SectionTileState();
+  State<SectionTile> createState() => _SectionTileState();
 }
 
 class _SectionTileState extends State<SectionTile> {
@@ -30,9 +30,8 @@ class _SectionTileState extends State<SectionTile> {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        // margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
-          color: isHovered ? Colors.grey[100] : Colors.white,
+          color: isHovered ? ColorConstants.hover : Colors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: const [
             BoxShadow(
@@ -41,6 +40,15 @@ class _SectionTileState extends State<SectionTile> {
               blurRadius: 3,
             )
           ],
+          border: isHovered
+              ? Border.all(
+                  color: ColorConstants.primary,
+                  width: 2,
+                )
+              : Border.all(
+                  color: Colors.transparent,
+                  width: 2,
+                ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,8 +115,7 @@ class _SectionTileState extends State<SectionTile> {
   }
 
   void _onTap(BuildContext context) {
-    // Navigator.of(context).pushNamed(Pages.section, arguments: section.toJson());
-    GoRouter.of(context).go(
+    GoRouter.of(context).push(
       "${Pages.section}/${widget.section.id}/${widget.section.name}",
     );
   }

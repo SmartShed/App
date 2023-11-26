@@ -10,7 +10,7 @@ class LoginController {
   static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
 
   static Future<void> init() async {
-    await XAuthTokenHandler.init();
+    XAuthTokenHandler.init();
   }
 
   static Future<Map<String, dynamic>?> login(
@@ -59,7 +59,7 @@ class LoginController {
           await _authAPIHandler.logout(XAuthTokenHandler.token!);
 
       if (response['status'] != 'success') {
-        print(response['message']);
+        return false;
       }
 
       await XAuthTokenHandler.deleteToken();
@@ -73,7 +73,6 @@ class LoginController {
   }
 
   static Future<bool> get isLoggedIn async {
-    await init();
     return XAuthTokenHandler.hasToken;
   }
 

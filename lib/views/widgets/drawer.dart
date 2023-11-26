@@ -66,7 +66,6 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Navigator.pushNamed(context, Pages.dashboard);
               GoRouter.of(context).go(Pages.dashboard);
             },
           ),
@@ -81,7 +80,6 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Navigator.pushNamed(context, '/settings');
               GoRouter.of(context).go('/settings');
             },
           ),

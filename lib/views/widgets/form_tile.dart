@@ -6,7 +6,7 @@ import '../../constants/colors.dart';
 import '../../views/pages.dart';
 import './tooltip.dart';
 
-class FormTile extends StatelessWidget {
+class FormTile extends StatefulWidget {
   final int index;
   final SmartShedForm form;
 
@@ -17,13 +17,20 @@ class FormTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<FormTile> createState() => _FormTileState();
+}
+
+class _FormTileState extends State<FormTile> {
+  bool isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isHovered ? ColorConstants.hover : Colors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: const [
             BoxShadow(
@@ -32,6 +39,15 @@ class FormTile extends StatelessWidget {
               blurRadius: 3,
             ),
           ],
+          border: isHovered
+              ? Border.all(
+                  color: ColorConstants.primary,
+                  width: 2,
+                )
+              : Border.all(
+                  color: Colors.transparent,
+                  width: 2,
+                ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,6 +64,11 @@ class FormTile extends StatelessWidget {
         ),
       ),
       onTap: () => _onTap(context),
+      onHover: (value) {
+        setState(() {
+          isHovered = value;
+        });
+      },
     );
   }
 
@@ -61,7 +82,7 @@ class FormTile extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          '${index + 1}',
+          '${widget.index + 1}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -87,7 +108,7 @@ class FormTile extends StatelessWidget {
 
   Widget _buildName() {
     return MyTooltip(
-      text: form.name,
+      text: widget.form.name,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -97,7 +118,7 @@ class FormTile extends StatelessWidget {
 
   Widget _buildDescription() {
     return MyTooltip(
-      text: form.description,
+      text: widget.form.description,
       textStyle: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,

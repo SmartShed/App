@@ -12,7 +12,7 @@ class SmartShedForm {
   factory SmartShedForm.fromJson(Map<String, dynamic> json) {
     return SmartShedForm(
       id: json['id'],
-      name: json['name'],
+      name: json['title'],
       description: json['description'],
     );
   }

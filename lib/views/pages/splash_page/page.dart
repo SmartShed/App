@@ -5,7 +5,7 @@ import '../../pages.dart';
 import '../../../constants/images.dart';
 
 class SplashPage extends StatefulWidget {
-  static const String routeName = '/splash';
+  static const String routeName = '/';
 
   const SplashPage({super.key});
 

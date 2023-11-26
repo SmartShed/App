@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
+import '../../../constants/images.dart';
 import '../../pages.dart';
 
 class UnknownRoutePage extends StatelessWidget {
@@ -12,67 +13,58 @@ class UnknownRoutePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorConstants.primary,
-        title: const Text(
-          'Route not found',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              ImageConstants.logo,
+              width: 150,
+            ),
+            const SizedBox(height: 10),
+            Image.asset(
+              ImageConstants.logoText,
+              width: 250,
+            ),
+            const SizedBox(height: 40),
+            Text(
+              "404",
+              style: TextStyle(
+                fontSize: 120,
+                fontWeight: FontWeight.bold,
+                color: ColorConstants.primary,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Page not found",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: ColorConstants.primary,
+              ),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () => GoRouter.of(context).go(Pages.dashboard),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Text(
+                  "Go to dashboard",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          ListTile(
-            leading: const Icon(
-              Icons.dashboard,
-            ),
-            title: const Text(
-              "Dashboard",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () {
-              // Navigator.pushNamedAndRemoveUntil(
-              // context, Pages.dashboard, (Route<dynamic> route) => false);
-              GoRouter.of(context).go(Pages.dashboard);
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.settings,
-            ),
-            title: const Text(
-              "Settings",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () {
-              // Navigator.pushNamed(context, '/settings');
-              GoRouter.of(context).go('/settings');
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.logout,
-            ),
-            title: const Text(
-              "Logout",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () {
-              // Navigator.pushNamed(context, '/login');
-              GoRouter.of(context).go('/login');
-            },
-          ),
-        ],
       ),
     );
   }

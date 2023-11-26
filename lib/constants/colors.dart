@@ -11,6 +11,7 @@ class ColorConstants {
 
   static const Color bg = Color(0xFFEEEEEE); // Grey[200]
   static const Color shadow = Color(0x33000000); // Black[200] with 20% opacity
+  static Color? hover = Colors.grey[100];
 
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();

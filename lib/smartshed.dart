@@ -7,19 +7,15 @@ import './controllers/auth/login.dart';
 class SmartShed extends StatelessWidget {
   const SmartShed({super.key});
 
-  static Future<void> init() async {
+  static void init() {
     LoginController.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    init();
-
     return MaterialApp.router(
       title: 'SmartShed',
-      // initialRoute: Pages.splash,
-      // onGenerateRoute: RouteController.generateRoute,
-      routerConfig: RouteController.generateRoute(),
+      routerConfig: RouteController.generateRouter(),
       theme: ColorConstants.themeData,
       debugShowCheckedModeBanner: false,
     );

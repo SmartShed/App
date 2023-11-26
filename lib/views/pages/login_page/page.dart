@@ -360,17 +360,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginWithGoogle() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const LoadingDialog(title: "Logging in..."),
-    );
-
     Map<String, dynamic>? response = await LoginController.loginWithGoogle();
-
-    if (!context.mounted) return;
-    // Navigator.pop(context);
-    GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
