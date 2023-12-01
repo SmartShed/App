@@ -2,34 +2,37 @@ class OpenedSmartShedForm {
   static const String UNKOWN_CREATOR = 'Unknown';
 
   String id;
-  String name;
+  String title;
   String description;
-  String status;
-  String formId;
-  String sectionId;
+  // String status;
+  // String formId;
+  // String sectionId;
   DateTime createdAt;
+  DateTime updatedAt;
   String createdBy;
 
   OpenedSmartShedForm({
     required this.id,
-    required this.name,
+    required this.title,
     required this.description,
-    required this.status,
-    required this.formId,
-    required this.sectionId,
+    // required this.status,
+    // required this.formId,
+    // required this.sectionId,
     required this.createdAt,
+    required this.updatedAt,
     this.createdBy = UNKOWN_CREATOR,
   });
 
   factory OpenedSmartShedForm.fromJson(Map<String, dynamic> json) {
     return OpenedSmartShedForm(
-      id: json['id'],
-      name: json['name'],
+      id: json['_id'],
+      title: json['title'],
       description: json['description'],
-      status: json['status'],
-      formId: json['formId'],
-      sectionId: json['sectionId'],
+      // status: json['status'],
+      // formId: json['formId'],
+      // sectionId: json['sectionId'],
       createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
       createdBy:
           json.containsKey('createdBy') ? json['createdBy'] : UNKOWN_CREATOR,
     );
@@ -38,12 +41,13 @@ class OpenedSmartShedForm {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': title,
       'description': description,
-      'status': status,
-      'formId': formId,
-      'sectionId': sectionId,
+      // 'status': status,
+      // 'formId': formId,
+      // 'sectionId': sectionId,
       'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
       if (createdBy != UNKOWN_CREATOR) 'createdBy': createdBy,
     };
   }

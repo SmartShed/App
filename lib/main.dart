@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:go_router/go_router.dart';
-
 import 'smartshed.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
@@ -14,9 +11,6 @@ void main() {
   ]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-  setUrlStrategy(const HashUrlStrategy());
-  GoRouter.optionURLReflectsImperativeAPIs = true;
-
-  SmartShed.init();
+  await SmartShed.init();
   runApp(const SmartShed());
 }

@@ -1,23 +1,23 @@
 class SmartShedSection {
   final String id;
-  final String name;
+  final String title;
 
   SmartShedSection({
     required this.id,
-    required this.name,
+    required this.title,
   });
 
   factory SmartShedSection.fromJson(Map<String, dynamic> json) {
     return SmartShedSection(
-      id: json['sectionID'],
-      name: json['name'],
+      id: json['id'],
+      title: json['title'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'title': title,
     };
   }
 }

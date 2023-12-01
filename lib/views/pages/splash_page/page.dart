@@ -19,8 +19,6 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () async {
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, routeName, (Route<dynamic> route) => false);
       GoRouter.of(context).go(Pages.dashboard);
     });
   }

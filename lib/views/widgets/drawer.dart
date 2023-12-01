@@ -5,6 +5,12 @@ import '../../constants/colors.dart';
 import '../../constants/images.dart';
 import '../pages.dart';
 
+class DrawerText {
+  static const String dashboard = "Dashboard";
+  static const String settings = "Settings";
+  static const String logout = "Logout";
+}
+
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
@@ -50,17 +56,15 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.dashboard,
-              color: currentRoute.startsWith(Pages.dashboard) ||
-                      currentRoute.startsWith(Pages.section)
+              color: _isHighlighted(currentRoute, DrawerText.dashboard)
                   ? ColorConstants.primary
                   : Colors.black,
             ),
             title: Text(
-              "Dashboard",
+              DrawerText.dashboard,
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: currentRoute.startsWith(Pages.dashboard) ||
-                        currentRoute.startsWith(Pages.section)
+                fontWeight: _isHighlighted(currentRoute, DrawerText.dashboard)
                     ? FontWeight.bold
                     : FontWeight.normal,
               ),
@@ -74,7 +78,7 @@ class MyDrawer extends StatelessWidget {
               Icons.settings,
             ),
             title: const Text(
-              "Settings",
+              DrawerText.settings,
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -84,13 +88,19 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.logout,
+              color: _isHighlighted(currentRoute, DrawerText.logout)
+                  ? ColorConstants.primary
+                  : Colors.black,
             ),
-            title: const Text(
-              "Logout",
+            title: Text(
+              DrawerText.logout,
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: _isHighlighted(currentRoute, DrawerText.logout)
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
             ),
             onTap: () {
@@ -107,5 +117,20 @@ class MyDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+bool _isHighlighted(String currentRoute, String text) {
+  switch (text) {
+    case DrawerText.dashboard:
+      return currentRoute.startsWith(Pages.dashboard) ||
+          currentRoute.startsWith(Pages.section) ||
+          currentRoute.startsWith(Pages.createForm);
+    case DrawerText.settings:
+      return currentRoute.startsWith('/settings');
+    case DrawerText.logout:
+      return currentRoute.startsWith(Pages.logout);
+    default:
+      return false;
   }
 }

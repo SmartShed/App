@@ -5,6 +5,18 @@ import '../../../models/opened_form.dart';
 import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
+AppBar buildAppBar(String title) {
+  return AppBar(
+    title: Text(
+      title,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    centerTitle: true,
+  );
+}
+
 Widget buildFormsList(
   bool isFormsForSectionLoading,
   List<SmartShedForm> formsForSection,

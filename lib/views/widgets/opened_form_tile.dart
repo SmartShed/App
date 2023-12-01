@@ -90,7 +90,7 @@ class OpenedFormTile extends StatelessWidget {
 
   Widget _buildName() {
     return MyTooltip(
-      text: openedForm.name,
+      text: openedForm.title,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,

@@ -64,18 +64,21 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
                   horizontal: 40,
                   vertical: 30,
                 ),
-                child: Column(
-                  children: [
-                    buildSectionsList(
-                      _isSectionLoading,
-                      _sections,
-                    ),
-                    const SizedBox(height: 30),
-                    buildRecentlyOpenedFormsList(
-                      _isRecentlyOpenedFormsLoading,
-                      _recentlyOpenedForms,
-                    ),
-                  ],
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: [
+                      buildSectionsList(
+                        _isSectionLoading,
+                        _sections,
+                      ),
+                      const SizedBox(height: 30),
+                      buildRecentlyOpenedFormsList(
+                        _isRecentlyOpenedFormsLoading,
+                        _recentlyOpenedForms,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

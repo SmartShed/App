@@ -13,6 +13,7 @@ class MyTextField extends StatelessWidget {
   final bool? readOnly;
   final TextInputType? keyboardType;
   final void Function()? onTap;
+  final bool? isTextCentered;
 
   const MyTextField({
     Key? key,
@@ -26,6 +27,7 @@ class MyTextField extends StatelessWidget {
     this.readOnly,
     this.keyboardType,
     this.onTap,
+    this.isTextCentered,
   }) : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class MyTextField extends StatelessWidget {
         readOnly: readOnly ?? false,
         keyboardType: keyboardType ?? TextInputType.text,
         onTap: () => onTap?.call(),
+        textAlign: isTextCentered ?? false ? TextAlign.center : TextAlign.start,
       ),
     );
   }

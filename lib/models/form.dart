@@ -1,19 +1,22 @@
 class SmartShedForm {
   final String id;
-  final String name;
-  final String description;
+  final String title;
+  final String descriptionEnglish;
+  final String descriptionHindi;
 
   SmartShedForm({
     required this.id,
-    required this.name,
-    required this.description,
+    required this.title,
+    required this.descriptionEnglish,
+    required this.descriptionHindi,
   });
 
   factory SmartShedForm.fromJson(Map<String, dynamic> json) {
     return SmartShedForm(
       id: json['id'],
-      name: json['title'],
-      description: json['description'],
+      title: json['title'],
+      descriptionEnglish: json['descriptionEnglish'],
+      descriptionHindi: json['descriptionHindi'],
     );
   }
 }

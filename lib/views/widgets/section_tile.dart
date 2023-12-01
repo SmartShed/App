@@ -106,7 +106,7 @@ class _SectionTileState extends State<SectionTile> {
 
   Widget _buildName() {
     return MyTooltip(
-      text: widget.section.name,
+      text: widget.section.title,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -116,7 +116,7 @@ class _SectionTileState extends State<SectionTile> {
 
   void _onTap(BuildContext context) {
     GoRouter.of(context).push(
-      "${Pages.section}/${widget.section.id}/${widget.section.name}",
+      "${Pages.section}/${widget.section.title}",
     );
   }
 }

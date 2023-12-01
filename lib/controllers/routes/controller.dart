@@ -2,8 +2,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../views/pages.dart';
 import '../auth/login.dart';
+import '../../models/form.dart';
 
 class RouteController {
+  static GoRouter router = generateRouter();
+
   static GoRouter generateRouter() {
     return GoRouter(
       initialLocation: Pages.splash,
@@ -25,12 +28,18 @@ class RouteController {
           builder: (context, state) => const RegisterPage(),
         ),
         GoRoute(
-          path: "${Pages.section}/:id/:name",
+          path: "${Pages.section}/:title",
           builder: (context, state) => SectionPage(
-            sectionId: state.pathParameters['id']!,
-            sectionName: state.pathParameters['name']!,
+            title: state.pathParameters['title']!,
           ),
         ),
+        GoRoute(
+            path: Pages.createForm,
+            builder: (context, state) {
+              SmartShedForm? form = state.extra as SmartShedForm?;
+              if (form == null) return const UnknownRoutePage();
+              return CreateFormPage.fromForm(form);
+            }),
         GoRoute(
           path: Pages.logout,
           builder: (context, state) => const LogoutPage(),

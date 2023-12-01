@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../constants/colors.dart';
 
 class LoadingDialog extends StatelessWidget {
   final String title;
@@ -16,7 +19,10 @@ class LoadingDialog extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(),
+          CupertinoActivityIndicator(
+            radius: 15,
+            color: ColorConstants.primary,
+          ),
           const SizedBox(width: 20),
           Text(title),
         ],

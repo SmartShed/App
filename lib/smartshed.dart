@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import './constants/colors.dart';
 import './controllers/routes/controller.dart';
 import './controllers/auth/login.dart';
+import './controllers/logger/log.dart';
 
 class SmartShed extends StatelessWidget {
   const SmartShed({super.key});
 
-  static void init() {
-    LoginController.init();
+  static Future init() async {
+    GoRouter.optionURLReflectsImperativeAPIs = true;
+    LoggerService.init(Level.error);
+    await LoginController.init();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'SmartShed',
-      routerConfig: RouteController.generateRouter(),
       theme: ColorConstants.themeData,
       debugShowCheckedModeBanner: false,
+      routerDelegate: RouteController.router.routerDelegate,
+      routeInformationParser: RouteController.router.routeInformationParser,
+      routeInformationProvider: RouteController.router.routeInformationProvider,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/form.dart';
@@ -108,7 +109,7 @@ class _FormTileState extends State<FormTile> {
 
   Widget _buildName() {
     return MyTooltip(
-      text: widget.form.name,
+      text: widget.form.title,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -117,18 +118,32 @@ class _FormTileState extends State<FormTile> {
   }
 
   Widget _buildDescription() {
-    return MyTooltip(
-      text: widget.form.description,
-      textStyle: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        color: Colors.grey[700],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MyTooltip(
+          text: widget.form.descriptionEnglish,
+          textStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[700],
+          ),
+        ),
+        const SizedBox(height: 4),
+        MyTooltip(
+          text: widget.form.descriptionHindi,
+          textStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[700],
+          ),
+        ),
+      ],
     );
   }
 
   void _onTap(BuildContext context) {
-    // Navigator.of(context).pushNamed(Pages.form, arguments: openedForm.toJson());
+    GoRouter.of(context).push(Pages.createForm, extra: widget.form);
   }
 }
 

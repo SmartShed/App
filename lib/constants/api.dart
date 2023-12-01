@@ -1,5 +1,12 @@
 class APIConstants {
+  // Network
   static const String baseUrl = 'https://smartshed-backend.onrender.com';
+
+  // Localhost
+  // static const String baseUrl = 'http://localhost:8000';
+
+  // Android emulator
+  // static const String baseUrl = 'http://10.0.2.2:8000';
 
   // Auth
   static const String login = '$baseUrl/api/auth/login';
@@ -10,4 +17,5 @@ class APIConstants {
 
   // Dashboard
   static const String sections = '$baseUrl/api/sections';
+  static const String recentlyOpenedForms = '$baseUrl/api/workers/forms';
 }

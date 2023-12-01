@@ -8,19 +8,16 @@ import './desktop.dart';
 class SectionPage extends StatelessWidget {
   static const String routeName = '/section';
 
-  final String sectionId;
-  final String sectionName;
+  final String title;
 
   const SectionPage({
     Key? key,
-    required this.sectionId,
-    required this.sectionName,
+    required this.title,
   }) : super(key: key);
 
   factory SectionPage.fromSection(SmartShedSection section) {
     return SectionPage(
-      sectionId: section.id,
-      sectionName: section.name,
+      title: section.title,
     );
   }
 
@@ -31,14 +28,8 @@ class SectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      mobileBody: SectionPageMobile(
-        sectionId: sectionId,
-        sectionName: sectionName,
-      ),
-      desktopBody: SectionPageDesktop(
-        sectionId: sectionId,
-        sectionName: sectionName,
-      ),
+      mobileBody: SectionPageMobile(title: title),
+      desktopBody: SectionPageDesktop(title: title),
     );
   }
 }

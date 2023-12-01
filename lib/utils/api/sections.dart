@@ -2,8 +2,11 @@ import 'package:dio/dio.dart';
 
 import '../../constants/api.dart';
 import '../cache/xauth_token.dart';
+import '../../controllers/logger/log.dart';
 
 class SectionsAPIHandler {
+  static final _logger = LoggerService.getLogger('SectionsAPIHandler');
+
   SectionsAPIHandler._internal();
   static final SectionsAPIHandler _sectionsAPIHandler =
       SectionsAPIHandler._internal();
@@ -15,6 +18,7 @@ class SectionsAPIHandler {
 
   Future<Map<String, dynamic>> getAllSections() async {
     try {
+      _logger.info('Calling getAllSections API');
       final response = await _dio.get(
         APIConstants.sections,
         options: Options(
@@ -30,6 +34,8 @@ class SectionsAPIHandler {
         'sections': response.data['sections'],
       };
     } on DioException catch (e) {
+      _logger.error(
+          'Error calling getAllSections API: ${e.response!.data['message']}');
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -37,10 +43,13 @@ class SectionsAPIHandler {
     }
   }
 
-  Future<Map<String, dynamic>> getFormsBySectionId(String sectionId) async {
+  Future<Map<String, dynamic>> getFormsBySectionIdOrName(
+      String sectionIdOrName) async {
     try {
+      _logger.info(
+          'Calling getFormsBySectionId API with sectionId: $sectionIdOrName');
       final response = await _dio.get(
-        '${APIConstants.sections}/$sectionId/forms',
+        '${APIConstants.sections}/$sectionIdOrName/forms',
         options: Options(
           headers: {
             'auth_token': _authToken,
@@ -54,6 +63,8 @@ class SectionsAPIHandler {
         'forms': response.data['forms'],
       };
     } on DioException catch (e) {
+      _logger.error(
+          'Error calling getFormsBySectionId API with sectionId: $sectionIdOrName: ${e.response!.data['message']}');
       return {
         'status': 'error',
         'message': e.response!.data['message'],

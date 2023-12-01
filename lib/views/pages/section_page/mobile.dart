@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/section.dart';
 import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
@@ -10,25 +9,12 @@ import '../../widgets/drawer.dart';
 import './const.dart';
 
 class SectionPageMobile extends StatefulWidget {
-  final String sectionId;
-  final String sectionName;
+  final String title;
 
   const SectionPageMobile({
     Key? key,
-    required this.sectionId,
-    required this.sectionName,
+    required this.title,
   }) : super(key: key);
-
-  factory SectionPageMobile.fromSection(SmartShedSection section) {
-    return SectionPageMobile(
-      sectionId: section.id,
-      sectionName: section.name,
-    );
-  }
-
-  factory SectionPageMobile.fromSectionJson(Map<String, dynamic> json) {
-    return SectionPageMobile.fromSection(SmartShedSection.fromJson(json));
-  }
 
   @override
   State<SectionPageMobile> createState() => _SectionPageMobileState();
@@ -57,7 +43,7 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
 
   Future<void> _initFormsForSection() async {
     _formsForSection =
-        await DashboardForAllController.getFormsForSection(widget.sectionId);
+        await DashboardForAllController.getFormsForSection(widget.title);
     setState(() {
       _isFormsForSectionLoading = false;
     });
@@ -66,7 +52,7 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
   Future<void> _initRecentlyOpenedForms() async {
     _recentlyOpenedForms =
         await DashboardForMeController.getRecentlyOpenedFormsForSection(
-            widget.sectionId);
+            widget.title);
     setState(() {
       _isRecentlyOpenedFormsLoading = false;
     });
@@ -75,7 +61,7 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
   Future<void> _initAllOpenedForms() async {
     _allOpenedForms =
         await DashboardForMeController.getRecentlyOpenedFormsForSection(
-            widget.sectionId);
+            widget.title);
     setState(() {
       _isAllOpenedFormsLoading = false;
     });
@@ -85,16 +71,7 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.bg,
-      appBar: AppBar(
-        title: Text(
-          widget.sectionName,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: ColorConstants.primary,
-      ),
+      appBar: buildAppBar(widget.title),
       drawer: const MyDrawer(),
       body: SingleChildScrollView(
         child: Padding(

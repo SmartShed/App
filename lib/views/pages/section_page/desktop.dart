@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/section.dart';
 import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
@@ -10,25 +9,12 @@ import '../../widgets/drawer.dart';
 import './const.dart';
 
 class SectionPageDesktop extends StatefulWidget {
-  final String sectionId;
-  final String sectionName;
+  final String title;
 
   const SectionPageDesktop({
     Key? key,
-    required this.sectionId,
-    required this.sectionName,
+    required this.title,
   }) : super(key: key);
-
-  factory SectionPageDesktop.fromSection(SmartShedSection section) {
-    return SectionPageDesktop(
-      sectionId: section.id,
-      sectionName: section.name,
-    );
-  }
-
-  factory SectionPageDesktop.fromSectionJson(Map<String, dynamic> json) {
-    return SectionPageDesktop.fromSection(SmartShedSection.fromJson(json));
-  }
 
   @override
   State<SectionPageDesktop> createState() => _SectionPageDesktopState();
@@ -57,7 +43,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
 
   Future<void> _initFormsForSection() async {
     _formsForSection =
-        await DashboardForAllController.getFormsForSection(widget.sectionId);
+        await DashboardForAllController.getFormsForSection(widget.title);
     setState(() {
       _isFormsForSectionLoading = false;
     });
@@ -66,7 +52,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
   Future<void> _initRecentlyOpenedForms() async {
     _recentlyOpenedForms =
         await DashboardForMeController.getRecentlyOpenedFormsForSection(
-            widget.sectionId);
+            widget.title);
     setState(() {
       _isRecentlyOpenedFormsLoading = false;
     });
@@ -75,7 +61,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
   Future<void> _initAllOpenedForms() async {
     _allOpenedForms =
         await DashboardForMeController.getRecentlyOpenedFormsForSection(
-            widget.sectionId);
+            widget.title);
     setState(() {
       _isAllOpenedFormsLoading = false;
     });
@@ -85,18 +71,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.bg,
-      appBar: AppBar(
-        title: Text(
-          widget.sectionName,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: ColorConstants.primary,
-        automaticallyImplyLeading: false,
-      ),
-      // drawer: const MyDrawer(),
+      appBar: buildAppBar(widget.title),
       body: Row(
         children: [
           const MyDrawer(),
@@ -107,23 +82,26 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
                   horizontal: 40,
                   vertical: 30,
                 ),
-                child: Column(
-                  children: [
-                    buildFormsList(
-                      _isFormsForSectionLoading,
-                      _formsForSection,
-                    ),
-                    const SizedBox(height: 20),
-                    buildRecentlyOpenedFormsList(
-                      _isRecentlyOpenedFormsLoading,
-                      _recentlyOpenedForms,
-                    ),
-                    const SizedBox(height: 20),
-                    buildAllOpenedFormsList(
-                      _isAllOpenedFormsLoading,
-                      _allOpenedForms,
-                    ),
-                  ],
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: [
+                      buildFormsList(
+                        _isFormsForSectionLoading,
+                        _formsForSection,
+                      ),
+                      const SizedBox(height: 20),
+                      buildRecentlyOpenedFormsList(
+                        _isRecentlyOpenedFormsLoading,
+                        _recentlyOpenedForms,
+                      ),
+                      const SizedBox(height: 20),
+                      buildAllOpenedFormsList(
+                        _isAllOpenedFormsLoading,
+                        _allOpenedForms,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
