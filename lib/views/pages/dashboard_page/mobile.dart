@@ -17,7 +17,7 @@ class DashboardPageMobile extends StatefulWidget {
 
 class _DashboardPageMobileState extends State<DashboardPageMobile> {
   List<SmartShedSection> _sections = [];
-  List<OpenedSmartShedForm> _recentlyOpenedForms = [];
+  List<SmartShedOpenedForm> _recentlyOpenedForms = [];
   bool _isSectionLoading = true;
   bool _isRecentlyOpenedFormsLoading = true;
 

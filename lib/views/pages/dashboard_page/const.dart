@@ -66,7 +66,7 @@ Widget buildSectionsList(
 
 Widget buildRecentlyOpenedFormsList(
   bool isRecentlyOpenedFormsLoading,
-  List<OpenedSmartShedForm> recentlyOpenedForms,
+  List<SmartShedOpenedForm> recentlyOpenedForms,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

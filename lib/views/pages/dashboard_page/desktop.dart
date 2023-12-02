@@ -17,7 +17,7 @@ class DashboardPageDesktop extends StatefulWidget {
 
 class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
   List<SmartShedSection> _sections = [];
-  List<OpenedSmartShedForm> _recentlyOpenedForms = [];
+  List<SmartShedOpenedForm> _recentlyOpenedForms = [];
   bool _isSectionLoading = true;
   bool _isRecentlyOpenedFormsLoading = true;
 

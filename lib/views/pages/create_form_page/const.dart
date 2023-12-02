@@ -136,5 +136,10 @@ void onTap(
   if (!context.mounted) return;
   GoRouter.of(context).pop();
 
-  // GoRouter.of(context).go('/form/$createdFormId');
+  if (createdFormId != null) {
+    print("Created new form");
+    print(createdFormId);
+  } else {
+    print("No form created");
+  }
 }

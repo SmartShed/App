@@ -22,8 +22,8 @@ class SectionPageDesktop extends StatefulWidget {
 
 class _SectionPageDesktopState extends State<SectionPageDesktop> {
   List<SmartShedForm> _formsForSection = [];
-  List<OpenedSmartShedForm> _recentlyOpenedForms = [];
-  List<OpenedSmartShedForm> _allOpenedForms = [];
+  List<SmartShedOpenedForm> _recentlyOpenedForms = [];
+  List<SmartShedOpenedForm> _allOpenedForms = [];
 
   bool _isFormsForSectionLoading = true;
   bool _isRecentlyOpenedFormsLoading = true;

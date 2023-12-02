@@ -66,7 +66,7 @@ Widget buildFormsList(
 
 Widget buildRecentlyOpenedFormsList(
   bool isRecentlyOpenedFormsLoading,
-  List<OpenedSmartShedForm> recentlyOpenedForms,
+  List<SmartShedOpenedForm> recentlyOpenedForms,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +114,7 @@ Widget buildRecentlyOpenedFormsList(
 
 Widget buildAllOpenedFormsList(
   bool isAllOpenedFormsLoading,
-  List<OpenedSmartShedForm> allOpenedForms,
+  List<SmartShedOpenedForm> allOpenedForms,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

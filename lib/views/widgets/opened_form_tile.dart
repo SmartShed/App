@@ -9,7 +9,7 @@ import './tooltip.dart';
 
 class OpenedFormTile extends StatelessWidget {
   final int index;
-  final OpenedSmartShedForm openedForm;
+  final SmartShedOpenedForm openedForm;
 
   const OpenedFormTile({
     Key? key,
@@ -100,7 +100,10 @@ class OpenedFormTile extends StatelessWidget {
 
   Widget _buildDescription() {
     return MyTooltip(
-      text: openedForm.description,
+      texts: [
+        openedForm.descriptionEnglish,
+        openedForm.descriptionHindi,
+      ],
       textStyle: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
@@ -121,16 +124,23 @@ class OpenedFormTile extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
-        if (openedForm.isCreatedByNotEmpty) ...[
-          const SizedBox(height: 4),
-          MyTooltip(
-            text: "Created By: ${openedForm.createdBy}",
-            textStyle: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+        const SizedBox(height: 2),
+        MyTooltip(
+          text:
+              "Updated At: ${DateFormat('dd MMM yyyy hh:mm a').format(openedForm.updatedAt)}",
+          textStyle: const TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
           ),
-        ],
+        ),
+        const SizedBox(height: 2),
+        MyTooltip(
+          text: "Created By: ${openedForm.createdBy}",
+          textStyle: const TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
       ],
     );
   }

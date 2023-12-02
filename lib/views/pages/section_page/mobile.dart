@@ -22,8 +22,8 @@ class SectionPageMobile extends StatefulWidget {
 
 class _SectionPageMobileState extends State<SectionPageMobile> {
   List<SmartShedForm> _formsForSection = [];
-  List<OpenedSmartShedForm> _recentlyOpenedForms = [];
-  List<OpenedSmartShedForm> _allOpenedForms = [];
+  List<SmartShedOpenedForm> _recentlyOpenedForms = [];
+  List<SmartShedOpenedForm> _allOpenedForms = [];
 
   bool _isFormsForSectionLoading = true;
   bool _isRecentlyOpenedFormsLoading = true;

@@ -1,57 +1,47 @@
-class OpenedSmartShedForm {
-  static const String UNKOWN_CREATOR = 'Unknown';
-
+class SmartShedOpenedForm {
   String id;
   String title;
-  String description;
-  // String status;
-  // String formId;
-  // String sectionId;
+  String descriptionEnglish;
+  String descriptionHindi;
   DateTime createdAt;
   DateTime updatedAt;
   String createdBy;
+  bool? lockStatus;
 
-  OpenedSmartShedForm({
+  SmartShedOpenedForm({
     required this.id,
     required this.title,
-    required this.description,
-    // required this.status,
-    // required this.formId,
-    // required this.sectionId,
+    required this.descriptionEnglish,
+    required this.descriptionHindi,
     required this.createdAt,
     required this.updatedAt,
-    this.createdBy = UNKOWN_CREATOR,
+    required this.createdBy,
+    this.lockStatus,
   });
 
-  factory OpenedSmartShedForm.fromJson(Map<String, dynamic> json) {
-    return OpenedSmartShedForm(
-      id: json['_id'],
+  factory SmartShedOpenedForm.fromJson(Map<String, dynamic> json) {
+    return SmartShedOpenedForm(
+      id: json['id'],
       title: json['title'],
-      description: json['description'],
-      // status: json['status'],
-      // formId: json['formId'],
-      // sectionId: json['sectionId'],
+      descriptionEnglish: json['descriptionEnglish'],
+      descriptionHindi: json['descriptionHindi'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      createdBy:
-          json.containsKey('createdBy') ? json['createdBy'] : UNKOWN_CREATOR,
+      createdBy: json['createdBy'],
+      lockStatus: json['lockStatus'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': title,
-      'description': description,
-      // 'status': status,
-      // 'formId': formId,
-      // 'sectionId': sectionId,
+      'title': title,
+      'descriptionEnglish': descriptionEnglish,
+      'descriptionHindi': descriptionHindi,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
-      if (createdBy != UNKOWN_CREATOR) 'createdBy': createdBy,
+      'createdBy': createdBy,
+      'lockStatus': lockStatus,
     };
   }
-
-  bool get isCreatetByEmpty => createdBy == UNKOWN_CREATOR;
-  bool get isCreatedByNotEmpty => !isCreatetByEmpty;
 }

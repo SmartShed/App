@@ -99,44 +99,41 @@ class _FormTileState extends State<FormTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildName(),
+          _buildName(context),
           const SizedBox(height: 4),
-          _buildDescription(),
+          _buildDescription(context),
         ],
       ),
     );
   }
 
-  Widget _buildName() {
+  Widget _buildName(BuildContext context) {
     return MyTooltip(
       text: widget.form.title,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
       ),
+      onDoubleTap: () => _onTap(context),
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MyTooltip(
-          text: widget.form.descriptionEnglish,
+          texts: [
+            widget.form.descriptionEnglish,
+            widget.form.descriptionHindi,
+          ],
           textStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: Colors.grey[700],
           ),
-        ),
-        const SizedBox(height: 4),
-        MyTooltip(
-          text: widget.form.descriptionHindi,
-          textStyle: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Colors.grey[700],
-          ),
+          maxLines: 1,
+          onDoubleTap: () => _onTap(context),
         ),
       ],
     );

@@ -4,12 +4,13 @@ import '../../constants/api.dart';
 import '../cache/xauth_token.dart';
 import '../../controllers/logger/log.dart';
 
-class FormsAPIHandler {
-  static final _logger = LoggerService.getLogger('FormsAPIHandler');
+class FormsAccessAPIHandler {
+  static final _logger = LoggerService.getLogger('FormsAccessAPIHandler');
 
-  FormsAPIHandler._internal();
-  static final FormsAPIHandler _formsAPIHandler = FormsAPIHandler._internal();
-  factory FormsAPIHandler() => _formsAPIHandler;
+  FormsAccessAPIHandler._internal();
+  static final FormsAccessAPIHandler _formsAPIHandler =
+      FormsAccessAPIHandler._internal();
+  factory FormsAccessAPIHandler() => _formsAPIHandler;
 
   final Dio _dio = Dio();
 

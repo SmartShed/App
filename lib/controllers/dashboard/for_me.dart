@@ -3,24 +3,24 @@ import 'dart:math';
 // Dummy data
 import '../../dummy/data.dart';
 import '../../models/opened_form.dart';
-import '../../utils/api/forms.dart';
+import '../../utils/api/forms_access.dart';
 import '../toast/toast.dart';
 import '../logger/log.dart';
 
 class DashboardForMeController {
-  static final FormsAPIHandler _formsAPIHandler = FormsAPIHandler();
   static final _logger = LoggerService.getLogger('DashboardForMeController');
+  static final FormsAccessAPIHandler _formsAPIHandler = FormsAccessAPIHandler();
 
   static Future<void> init() async {
     _logger.info('Initializing DashboardForMeController');
   }
 
-  static Future<List<OpenedSmartShedForm>> getRecentlyOpenedForms() async {
+  static Future<List<SmartShedOpenedForm>> getRecentlyOpenedForms() async {
     _logger.info('Getting recently opened forms');
 
     final response = await _formsAPIHandler.getRecentForms();
 
-    List<OpenedSmartShedForm> forms = [];
+    List<SmartShedOpenedForm> forms = [];
 
     if (response['status'] == 'success') {
       if (response['forms'].length == 0) {
@@ -29,7 +29,7 @@ class DashboardForMeController {
       }
 
       for (var form in response['forms']) {
-        forms.add(OpenedSmartShedForm.fromJson(form));
+        forms.add(SmartShedOpenedForm.fromJson(form));
       }
     } else {
       ToastController.error(response['message']);
@@ -38,7 +38,7 @@ class DashboardForMeController {
     return forms;
   }
 
-  static Future<List<OpenedSmartShedForm>> getRecentlyOpenedFormsByMeForSection(
+  static Future<List<SmartShedOpenedForm>> getRecentlyOpenedFormsByMeForSection(
       String sectionId) async {
     _logger.info('Getting recently opened forms by me for section $sectionId');
 
@@ -49,7 +49,7 @@ class DashboardForMeController {
     return [];
   }
 
-  static Future<List<OpenedSmartShedForm>> getRecentlyOpenedFormsForSection(
+  static Future<List<SmartShedOpenedForm>> getRecentlyOpenedFormsForSection(
       String sectionId) async {
     _logger.info('Getting recently opened forms for section $sectionId');
 
