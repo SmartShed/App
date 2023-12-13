@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../constants/api.dart';
 import '../logger/log.dart';
-
-const String CLIENT_ID_IOS =
-    "733510285262-g2o3upi13pbohg452f9esash3tlmf88s.apps.googleusercontent.com";
 
 class GoogleSignInAPI {
   static final _logger = LoggerService.getLogger('GoogleSignInAPI');
@@ -20,7 +18,7 @@ class GoogleSignInAPI {
       );
     } else if (Platform.isIOS || Platform.isMacOS) {
       return GoogleSignIn(
-        clientId: CLIENT_ID_IOS,
+        clientId: APIConstants.googleClientId,
         scopes: [
           'email',
         ],

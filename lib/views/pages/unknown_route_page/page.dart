@@ -28,7 +28,7 @@ class UnknownRoutePage extends StatelessWidget {
               width: 250,
             ),
             const SizedBox(height: 40),
-            Text(
+            const Text(
               "404",
               style: TextStyle(
                 fontSize: 120,
@@ -37,7 +37,7 @@ class UnknownRoutePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
+            const Text(
               "Page not found",
               style: TextStyle(
                 fontSize: 24,
@@ -48,8 +48,8 @@ class UnknownRoutePage extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => GoRouter.of(context).go(Pages.dashboard),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
                 ),

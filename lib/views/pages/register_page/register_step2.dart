@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/text_field.dart';
 import '../../widgets/dropdown.dart';
+import '../../widgets/text_field.dart';
 
 class RegisterStep2 extends StatefulWidget {
   final TextEditingController nameController;

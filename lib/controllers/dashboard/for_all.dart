@@ -1,8 +1,10 @@
+import '../../models/opened_form.dart';
+
 import '../../models/section.dart';
-import '../../models/form.dart';
+import '../../models/unopened_form.dart';
 import '../../utils/api/sections.dart';
-import '../toast/toast.dart';
 import '../logger/log.dart';
+import '../toast/toast.dart';
 
 class DashboardForAllController {
   static final SectionsAPIHandler _sectionsAPIHandler = SectionsAPIHandler();
@@ -34,13 +36,13 @@ class DashboardForAllController {
     return sections;
   }
 
-  static Future<List<SmartShedForm>> getFormsForSection(
+  static Future<List<SmartShedUnopenedForm>> getFormsForSection(
       String sectionIdOrName) async {
     _logger.info('Fetching forms for section: $sectionIdOrName');
     final response =
         await _sectionsAPIHandler.getFormsBySectionIdOrName(sectionIdOrName);
 
-    List<SmartShedForm> forms = [];
+    List<SmartShedUnopenedForm> forms = [];
 
     if (response['status'] == 'success') {
       if (response['forms'].length == 0) {
@@ -49,7 +51,31 @@ class DashboardForAllController {
       }
 
       for (var form in response['forms']) {
-        forms.add(SmartShedForm.fromJson(form));
+        forms.add(SmartShedUnopenedForm.fromJson(form));
+      }
+    } else {
+      ToastController.error(response['message']);
+    }
+
+    return forms;
+  }
+
+  static Future<List<SmartShedOpenedForm>> getOpenedFormsForSection(
+      String sectionIdOrName) async {
+    _logger.info('Fetching opened forms for section: $sectionIdOrName');
+    final response = await _sectionsAPIHandler
+        .getOpenedFormsBySectionIdOrName(sectionIdOrName);
+
+    List<SmartShedOpenedForm> forms = [];
+
+    if (response['status'] == 'success') {
+      if (response['forms'].length == 0) {
+        ToastController.error('No opened forms found for this section');
+        return forms;
+      }
+
+      for (var form in response['forms']) {
+        forms.add(SmartShedOpenedForm.fromJson(form));
       }
     } else {
       ToastController.error(response['message']);

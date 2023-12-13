@@ -9,8 +9,8 @@ import '../../../controllers/auth/register.dart';
 import '../../../controllers/toast/toast.dart';
 import '../../pages.dart';
 import '../../responsive/dimensions.dart';
-import './register_step1.dart';
-import './register_step2.dart';
+import 'register_step1.dart';
+import 'register_step2.dart';
 import '../../widgets/loading_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -148,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Welcome",
                                 style: TextStyle(
                                   color: ColorConstants.primary,
@@ -184,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       // context, Pages.login);
                                       GoRouter.of(context).go(Pages.login);
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "Login",
                                       style: TextStyle(
                                         color: ColorConstants.primary,
@@ -279,7 +279,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   vertical: 15,
                 ),
               ),
-              child: const Text("Next"),
+              child: const Text(
+                "Next",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           if (currentStep == _getSteps().length - 1)
             ElevatedButton(
@@ -293,7 +298,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   vertical: 15,
                 ),
               ),
-              child: const Text("REGISTER"),
+              child: const Text(
+                "REGISTER",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
         ],
       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smartshed/views/widgets/loading_dialog.dart';
 
-import '../../widgets/text_field.dart';
 import '../../../controllers/forms/opening.dart';
+import '../../../models/opened_form.dart';
+import '../../pages.dart';
+import '../../widgets/loading_dialog.dart';
+import '../../widgets/text_field.dart';
 
 TextEditingController locoNameController = TextEditingController();
 TextEditingController locoNumberController = TextEditingController();
@@ -99,10 +101,11 @@ Widget buildMainBody(
                   vertical: 10,
                 ),
                 child: Text(
-                  'Create Form',
+                  'Open Form',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -122,12 +125,12 @@ void onTap(
     context: context,
     barrierDismissible: false,
     builder: (context) => const LoadingDialog(
-      title: "Creating Form...",
+      title: "Opening Form...",
     ),
   );
 
   FormOpeningController.init();
-  String? createdFormId = await FormOpeningController.createForm(
+  SmartShedOpenedForm? createdForm = await FormOpeningController.createForm(
     formId,
     locoNameController.text,
     locoNumberController.text,
@@ -136,10 +139,12 @@ void onTap(
   if (!context.mounted) return;
   GoRouter.of(context).pop();
 
-  if (createdFormId != null) {
-    print("Created new form");
-    print(createdFormId);
+  if (createdForm != null) {
+    GoRouter.of(context).go(
+      "${Pages.form}/${createdForm.id}",
+      extra: createdForm,
+    );
   } else {
-    print("No form created");
+    GoRouter.of(context).go(Pages.dashboard);
   }
 }

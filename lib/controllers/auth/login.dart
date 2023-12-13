@@ -1,14 +1,17 @@
+import '../../models/user.dart';
 import '../../utils/api/auth.dart';
+import '../../utils/cache/user.dart';
 import '../../utils/cache/xauth_token.dart';
-import './google_sign_in.dart';
 import '../logger/log.dart';
+import 'google_sign_in.dart';
 
 class LoginController {
   static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
   static final _logger = LoggerService.getLogger('LoginController');
 
   static Future<void> init() async {
-    await XAuthTokenHandler.init();
+    await XAuthTokenCacheHandler.init();
+    await UserCacheHandler.init();
   }
 
   static Future<Map<String, dynamic>?> login(
@@ -18,7 +21,8 @@ class LoginController {
         await _authAPIHandler.login(email, password);
 
     if (response['status'] == 'success') {
-      XAuthTokenHandler.saveToken(response['auth_token']);
+      XAuthTokenCacheHandler.saveToken(response['auth_token']);
+      UserCacheHandler.saveUserFromJson(response['user']);
     } else {
       _logger.error('Login failed');
     }
@@ -42,7 +46,8 @@ class LoginController {
         await _authAPIHandler.loginWithGoogle(account.email);
 
     if (response['status'] == 'success') {
-      XAuthTokenHandler.saveToken(response['auth_token']);
+      XAuthTokenCacheHandler.saveToken(response['auth_token']);
+      UserCacheHandler.saveUserFromJson(response['user']);
     } else {
       _logger.error('Login with Google failed');
     }
@@ -54,27 +59,35 @@ class LoginController {
     try {
       _logger.info('Logging out');
       Map<String, dynamic> response =
-          await _authAPIHandler.logout(XAuthTokenHandler.token!);
+          await _authAPIHandler.logout(XAuthTokenCacheHandler.token!);
 
       if (response['status'] != 'success') {
         _logger.error('Logout failed');
         return false;
       }
 
-      await XAuthTokenHandler.deleteToken();
+      await XAuthTokenCacheHandler.deleteToken();
+      await UserCacheHandler.deleteUser();
 
       await GoogleSignInAPI.signOut();
 
       return true;
     } catch (e) {
+      _logger.error(e);
       _logger.error('Logout failed');
       return false;
     }
   }
 
   static Future<bool> get isLoggedIn async {
-    return XAuthTokenHandler.hasToken;
+    return XAuthTokenCacheHandler.hasToken;
   }
 
-  static String? get token => XAuthTokenHandler.token;
+  static String? get token => XAuthTokenCacheHandler.token;
+
+  static SmartShedUser? get user => UserCacheHandler.user;
+
+  static bool get isWorker => user!.position == 'worker';
+  static bool get isSupervisor => user!.position == 'supervisor';
+  static bool get isAuthority => user!.position == 'authority';
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/form.dart';
-import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../models/opened_form.dart';
+import '../../../models/unopened_form.dart';
 import '../../widgets/drawer.dart';
-import './const.dart';
+import 'const.dart';
 
 class SectionPageDesktop extends StatefulWidget {
   final String title;
@@ -21,7 +21,7 @@ class SectionPageDesktop extends StatefulWidget {
 }
 
 class _SectionPageDesktopState extends State<SectionPageDesktop> {
-  List<SmartShedForm> _formsForSection = [];
+  List<SmartShedUnopenedForm> _formsForSection = [];
   List<SmartShedOpenedForm> _recentlyOpenedForms = [];
   List<SmartShedOpenedForm> _allOpenedForms = [];
 
@@ -72,18 +72,22 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
     return Scaffold(
       backgroundColor: ColorConstants.bg,
       appBar: buildAppBar(widget.title),
-      body: Row(
-        children: [
-          const MyDrawer(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 30,
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _initFormsForSection();
+          await _initRecentlyOpenedForms();
+          await _initAllOpenedForms();
+        },
+        child: Row(
+          children: [
+            const MyDrawer(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 30,
+                  ),
                   child: Column(
                     children: [
                       buildFormsList(
@@ -105,8 +109,8 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

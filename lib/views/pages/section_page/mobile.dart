@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/form.dart';
-import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../models/opened_form.dart';
+import '../../../models/unopened_form.dart';
 import '../../widgets/drawer.dart';
-import './const.dart';
+import 'const.dart';
 
 class SectionPageMobile extends StatefulWidget {
   final String title;
@@ -21,7 +21,7 @@ class SectionPageMobile extends StatefulWidget {
 }
 
 class _SectionPageMobileState extends State<SectionPageMobile> {
-  List<SmartShedForm> _formsForSection = [];
+  List<SmartShedUnopenedForm> _formsForSection = [];
   List<SmartShedOpenedForm> _recentlyOpenedForms = [];
   List<SmartShedOpenedForm> _allOpenedForms = [];
 
@@ -60,8 +60,7 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
 
   Future<void> _initAllOpenedForms() async {
     _allOpenedForms =
-        await DashboardForMeController.getRecentlyOpenedFormsForSection(
-            widget.title);
+        await DashboardForAllController.getOpenedFormsForSection(widget.title);
     setState(() {
       _isAllOpenedFormsLoading = false;
     });
@@ -73,29 +72,36 @@ class _SectionPageMobileState extends State<SectionPageMobile> {
       backgroundColor: ColorConstants.bg,
       appBar: buildAppBar(widget.title),
       drawer: const MyDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 30,
-          ),
-          child: Column(
-            children: [
-              buildFormsList(
-                _isFormsForSectionLoading,
-                _formsForSection,
-              ),
-              const SizedBox(height: 20),
-              buildRecentlyOpenedFormsList(
-                _isRecentlyOpenedFormsLoading,
-                _recentlyOpenedForms,
-              ),
-              const SizedBox(height: 20),
-              buildAllOpenedFormsList(
-                _isAllOpenedFormsLoading,
-                _allOpenedForms,
-              ),
-            ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _initFormsForSection();
+          await _initRecentlyOpenedForms();
+          await _initAllOpenedForms();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 30,
+            ),
+            child: Column(
+              children: [
+                buildFormsList(
+                  _isFormsForSectionLoading,
+                  _formsForSection,
+                ),
+                const SizedBox(height: 20),
+                buildRecentlyOpenedFormsList(
+                  _isRecentlyOpenedFormsLoading,
+                  _recentlyOpenedForms,
+                ),
+                const SizedBox(height: 20),
+                buildAllOpenedFormsList(
+                  _isAllOpenedFormsLoading,
+                  _allOpenedForms,
+                ),
+              ],
+            ),
           ),
         ),
       ),

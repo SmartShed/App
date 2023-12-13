@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/form.dart';
 import '../../../models/opened_form.dart';
+import '../../../models/unopened_form.dart';
 import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
@@ -19,7 +19,7 @@ AppBar buildAppBar(String title) {
 
 Widget buildFormsList(
   bool isFormsForSectionLoading,
-  List<SmartShedForm> formsForSection,
+  List<SmartShedUnopenedForm> formsForSection,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

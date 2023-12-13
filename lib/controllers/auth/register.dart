@@ -1,15 +1,16 @@
 import '../../utils/api/auth.dart';
+import '../../utils/cache/user.dart';
 import '../../utils/cache/xauth_token.dart';
-import './google_sign_in.dart';
 import '../logger/log.dart';
+import 'google_sign_in.dart';
 
 class RegisterController {
   static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
   static final _logger = LoggerService.getLogger('RegisterController');
 
   static Future<void> init() async {
-    await XAuthTokenHandler.init();
-    _logger.info('RegisterController initialized');
+    await XAuthTokenCacheHandler.init();
+    await UserCacheHandler.init();
   }
 
   static Future<Map<String, dynamic>?> register(
@@ -19,7 +20,8 @@ class RegisterController {
         await _authAPIHandler.register(email, password, name, position);
 
     if (response['status'] == 'success') {
-      XAuthTokenHandler.saveToken(response['auth_token']);
+      XAuthTokenCacheHandler.saveToken(response['auth_token']);
+      UserCacheHandler.saveUserFromJson(response['user']);
       _logger.info('User registered successfully: $email');
     } else {
       _logger.error('Failed to register user: $email');
@@ -35,7 +37,8 @@ class RegisterController {
         await _authAPIHandler.registerWithGoogle(email, name, position);
 
     if (response['status'] == 'success') {
-      XAuthTokenHandler.saveToken(response['auth_token']);
+      XAuthTokenCacheHandler.saveToken(response['auth_token']);
+      UserCacheHandler.saveUserFromJson(response['user']);
       _logger.info('User registered with Google successfully: $email');
     } else {
       _logger.error('Failed to register user with Google: $email');

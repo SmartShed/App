@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 
-class FormPage extends StatefulWidget {
+import '../../../models/opened_form.dart';
+import '../../responsive/responsive_layout.dart';
+import 'desktop.dart';
+import 'mobile.dart';
+
+class FormPage extends StatelessWidget {
   static const String routeName = '/form';
 
-  const FormPage({super.key});
+  final String id;
+  final SmartShedOpenedForm? data;
 
-  @override
-  State<FormPage> createState() => _FormPageState();
-}
+  const FormPage({
+    Key? key,
+    required this.id,
+    this.data,
+  }) : super(key: key);
 
-class _FormPageState extends State<FormPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ResponsiveLayout(
+      mobileBody: FormPageMobile(id: id, data: data),
+      desktopBody: FormPageDesktop(id: id, data: data),
+    );
   }
 }

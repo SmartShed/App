@@ -1,13 +1,16 @@
 class SmartShedQuestion {
   final String id;
+  final String questionID;
   final String textEnglish;
   final String textHindi;
   final String ansType;
-  final bool isAnswered;
-  final String? ans;
+  bool isAnswered;
+  String? ans;
+  bool isExpanded = false;
 
   SmartShedQuestion({
     required this.id,
+    required this.questionID,
     required this.textEnglish,
     required this.textHindi,
     required this.ansType,
@@ -17,23 +20,13 @@ class SmartShedQuestion {
 
   factory SmartShedQuestion.fromJson(Map<String, dynamic> json) {
     return SmartShedQuestion(
-      id: json['id'],
+      id: json['_id'],
+      questionID: json['questionID'],
       textEnglish: json['textEnglish'],
       textHindi: json['textHindi'],
       ansType: json['ansType'],
       isAnswered: json['isAnswered'],
       ans: json['ans'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'textEnglish': textEnglish,
-      'textHindi': textHindi,
-      'ansType': ansType,
-      'isAnswered': isAnswered,
-      'ans': ans,
-    };
   }
 }

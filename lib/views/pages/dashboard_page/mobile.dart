@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/section.dart';
-import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../models/opened_form.dart';
+import '../../../models/section.dart';
 import '../../widgets/drawer.dart';
-import './const.dart';
+import 'const.dart';
 
 class DashboardPageMobile extends StatefulWidget {
   const DashboardPageMobile({super.key});
@@ -55,24 +55,30 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
       backgroundColor: ColorConstants.bg,
       appBar: buildAppBar(),
       drawer: const MyDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 30,
-          ),
-          child: Column(
-            children: [
-              buildSectionsList(
-                _isSectionLoading,
-                _sections,
-              ),
-              const SizedBox(height: 30),
-              buildRecentlyOpenedFormsList(
-                _isRecentlyOpenedFormsLoading,
-                _recentlyOpenedForms,
-              ),
-            ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _initSections();
+          await _initRecentlyOpenedForms();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 30,
+            ),
+            child: Column(
+              children: [
+                buildSectionsList(
+                  _isSectionLoading,
+                  _sections,
+                ),
+                const SizedBox(height: 30),
+                buildRecentlyOpenedFormsList(
+                  _isRecentlyOpenedFormsLoading,
+                  _recentlyOpenedForms,
+                ),
+              ],
+            ),
           ),
         ),
       ),

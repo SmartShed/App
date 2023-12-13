@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ColorConstants {
-  static final Color primary = fromHex('#128AA4');
-  static final Color secondary = fromHex('#F4D35E');
-  static final Color iconColor = fromHex('#FFFFFF');
+  static const Color primary = Color(0xFF128AA4);
+  static const Color secondary = Color(0xFF1E8FAC);
+  static const Color iconColor = Colors.white;
 
-  static final Color success = fromHex('#4BB543');
-  static final Color warning = fromHex('#FFC107');
-  static final Color error = fromHex('#FF0000');
+  static const Color success = Color(0xFF4BB543);
+  static const Color warning = Color(0xFFFFC107);
+  static const Color error = Color(0xFFFF0000);
 
-  static const Color bg = Color(0xFFEEEEEE); // Grey[200]
-  static const Color shadow = Color(0x33000000); // Black[200] with 20% opacity
-  static Color? hover = Colors.grey[100];
+  static const Color bg = Color(0xFFEEEEEE);
+  static const Color shadow = Color(0x33000000);
+  static const Color hover = Color(0xFFEAEAEA);
 
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
@@ -53,12 +53,23 @@ class ColorConstants {
   static ThemeData get themeData {
     return ThemeData(
       primarySwatch: createMaterialColor(primary),
-      primaryColor: primary,
-      iconTheme: IconThemeData(color: iconColor),
-      scaffoldBackgroundColor: bg,
-      appBarTheme: AppBarTheme(
-        backgroundColor: primary,
-        iconTheme: IconThemeData(color: iconColor),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: createMaterialStateColor(primary),
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        color: primary,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        foregroundColor: Colors.white,
+      ),
+      colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: createMaterialColor(primary),
+      ).copyWith(
+        secondary: secondary,
+        background: bg,
       ),
     );
   }

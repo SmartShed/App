@@ -22,16 +22,23 @@ class MyDropdown extends StatelessWidget {
       focusNode: focusNode,
       decoration: InputDecoration(
         hintText: hintText,
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
             color: ColorConstants.primary,
+          ),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey,
           ),
         ),
       ),
       items: items.map((String item) {
         return DropdownMenuItem<String>(
           value: item,
-          child: Text(item),
+          child: Text(
+            item,
+          ),
         );
       }).toList(),
       onChanged: (value) {

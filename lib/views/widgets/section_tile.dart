@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/section.dart';
 import '../../constants/colors.dart';
+import '../../models/section.dart';
 import '../../views/pages.dart';
-import './tooltip.dart';
+import 'tooltip.dart';
 
 class SectionTile extends StatefulWidget {
   final int index;
@@ -63,6 +63,8 @@ class _SectionTileState extends State<SectionTile> {
         ),
       ),
       onTap: () => _onTap(context),
+      onDoubleTap: () => _onTap(context),
+      onLongPress: () => _onTap(context),
       onHover: (value) {
         setState(() {
           isHovered = value;

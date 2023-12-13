@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import './constants/colors.dart';
-import './controllers/routes/controller.dart';
-import './controllers/auth/login.dart';
-import './controllers/logger/log.dart';
+import 'constants/colors.dart';
+import 'controllers/auth/login.dart';
+import 'controllers/logger/log.dart';
+import 'controllers/routes/controller.dart';
 
 class SmartShed extends StatelessWidget {
   const SmartShed({super.key});
 
   static Future init() async {
     GoRouter.optionURLReflectsImperativeAPIs = true;
-    LoggerService.init(Level.all);
+    LoggerService.init(Level.off);
     await LoginController.init();
   }
 

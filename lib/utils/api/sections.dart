@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
 import '../../constants/api.dart';
-import '../cache/xauth_token.dart';
 import '../../controllers/logger/log.dart';
+import '../cache/xauth_token.dart';
 
 class SectionsAPIHandler {
   static final _logger = LoggerService.getLogger('SectionsAPIHandler');
@@ -14,8 +14,6 @@ class SectionsAPIHandler {
 
   final Dio _dio = Dio();
 
-  final String _authToken = XAuthTokenHandler.token!;
-
   Future<Map<String, dynamic>> getAllSections() async {
     try {
       _logger.info('Calling getAllSections API');
@@ -23,7 +21,7 @@ class SectionsAPIHandler {
         APIConstants.sections,
         options: Options(
           headers: {
-            'auth_token': _authToken,
+            'auth_token': XAuthTokenCacheHandler.token!,
           },
         ),
       );
@@ -46,13 +44,14 @@ class SectionsAPIHandler {
   Future<Map<String, dynamic>> getFormsBySectionIdOrName(
       String sectionIdOrName) async {
     try {
-      _logger.info(
-          'Calling getFormsBySectionId API with sectionId: $sectionIdOrName');
+      _logger
+          .info('Calling getFormsBySection API with section: $sectionIdOrName');
       final response = await _dio.get(
-        '${APIConstants.sections}/$sectionIdOrName/forms',
+        APIConstants.formsBySectionIdOrName
+            .replaceFirst(':idOrName', sectionIdOrName),
         options: Options(
           headers: {
-            'auth_token': _authToken,
+            'auth_token': XAuthTokenCacheHandler.token!,
           },
         ),
       );
@@ -64,7 +63,37 @@ class SectionsAPIHandler {
       };
     } on DioException catch (e) {
       _logger.error(
-          'Error calling getFormsBySectionId API with sectionId: $sectionIdOrName: ${e.response!.data['message']}');
+          'Error calling getFormsBySection API with section: $sectionIdOrName: ${e.response!.data['message']}');
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getOpenedFormsBySectionIdOrName(
+      String sectionIdOrName) async {
+    try {
+      _logger.info(
+          'Calling getOpenedFormsBySection API with section: $sectionIdOrName');
+      final response = await _dio.get(
+        APIConstants.openedFormsBySectionIdOrName
+            .replaceFirst(':idOrName', sectionIdOrName),
+        options: Options(
+          headers: {
+            'auth_token': XAuthTokenCacheHandler.token!,
+          },
+        ),
+      );
+
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+        'forms': response.data['forms'],
+      };
+    } on DioException catch (e) {
+      _logger.error(
+          'Error calling getOpenedFormsBySection API with section: $sectionIdOrName: ${e.response!.data['message']}');
       return {
         'status': 'error',
         'message': e.response!.data['message'],

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/opened_form.dart';
 import '../../constants/colors.dart';
+import '../../models/opened_form.dart';
 import '../../views/pages.dart';
-import './tooltip.dart';
+import 'tooltip.dart';
 
-class OpenedFormTile extends StatelessWidget {
+class OpenedFormTile extends StatefulWidget {
   final int index;
   final SmartShedOpenedForm openedForm;
 
@@ -18,13 +18,21 @@ class OpenedFormTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<OpenedFormTile> createState() => _OpenedFormTileState();
+}
+
+class _OpenedFormTileState extends State<OpenedFormTile> {
+  bool isHovered = false;
+  bool showInfo = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isHovered ? ColorConstants.hover : Colors.white,
           borderRadius: BorderRadius.circular(8),
           boxShadow: const [
             BoxShadow(
@@ -33,6 +41,15 @@ class OpenedFormTile extends StatelessWidget {
               blurRadius: 3,
             ),
           ],
+          border: isHovered
+              ? Border.all(
+                  color: ColorConstants.primary,
+                  width: 2,
+                )
+              : Border.all(
+                  color: Colors.transparent,
+                  width: 2,
+                ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,6 +66,13 @@ class OpenedFormTile extends StatelessWidget {
         ),
       ),
       onTap: () => _onTap(context),
+      onDoubleTap: () => _onTap(context),
+      onLongPress: () => _onTap(context),
+      onHover: (value) {
+        setState(() {
+          isHovered = value;
+        });
+      },
     );
   }
 
@@ -62,7 +86,7 @@ class OpenedFormTile extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          '${index + 1}',
+          '${widget.index + 1}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -80,9 +104,51 @@ class OpenedFormTile extends StatelessWidget {
         children: [
           _buildName(),
           const SizedBox(height: 4),
-          _buildDescription(),
-          const SizedBox(height: 4),
-          _buildInfo(),
+          _buildLocoDetails(),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                showInfo = !showInfo;
+              });
+            },
+            style: TextButton.styleFrom(
+              splashFactory: NoSplash.splashFactory,
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 12,
+              ),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              minimumSize: const Size(0, 0),
+              backgroundColor: Colors.grey.shade100,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  showInfo ? "Hide Details" : "Show Details",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Icon(
+                  showInfo
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  color: Colors.grey.shade700,
+                  size: 12,
+                ),
+              ],
+            ),
+          ),
+          if (showInfo) _buildInfo(),
         ],
       ),
     );
@@ -90,7 +156,7 @@ class OpenedFormTile extends StatelessWidget {
 
   Widget _buildName() {
     return MyTooltip(
-      text: openedForm.title,
+      text: widget.openedForm.title,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -98,16 +164,12 @@ class OpenedFormTile extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildLocoDetails() {
     return MyTooltip(
-      texts: [
-        openedForm.descriptionEnglish,
-        openedForm.descriptionHindi,
-      ],
-      textStyle: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        color: Colors.grey[700],
+      text: '${widget.openedForm.locoName} (${widget.openedForm.locoNumber})',
+      textStyle: const TextStyle(
+        fontSize: 16,
+        color: Colors.black87,
       ),
     );
   }
@@ -116,29 +178,39 @@ class OpenedFormTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 8),
         MyTooltip(
-          text:
-              "Created At: ${DateFormat('dd MMM yyyy hh:mm a').format(openedForm.createdAt)}",
+          texts: [
+            widget.openedForm.descriptionEnglish,
+            widget.openedForm.descriptionHindi,
+          ],
           textStyle: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 4),
+        MyTooltip(
+          text: "Created At: ${widget.openedForm.createdAtString}",
+          textStyle: const TextStyle(
+            fontSize: 13,
+            color: Colors.black54,
           ),
         ),
         const SizedBox(height: 2),
         MyTooltip(
-          text:
-              "Updated At: ${DateFormat('dd MMM yyyy hh:mm a').format(openedForm.updatedAt)}",
+          text: "Updated At: ${widget.openedForm.updatedAtString}",
           textStyle: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
+            fontSize: 13,
+            color: Colors.black54,
           ),
         ),
         const SizedBox(height: 2),
         MyTooltip(
-          text: "Created By: ${openedForm.createdBy}",
+          text: "Created By: ${widget.openedForm.createdBy}",
           textStyle: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
+            fontSize: 13,
+            color: Colors.black54,
           ),
         ),
       ],
@@ -146,7 +218,10 @@ class OpenedFormTile extends StatelessWidget {
   }
 
   void _onTap(BuildContext context) {
-    // Navigator.of(context).pushNamed(Pages.form, arguments: openedForm.toJson());
+    GoRouter.of(context).push(
+      "${Pages.form}/${widget.openedForm.id}",
+      extra: widget.openedForm,
+    );
   }
 }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../pages.dart';
 import '../../../constants/colors.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
+import '../../pages.dart';
 import '../../widgets/loading_dialog.dart';
-import './widgets/dialog_text_button.dart';
+import 'widgets/dialog_text_button.dart';
 
 class LogoutPage extends StatelessWidget {
   static const String routeName = '/logout';

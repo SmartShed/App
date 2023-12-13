@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../responsive/responsive_layout.dart';
-import './mobile.dart';
-import './desktop.dart';
+import 'mobile.dart';
+import 'desktop.dart';
 
 class DashboardPage extends StatelessWidget {
   static const String routeName = '/dashboard';

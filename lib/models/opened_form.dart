@@ -1,8 +1,12 @@
+import 'package:intl/intl.dart';
+
 class SmartShedOpenedForm {
   String id;
   String title;
   String descriptionEnglish;
   String descriptionHindi;
+  String locoName;
+  String locoNumber;
   DateTime createdAt;
   DateTime updatedAt;
   String createdBy;
@@ -13,6 +17,8 @@ class SmartShedOpenedForm {
     required this.title,
     required this.descriptionEnglish,
     required this.descriptionHindi,
+    required this.locoName,
+    required this.locoNumber,
     required this.createdAt,
     required this.updatedAt,
     required this.createdBy,
@@ -25,6 +31,8 @@ class SmartShedOpenedForm {
       title: json['title'],
       descriptionEnglish: json['descriptionEnglish'],
       descriptionHindi: json['descriptionHindi'],
+      locoName: json['locoName'],
+      locoNumber: json['locoNumber'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       createdBy: json['createdBy'],
@@ -38,10 +46,20 @@ class SmartShedOpenedForm {
       'title': title,
       'descriptionEnglish': descriptionEnglish,
       'descriptionHindi': descriptionHindi,
+      'locoName': locoName,
+      'locoNumber': locoNumber,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'createdBy': createdBy,
       'lockStatus': lockStatus,
     };
   }
+
+  String get createdAtString =>
+      DateFormat('dd MMM yyyy hh:mm a').format(createdAt);
+
+  String get createdAtDateString => DateFormat('dd MMM yyyy').format(createdAt);
+
+  String get updatedAtString =>
+      DateFormat('dd MMM yyyy hh:mm a').format(updatedAt);
 }

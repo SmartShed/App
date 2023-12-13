@@ -81,12 +81,14 @@ class _MyTooltipState extends State<MyTooltip> {
           onScrollComplete: () {
             setState(() => _clicked = false);
           },
+          textAlign: TextAlign.left,
         )
       : Text(
           widget.text!,
           style: widget.textStyle ?? const TextStyle(),
           overflow: TextOverflow.ellipsis,
           maxLines: widget.maxLines,
+          textAlign: TextAlign.left,
         );
 
   Widget _showTexts() => _clicked
@@ -101,14 +103,17 @@ class _MyTooltipState extends State<MyTooltip> {
           onScrollComplete: () {
             setState(() => _clicked = false);
           },
+          textAlign: TextAlign.left,
         )
       : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: widget.texts!
               .map((text) => Text(
                     text,
                     style: widget.textStyle ?? const TextStyle(),
                     overflow: TextOverflow.ellipsis,
                     maxLines: widget.maxLines,
+                    textAlign: TextAlign.left,
                   ))
               .toList(),
         );

@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../controllers/logger/log.dart';
 
-class XAuthTokenHandler {
+class XAuthTokenCacheHandler {
   static final _logger = LoggerService.getLogger('XAuthTokenHandler');
 
   static const _boxName = 'xAuthTokenBox';
@@ -22,7 +22,7 @@ class XAuthTokenHandler {
   }
 
   static Future<void> saveToken(String token) async {
-    await XAuthTokenHandler.init();
+    await XAuthTokenCacheHandler.init();
     await _box.put(_tokenKey, token);
     _logger.info('Token saved');
   }

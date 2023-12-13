@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../pages.dart';
 import '../../../constants/images.dart';
+import '../../pages.dart';
 
 class SplashPage extends StatefulWidget {
   static const String routeName = '/';

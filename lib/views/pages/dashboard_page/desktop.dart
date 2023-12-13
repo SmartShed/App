@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
-import '../../../models/section.dart';
-import '../../../models/opened_form.dart';
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../models/opened_form.dart';
+import '../../../models/section.dart';
 import '../../widgets/drawer.dart';
-import './const.dart';
+import 'const.dart';
 
 class DashboardPageDesktop extends StatefulWidget {
   const DashboardPageDesktop({super.key});
@@ -54,18 +54,21 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
     return Scaffold(
       backgroundColor: ColorConstants.bg,
       appBar: buildAppBar(),
-      body: Row(
-        children: [
-          const MyDrawer(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 30,
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _initSections();
+          await _initRecentlyOpenedForms();
+        },
+        child: Row(
+          children: [
+            const MyDrawer(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 30,
+                  ),
                   child: Column(
                     children: [
                       buildSectionsList(
@@ -82,8 +85,8 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

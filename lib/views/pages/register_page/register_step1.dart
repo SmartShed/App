@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/images.dart';
 import '../../widgets/text_field.dart';
-import './widgets/disable_google_sign_in.dart';
+import 'widgets/disable_google_sign_in.dart';
 
 class RegisterStep1 extends StatefulWidget {
   final TextEditingController emailController;
@@ -107,9 +107,11 @@ class _RegisterStep1State extends State<RegisterStep1> {
               const SizedBox(height: 10),
               IconButton(
                 onPressed: _registerWithGoogle,
-                iconSize: 70,
+                iconSize: 90,
                 icon: Image.asset(
                   ImageConstants.googleLogo,
+                  width: 90,
+                  height: 90,
                 ),
               )
             ],

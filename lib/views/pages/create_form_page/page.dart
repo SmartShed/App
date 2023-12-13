@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../responsive/responsive_layout.dart';
-import '../../../models/form.dart';
-import './mobile.dart';
-import './desktop.dart';
+import '../../../models/unopened_form.dart';
+import 'mobile.dart';
+import 'desktop.dart';
 
 class CreateFormPage extends StatelessWidget {
   static const String routeName = '/create-form';
@@ -21,7 +21,7 @@ class CreateFormPage extends StatelessWidget {
     required this.descriptionHindi,
   }) : super(key: key);
 
-  factory CreateFormPage.fromForm(SmartShedForm form) {
+  factory CreateFormPage.fromForm(SmartShedUnopenedForm form) {
     return CreateFormPage(
       formId: form.id,
       title: form.title,
@@ -31,7 +31,7 @@ class CreateFormPage extends StatelessWidget {
   }
 
   factory CreateFormPage.fromFormJson(Map<String, dynamic> json) {
-    return CreateFormPage.fromForm(SmartShedForm.fromJson(json));
+    return CreateFormPage.fromForm(SmartShedUnopenedForm.fromJson(json));
   }
 
   @override

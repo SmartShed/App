@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../controllers/toast/toast.dart';
-import './dialog_text_button.dart';
+import 'dialog_text_button.dart';
 
 class DisableGoogleSignInDialog extends StatelessWidget {
   final void Function() onDisable;

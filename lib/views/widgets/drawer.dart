@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smartshed/controllers/auth/login.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/images.dart';
@@ -7,7 +8,8 @@ import '../pages.dart';
 
 class DrawerText {
   static const String dashboard = "Dashboard";
-  static const String settings = "Settings";
+  static const String profile = "Profile";
+  static const String addEmp = "Employees";
   static const String logout = "Logout";
 }
 
@@ -24,6 +26,9 @@ class MyDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: ColorConstants.bg,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +39,7 @@ class MyDrawer extends StatelessWidget {
               ImageConstants.logo,
               height: 40,
             ),
-            title: Text(
+            title: const Text(
               "SmartShed",
               style: TextStyle(
                 fontSize: 28,
@@ -46,7 +51,7 @@ class MyDrawer extends StatelessWidget {
               GoRouter.of(context).go(Pages.dashboard);
             },
           ),
-          Divider(
+          const Divider(
             color: ColorConstants.primary,
             thickness: 2,
             indent: 10,
@@ -74,19 +79,46 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(
-              Icons.settings,
+            leading: Icon(
+              Icons.person,
+              color: _isHighlighted(currentRoute, DrawerText.profile)
+                  ? ColorConstants.primary
+                  : Colors.black,
             ),
-            title: const Text(
-              DrawerText.settings,
+            title: Text(
+              DrawerText.profile,
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: _isHighlighted(currentRoute, DrawerText.profile)
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
             ),
             onTap: () {
-              GoRouter.of(context).go('/settings');
+              GoRouter.of(context).push(Pages.profile);
+              GoRouter.of(context).pop();
             },
           ),
+          if (!LoginController.isWorker)
+            ListTile(
+              leading: Icon(Icons.engineering,
+                  color: _isHighlighted(currentRoute, DrawerText.addEmp)
+                      ? ColorConstants.primary
+                      : Colors.black),
+              title: Text(
+                DrawerText.addEmp,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: _isHighlighted(currentRoute, DrawerText.addEmp)
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                ),
+              ),
+              onTap: () {
+                GoRouter.of(context).push(Pages.addEmployee);
+                GoRouter.of(context).pop();
+              },
+            ),
           ListTile(
             leading: Icon(
               Icons.logout,
@@ -125,9 +157,14 @@ bool _isHighlighted(String currentRoute, String text) {
     case DrawerText.dashboard:
       return currentRoute.startsWith(Pages.dashboard) ||
           currentRoute.startsWith(Pages.section) ||
-          currentRoute.startsWith(Pages.createForm);
-    case DrawerText.settings:
-      return currentRoute.startsWith('/settings');
+          currentRoute.startsWith(Pages.createForm) ||
+          currentRoute.startsWith(Pages.form);
+    // case DrawerText.settings:
+    //   return currentRoute.startsWith('/settings');
+    case DrawerText.profile:
+      return currentRoute.startsWith(Pages.profile);
+    case DrawerText.addEmp:
+      return currentRoute.startsWith(Pages.addEmployee);
     case DrawerText.logout:
       return currentRoute.startsWith(Pages.logout);
     default:

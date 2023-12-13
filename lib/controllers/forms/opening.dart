@@ -1,6 +1,8 @@
-import '../toast/toast.dart';
-import '../logger/log.dart';
+import '../../models/full_form.dart';
+import '../../models/opened_form.dart';
 import '../../utils/api/forms_open.dart';
+import '../logger/log.dart';
+import '../toast/toast.dart';
 
 class FormOpeningController {
   static final _logger = LoggerService.getLogger('FormOpeningController');
@@ -11,7 +13,7 @@ class FormOpeningController {
     _logger.info('Initializing FormOpeningController');
   }
 
-  static Future<String?> createForm(
+  static Future<SmartShedOpenedForm?> createForm(
       String formId, String locoName, String locoNumber) async {
     if (locoName.isEmpty || locoNumber.isEmpty) {
       ToastController.error('Please fill all the fields');
@@ -27,7 +29,19 @@ class FormOpeningController {
 
     if (response['status'] == 'success') {
       ToastController.success(response['message']);
-      return response['newFormID'];
+      return SmartShedOpenedForm.fromJson(response['form']);
+    } else {
+      ToastController.error(response['message']);
+      return null;
+    }
+  }
+
+  static Future<SmartShedForm?> getForm(String formId) async {
+    _logger.info('Fetching form with formId: $formId');
+    final response = await _formsOpeningAPIHandler.getForm(formId);
+
+    if (response['status'] == 'success') {
+      return SmartShedForm.fromJson(response['form']);
     } else {
       ToastController.error(response['message']);
       return null;

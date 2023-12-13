@@ -29,8 +29,9 @@ class AuthAPIHandler {
       _logger.info('User registered successfully: $email');
       return {
         'status': 'success',
-        'auth_token': response.data['auth_token'],
         'message': response.data['message'],
+        'auth_token': response.data['auth_token'],
+        'user': response.data['user'],
       };
     } on DioException catch (e) {
       _logger.error('Error registering user: $email');
@@ -57,8 +58,9 @@ class AuthAPIHandler {
       _logger.info('User registered with Google successfully: $email');
       return {
         'status': 'success',
-        'auth_token': response.data['auth_token'],
         'message': response.data['message'],
+        'auth_token': response.data['auth_token'],
+        'user': response.data['user'],
       };
     } on DioException catch (e) {
       _logger.error('Error registering user with Google: $email');
@@ -81,10 +83,12 @@ class AuthAPIHandler {
       );
 
       _logger.info('User logged in successfully: $email');
+
       return {
         'status': 'success',
-        'auth_token': response.data['auth_token'],
         'message': response.data['message'],
+        'auth_token': response.data['auth_token'],
+        'user': response.data['user'],
       };
     } on DioException catch (e) {
       _logger.error('Error logging in user: $email');
@@ -106,10 +110,12 @@ class AuthAPIHandler {
       );
 
       _logger.info('User logged in with Google successfully: $email');
+
       return {
         'status': 'success',
-        'auth_token': response.data['auth_token'],
         'message': response.data['message'],
+        'auth_token': response.data['auth_token'],
+        'user': response.data['user'],
       };
     } on DioException catch (e) {
       _logger.error('Error logging in user with Google: $email');
@@ -124,7 +130,7 @@ class AuthAPIHandler {
     try {
       _logger.info('Fetching user details');
       final response = await _dio.get(
-        "http://localhost:8000/api/auth/me",
+        APIConstants.me,
         options: Options(
           headers: {
             'auth_token': authToken,
@@ -165,6 +171,81 @@ class AuthAPIHandler {
       };
     } on DioException catch (e) {
       _logger.error('Error logging out user');
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> sendOTP(String email) async {
+    try {
+      _logger.info('Sending OTP to $email');
+      final response = await _dio.post(
+        APIConstants.forgotPassword,
+        data: {
+          'email': email,
+        },
+      );
+
+      _logger.info('OTP sent successfully to $email');
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      _logger.error('Error sending OTP to $email');
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> validateOTP(String email, String otp) async {
+    try {
+      _logger.info('Validating OTP for $email');
+      final response = await _dio.post(
+        APIConstants.validateOTP,
+        data: {
+          'email': email,
+          'otp': otp,
+        },
+      );
+
+      _logger.info('OTP validated successfully for $email');
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      _logger.error('Error validating OTP for $email');
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> resetPassword(
+      String email, String password) async {
+    try {
+      _logger.info('Resetting password for $email');
+      final response = await _dio.post(
+        APIConstants.resetPassword,
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      _logger.info('Password reset successfully for $email');
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      _logger.error('Error resetting password for $email');
       return {
         'status': 'error',
         'message': e.response!.data['message'],

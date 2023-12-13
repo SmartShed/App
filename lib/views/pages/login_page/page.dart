@@ -5,12 +5,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
-import '../../widgets/loading_dialog.dart';
-import '../../widgets/text_field.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
-import '../../responsive/dimensions.dart';
 import '../../pages.dart';
+import '../../responsive/dimensions.dart';
+import '../../widgets/loading_dialog.dart';
+import '../../widgets/text_field.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
 
   late FocusNode passwordFocusNode;
 
-  bool rememberUser = true;
   bool hidePassword = true;
 
   @override
@@ -145,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Welcome Back",
                                 style: TextStyle(
                                   color: ColorConstants.primary,
@@ -185,34 +184,13 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        value: rememberUser,
-                                        activeColor: ColorConstants.primary,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(2),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            rememberUser = value!;
-                                          });
-                                        },
-                                      ),
-                                      const Text(
-                                        "Remember me",
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      GoRouter.of(context)
+                                          .go(Pages.forgotPassword);
+                                    },
                                     child: const Text(
                                       "Forgot Password?",
                                       style: TextStyle(
@@ -238,9 +216,11 @@ class _LoginPageState extends State<LoginPage> {
                                     const SizedBox(height: 10),
                                     IconButton(
                                       onPressed: _loginWithGoogle,
-                                      iconSize: 70,
+                                      iconSize: 90,
                                       icon: Image.asset(
                                         ImageConstants.googleLogo,
+                                        width: 90,
+                                        height: 90,
                                       ),
                                     )
                                   ],
@@ -257,11 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Navigator.pushReplacementNamed(
-                                      //     context, Pages.register);
                                       GoRouter.of(context).go(Pages.register);
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "Register",
                                       style: TextStyle(
                                         color: ColorConstants.primary,
@@ -345,13 +323,11 @@ class _LoginPageState extends State<LoginPage> {
         await LoginController.login(email, password);
 
     if (!context.mounted) return;
-    // Navigator.pop(context);
     GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      // Navigator.pushReplacementNamed(context, Pages.dashboard);
 
       GoRouter.of(context).go(Pages.dashboard);
     } else {
@@ -365,7 +341,6 @@ class _LoginPageState extends State<LoginPage> {
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      // Navigator.pushReplacementNamed(context, Pages.dashboard);
       GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../models/form.dart';
 import '../../constants/colors.dart';
+import '../../models/unopened_form.dart';
 import '../../views/pages.dart';
-import './tooltip.dart';
+import 'tooltip.dart';
 
 class FormTile extends StatefulWidget {
   final int index;
-  final SmartShedForm form;
+  final SmartShedUnopenedForm form;
 
   const FormTile({
     Key? key,
