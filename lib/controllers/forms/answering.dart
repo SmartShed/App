@@ -17,6 +17,7 @@ class FormAnsweringController {
 
     for (SmartShedQuestion question in form.questions) {
       if (question.ans == null) continue;
+      if (question.isAnsChanged == false) continue;
       answers.add({
         'question_id': question.id,
         'answer': question.ans,
@@ -26,6 +27,7 @@ class FormAnsweringController {
     for (SmartShedSubForm subForm in form.subForms) {
       for (SmartShedQuestion question in subForm.questions) {
         if (question.ans == null) continue;
+        if (question.isAnsChanged == false) continue;
         answers.add({
           'question_id': question.id,
           'answer': question.ans,

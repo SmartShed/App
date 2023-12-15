@@ -1,8 +1,7 @@
-import 'package:smartshed/controllers/logger/log.dart';
-import 'package:smartshed/controllers/toast/toast.dart';
-import 'package:smartshed/models/user.dart';
-
+import '../../models/user.dart';
 import '../../utils/api/employees.dart';
+import '../logger/log.dart';
+import '../toast/toast.dart';
 
 class EmployeesController {
   static final EmployeesAPIHandler _employeesAPIHandler = EmployeesAPIHandler();
@@ -157,5 +156,21 @@ class EmployeesController {
         'worker': [],
       };
     }
+  }
+
+  static Future<Map<String, dynamic>> deleteUsers(List<String> userIds) async {
+    _logger.info('Deleting users');
+
+    final response = await _employeesAPIHandler.deleteUsers(userIds);
+
+    if (response['status'] == 'success') {
+      _logger.info('Users deleted successfully');
+      ToastController.success(response['message']);
+    } else {
+      _logger.error('Error deleting users');
+      ToastController.error(response['message']);
+    }
+
+    return response;
   }
 }

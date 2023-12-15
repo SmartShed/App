@@ -19,6 +19,8 @@ class QuestionTile extends StatefulWidget {
 }
 
 class _QuestionTileState extends State<QuestionTile> {
+  bool _isShowingHistory = false;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -140,6 +142,7 @@ class _QuestionTileState extends State<QuestionTile> {
                   initialValue: widget.question.ans,
                   onChanged: (value) {
                     widget.question.ans = value;
+                    widget.question.isAnsChanged = true;
 
                     setState(() {
                       widget.question.isAnswered = value.isEmpty ? false : true;
@@ -147,8 +150,168 @@ class _QuestionTileState extends State<QuestionTile> {
                   },
                 ),
               ),
+            if (widget.question.isExpanded && widget.question.isAnswered)
+              // Show answered by and answered at
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    "Answered by ${widget.question.history.first['editedBy']} on ${SmartShedQuestion.formattedDate(widget.question.history.first['editedAt'])}",
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+            if (widget.question.isExpanded &&
+                widget.question.history.length > 1)
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isShowingHistory = !_isShowingHistory;
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        _isShowingHistory ? "Hide History" : "Show History",
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Icon(
+                        _isShowingHistory
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        color: Colors.grey,
+                        size: 20.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.question.isExpanded && _isShowingHistory)
+              _buildHistory(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHistory() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  "Edited By",
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(width: 5.0),
+              Expanded(
+                child: Text(
+                  "Edited At",
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(width: 5.0),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  "Filled Answer",
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Colors.grey.shade900,
+            thickness: 0.5,
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(0.0),
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: widget.question.history.length,
+            itemBuilder: (context, index) {
+              if (widget.question.history[index]['newAns'] == null) {
+                return const SizedBox.shrink();
+              }
+
+              return Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.question.history[index]['editedBy'],
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5.0),
+                      Expanded(
+                        child: Text(
+                          SmartShedQuestion.formattedDate(
+                            widget.question.history[index]['editedAt'],
+                          ),
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5.0),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          widget.question.history[index]['newAns'],
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (index != widget.question.history.length - 1)
+                    Divider(
+                      color: Colors.grey.shade500,
+                      thickness: 0.5,
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

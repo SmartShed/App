@@ -5,8 +5,8 @@ import '../../../constants/colors.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
 import '../../pages.dart';
+import '../../widgets/dialog_text_button.dart';
 import '../../widgets/loading_dialog.dart';
-import 'widgets/dialog_text_button.dart';
 
 class LogoutPage extends StatelessWidget {
   static const String routeName = '/logout';
@@ -85,26 +85,14 @@ class LogoutPage extends StatelessWidget {
       ),
     );
 
-    bool isLoggedOut = await LoginController.logout();
+    await LoginController.logout();
 
     if (!context.mounted) return;
-    // Navigator.pop(context);
     GoRouter.of(context).pop();
 
-    if (isLoggedOut) {
-      ToastController.success("Logged out successfully.");
-      if (!context.mounted) return;
-      // Navigator.pop(context);
-      GoRouter.of(context).pop();
-      // Navigator.pushNamedAndRemoveUntil(
-      // context, Pages.login, (Route<dynamic> route) => false);
-      GoRouter.of(context).go(Pages.login);
-    } else {
-      ToastController.error(
-        "Something went wrong. Please try again later.",
-      );
-      // Navigator.pop(context);
-      GoRouter.of(context).pop();
-    }
+    ToastController.success("Logged out successfully.");
+    if (!context.mounted) return;
+    GoRouter.of(context).pop();
+    GoRouter.of(context).go(Pages.login);
   }
 }

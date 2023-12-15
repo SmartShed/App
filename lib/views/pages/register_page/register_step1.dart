@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/images.dart';
+import '../../widgets/disable_google_sign_in.dart';
 import '../../widgets/text_field.dart';
-import 'widgets/disable_google_sign_in.dart';
 
 class RegisterStep1 extends StatefulWidget {
   final TextEditingController emailController;

@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import '../constants/settings.dart';
 import 'question.dart';
 import 'sub_form.dart';
 
@@ -68,10 +69,11 @@ class SmartShedForm {
   }
 
   String get createdAtString =>
-      DateFormat('dd MMM yyyy hh:mm a').format(createdAt);
+      DateFormat(SettingsConstants.dateTimeFormat).format(createdAt);
 
-  String get createdAtDateString => DateFormat('dd MMM yyyy').format(createdAt);
+  String get createdAtDateString =>
+      DateFormat(SettingsConstants.dateFormat).format(createdAt);
 
   String get updatedAtString =>
-      DateFormat('dd MMM yyyy hh:mm a').format(updatedAt);
+      DateFormat(SettingsConstants.dateTimeFormat).format(updatedAt);
 }

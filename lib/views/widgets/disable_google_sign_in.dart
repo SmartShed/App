@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../constants/colors.dart';
-import '../../../../controllers/toast/toast.dart';
-import 'dialog_text_button.dart';
+import '../../constants/colors.dart';
+import '../../controllers/toast/toast.dart';
+import 'dialog_text_button_register.dart';
 
 class DisableGoogleSignInDialog extends StatelessWidget {
   final void Function() onDisable;

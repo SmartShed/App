@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../responsive/responsive_layout.dart';
 import '../../../models/section.dart';
-import 'mobile.dart';
+import '../../responsive/responsive_layout.dart';
 import 'desktop.dart';
+import 'mobile.dart';
 
 class SectionPage extends StatelessWidget {
   static const String routeName = '/section';

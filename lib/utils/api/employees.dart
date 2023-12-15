@@ -107,4 +107,28 @@ class EmployeesAPIHandler {
       };
     }
   }
+
+  Future<Map<String, dynamic>> deleteUsers(List<String> userIds) async {
+    try {
+      _logger.info('Deleting users');
+      final response = await _dio.post(
+        APIConstants.deleteUsers,
+        data: {
+          'users': userIds,
+        },
+      );
+
+      _logger.info('Users deleted successfully');
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+      };
+    } on DioException catch (e) {
+      _logger.error('Error deleting users');
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/forms/answering.dart';
+import '../../../controllers/forms/opening.dart';
 import '../../../models/full_form.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/question.dart';
@@ -12,15 +13,103 @@ import '../../widgets/loading_dialog.dart';
 import '../../widgets/question_tile.dart';
 import '../../widgets/text_field.dart';
 
+late String id;
 SmartShedOpenedForm? data;
 SmartShedForm? form;
+
+bool isLoading = true;
 bool isAnswersShown = false;
 bool isSearchBoxOpen = false;
 bool isShowDetails = false;
 bool isDesktop = false;
+
 final searchController = TextEditingController();
 late BuildContext context;
 late void Function(void Function()) changeState;
+
+// History
+/*
+{
+  'qusID': [
+    {
+      'editedBy': 'Name',
+      'editedAt': 'Date',
+      'oldAns': 'Old Answer',
+      'newAns': 'New Answer',
+    },
+    {
+      'editedBy': 'Name',
+      'editedAt': 'Date',
+      'oldAns': 'Old Answer',
+      'newAns': 'New Answer',
+    },
+  ],
+}
+*/
+final Map<String, List<Map<String, dynamic>>> qusIdToHistory = {};
+
+void initForm() async {
+  form = await FormOpeningController.getForm(id);
+  fillHistory();
+  changeState(() => isLoading = false);
+}
+
+void fillHistory() {
+  qusIdToHistory.clear();
+
+  for (var question in form!.questions) {
+    question.history = [];
+  }
+
+  /*
+  form.history = [
+      {
+          "editedBy": "Name"
+          "editedAt": "2023-12-14T15:28:37.335Z",
+          "changes": [
+              {
+                  "questionID": "657b1ed1f9f54037c11efb94",
+                  "oldValue": "Old Answer",
+                  "newValue": "New Answer"
+              }
+          ],
+      }
+  ],
+  */
+
+  for (var history in form!.history) {
+    for (var change in history['changes']) {
+      final qusId = change['questionID'];
+      final oldAns = change['oldValue'];
+      final newAns = change['newValue'];
+
+      if (qusIdToHistory[qusId] == null) {
+        qusIdToHistory[qusId] = [];
+      }
+
+      qusIdToHistory[qusId]!.add({
+        'editedBy': history['editedBy'],
+        'editedAt': history['editedAt'],
+        'oldAns': oldAns,
+        'newAns': newAns,
+      });
+    }
+  }
+
+  for (var question in form!.questions) {
+    if (qusIdToHistory[question.id] == null) continue;
+
+    question.history = qusIdToHistory[question.id]!;
+  }
+
+  for (var subForm in form!.subForms) {
+    for (var question in subForm.questions) {
+      if (qusIdToHistory[question.id] == null) continue;
+
+      question.history = qusIdToHistory[question.id]!;
+    }
+  }
+}
 
 AppBar buildAppBar() {
   return AppBar(

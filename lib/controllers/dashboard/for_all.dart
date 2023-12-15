@@ -1,5 +1,4 @@
 import '../../models/opened_form.dart';
-
 import '../../models/section.dart';
 import '../../models/unopened_form.dart';
 import '../../utils/api/sections.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../responsive/responsive_layout.dart';
 import '../../../models/unopened_form.dart';
-import 'mobile.dart';
+import '../../responsive/responsive_layout.dart';
 import 'desktop.dart';
+import 'mobile.dart';
 
 class CreateFormPage extends StatelessWidget {
   static const String routeName = '/create-form';

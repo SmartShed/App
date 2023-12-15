@@ -18,7 +18,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       GoRouter.of(context).go(Pages.dashboard);
     });
   }

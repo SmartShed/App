@@ -1,11 +1,58 @@
 import 'package:flutter/material.dart';
 
+import '../../../controllers/dashboard/for_all.dart';
+import '../../../controllers/dashboard/for_me.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/unopened_form.dart';
 import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
-AppBar buildAppBar(String title) {
+late String title;
+
+List<SmartShedUnopenedForm> formsForSection = [];
+List<SmartShedOpenedForm> recentlyOpenedForms = [];
+List<SmartShedOpenedForm> allOpenedForms = [];
+
+bool isFormsForSectionLoading = true;
+bool isRecentlyOpenedFormsLoading = true;
+bool isAllOpenedFormsLoading = true;
+
+late BuildContext context;
+late void Function(void Function()) changeState;
+
+void init() {
+  DashboardForAllController.init();
+  DashboardForMeController.init();
+
+  initFormsForSection();
+  initRecentlyOpenedForms();
+  initAllOpenedForms();
+}
+
+Future<void> initFormsForSection() async {
+  formsForSection = await DashboardForAllController.getFormsForSection(title);
+  changeState(() {
+    isFormsForSectionLoading = false;
+  });
+}
+
+Future<void> initRecentlyOpenedForms() async {
+  recentlyOpenedForms =
+      await DashboardForMeController.getRecentlyOpenedFormsForSection(title);
+  changeState(() {
+    isRecentlyOpenedFormsLoading = false;
+  });
+}
+
+Future<void> initAllOpenedForms() async {
+  allOpenedForms =
+      await DashboardForAllController.getOpenedFormsForSection(title);
+  changeState(() {
+    isAllOpenedFormsLoading = false;
+  });
+}
+
+AppBar buildAppBar() {
   return AppBar(
     title: Text(
       title,
@@ -17,10 +64,7 @@ AppBar buildAppBar(String title) {
   );
 }
 
-Widget buildFormsList(
-  bool isFormsForSectionLoading,
-  List<SmartShedUnopenedForm> formsForSection,
-) {
+Widget buildFormsList() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -64,10 +108,7 @@ Widget buildFormsList(
   );
 }
 
-Widget buildRecentlyOpenedFormsList(
-  bool isRecentlyOpenedFormsLoading,
-  List<SmartShedOpenedForm> recentlyOpenedForms,
-) {
+Widget buildRecentlyOpenedFormsList() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -112,10 +153,7 @@ Widget buildRecentlyOpenedFormsList(
   );
 }
 
-Widget buildAllOpenedFormsList(
-  bool isAllOpenedFormsLoading,
-  List<SmartShedOpenedForm> allOpenedForms,
-) {
+Widget buildAllOpenedFormsList() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -156,6 +194,18 @@ Widget buildAllOpenedFormsList(
                 return const SizedBox(height: 12);
               },
             ),
+    ],
+  );
+}
+
+Widget buildMainBody() {
+  return Column(
+    children: [
+      buildFormsList(),
+      const SizedBox(height: 20),
+      buildRecentlyOpenedFormsList(),
+      const SizedBox(height: 20),
+      buildAllOpenedFormsList(),
     ],
   );
 }

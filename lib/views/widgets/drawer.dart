@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smartshed/controllers/auth/login.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/images.dart';
+import '../../controllers/auth/login.dart';
 import '../pages.dart';
 
 class DrawerText {
   static const String dashboard = "Dashboard";
+  static const String notifications = "Notifications";
+  static const String manageForms = "Manage Forms";
   static const String profile = "Profile";
-  static const String addEmp = "Employees";
+  static const String emp = "Employees";
   static const String logout = "Logout";
 }
 
@@ -80,6 +82,49 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.notifications,
+              color: _isHighlighted(currentRoute, DrawerText.notifications)
+                  ? ColorConstants.primary
+                  : Colors.black,
+            ),
+            title: Text(
+              DrawerText.notifications,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight:
+                    _isHighlighted(currentRoute, DrawerText.notifications)
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+              ),
+            ),
+            onTap: () {
+              GoRouter.of(context).push(Pages.notifications);
+              GoRouter.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.list_alt,
+              color: _isHighlighted(currentRoute, DrawerText.manageForms)
+                  ? ColorConstants.primary
+                  : Colors.black,
+            ),
+            title: Text(
+              DrawerText.manageForms,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: _isHighlighted(currentRoute, DrawerText.manageForms)
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+              ),
+            ),
+            onTap: () {
+              GoRouter.of(context).push(Pages.manageForms);
+              GoRouter.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.person,
               color: _isHighlighted(currentRoute, DrawerText.profile)
                   ? ColorConstants.primary
@@ -101,21 +146,21 @@ class MyDrawer extends StatelessWidget {
           ),
           if (!LoginController.isWorker)
             ListTile(
-              leading: Icon(Icons.engineering,
-                  color: _isHighlighted(currentRoute, DrawerText.addEmp)
+              leading: Icon(Icons.people,
+                  color: _isHighlighted(currentRoute, DrawerText.emp)
                       ? ColorConstants.primary
                       : Colors.black),
               title: Text(
-                DrawerText.addEmp,
+                DrawerText.emp,
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: _isHighlighted(currentRoute, DrawerText.addEmp)
+                  fontWeight: _isHighlighted(currentRoute, DrawerText.emp)
                       ? FontWeight.bold
                       : FontWeight.normal,
                 ),
               ),
               onTap: () {
-                GoRouter.of(context).push(Pages.addEmployee);
+                GoRouter.of(context).push(Pages.employees);
                 GoRouter.of(context).pop();
               },
             ),
@@ -159,12 +204,14 @@ bool _isHighlighted(String currentRoute, String text) {
           currentRoute.startsWith(Pages.section) ||
           currentRoute.startsWith(Pages.createForm) ||
           currentRoute.startsWith(Pages.form);
-    // case DrawerText.settings:
-    //   return currentRoute.startsWith('/settings');
+    case DrawerText.notifications:
+      return currentRoute.startsWith(Pages.notifications);
+    case DrawerText.manageForms:
+      return currentRoute.startsWith(Pages.manageForms);
     case DrawerText.profile:
       return currentRoute.startsWith(Pages.profile);
-    case DrawerText.addEmp:
-      return currentRoute.startsWith(Pages.addEmployee);
+    case DrawerText.emp:
+      return currentRoute.startsWith(Pages.employees);
     case DrawerText.logout:
       return currentRoute.startsWith(Pages.logout);
     default:

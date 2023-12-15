@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:smartshed/models/user.dart';
 
 import '../../models/opened_form.dart';
 import '../../models/unopened_form.dart';
+import '../../models/user.dart';
 import '../../views/pages.dart';
 import '../auth/login.dart';
 
@@ -42,6 +42,14 @@ class RouteController {
           builder: (context, state) => const ForgotPasswordPage(),
         ),
         GoRoute(
+          path: Pages.notifications,
+          builder: (context, state) => const NotificationsPage(),
+        ),
+        GoRoute(
+          path: Pages.manageForms,
+          builder: (context, state) => const ManageFormsPage(),
+        ),
+        GoRoute(
           path: "${Pages.section}/:title",
           builder: (context, state) => SectionPage(
             title: state.pathParameters['title']!,
@@ -70,7 +78,7 @@ class RouteController {
           builder: (context, state) => const LogoutPage(),
         ),
         GoRoute(
-          path: Pages.addEmployee,
+          path: Pages.employees,
           builder: (context, state) => const EmployeesPage(),
         ),
       ],
@@ -99,7 +107,7 @@ class RouteController {
           return Pages.dashboard;
         }
 
-        if (state.uri.toString() == Pages.addEmployee &&
+        if (state.uri.toString() == Pages.employees &&
             LoginController.isWorker) {
           return Pages.dashboard;
         }

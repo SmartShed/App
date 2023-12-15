@@ -1,9 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../controllers/dashboard/for_all.dart';
+import '../../../controllers/dashboard/for_me.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/section.dart';
+import '../../pages.dart';
 import '../../widgets/opened_form_tile.dart';
 import '../../widgets/section_tile.dart';
+
+List<SmartShedSection> sections = [];
+List<SmartShedOpenedForm> recentlyOpenedForms = [];
+bool isSectionLoading = true;
+bool isRecentlyOpenedFormsLoading = true;
+
+late BuildContext context;
+late void Function(void Function()) changeState;
+
+void init() {
+  DashboardForAllController.init();
+  DashboardForMeController.init();
+
+  _initSections();
+  _initRecentlyOpenedForms();
+}
+
+Future<void> _initSections() async {
+  sections = await DashboardForAllController.getSections();
+
+  changeState(() {
+    isSectionLoading = false;
+  });
+}
+
+Future<void> _initRecentlyOpenedForms() async {
+  recentlyOpenedForms = await DashboardForMeController.getRecentlyOpenedForms();
+
+  changeState(() {
+    isRecentlyOpenedFormsLoading = false;
+  });
+}
 
 AppBar buildAppBar() {
   return AppBar(
@@ -12,15 +48,21 @@ AppBar buildAppBar() {
       style: TextStyle(
         fontWeight: FontWeight.bold,
       ),
+      textAlign: TextAlign.center,
     ),
     centerTitle: true,
+    actions: [
+      IconButton(
+        onPressed: () {
+          GoRouter.of(context).push(Pages.notifications);
+        },
+        icon: const Icon(Icons.notifications),
+      ),
+    ],
   );
 }
 
-Widget buildSectionsList(
-  bool isSectionLoading,
-  List<SmartShedSection> sections,
-) {
+Widget buildSectionsList() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -64,10 +106,7 @@ Widget buildSectionsList(
   );
 }
 
-Widget buildRecentlyOpenedFormsList(
-  bool isRecentlyOpenedFormsLoading,
-  List<SmartShedOpenedForm> recentlyOpenedForms,
-) {
+Widget buildRecentlyOpenedFormsList() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -107,6 +146,16 @@ Widget buildRecentlyOpenedFormsList(
                 return const SizedBox(height: 12);
               },
             ),
+    ],
+  );
+}
+
+Widget buildMainBody() {
+  return Column(
+    children: [
+      buildSectionsList(),
+      const SizedBox(height: 30),
+      buildRecentlyOpenedFormsList(),
     ],
   );
 }

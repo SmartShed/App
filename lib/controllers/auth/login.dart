@@ -87,7 +87,10 @@ class LoginController {
 
   static SmartShedUser? get user => UserCacheHandler.user;
 
-  static bool get isWorker => user!.position == 'worker';
-  static bool get isSupervisor => user!.position == 'supervisor';
-  static bool get isAuthority => user!.position == 'authority';
+  static bool get isWorker => user != null && user!.position == 'worker';
+
+  static bool get isSupervisor =>
+      user != null && user!.position == 'supervisor';
+
+  static bool get isAuthority => user != null && user!.position == 'authority';
 }

@@ -1,15 +1,12 @@
 class APIConstants {
+  // AWS EC2
+  static const String baseUrl = 'http://13.233.17.93';
+
   // Render
   // static const String baseUrl = 'https://smartshed-backend.onrender.com';
 
-  // AWS EC2
-  // static const String baseUrl = 'http://13.235.91.230:8000';
-
   // Localhost
-  static const String baseUrl = 'http://localhost:8000';
-
-  // Android emulator
-  // static const String baseUrl = 'http://10.0.2.2:8000';
+  // static const String baseUrl = 'http://localhost:8000';
 
   // Constants for Google Sign In API
   static const String googleClientId =
@@ -60,4 +57,6 @@ class APIConstants {
   static const String addForms = '$baseUrl/api/create/forms';
   static const String addSubForms = '$baseUrl/api/create/sub-forms';
   static const String addQuestions = '$baseUrl/api/create/questions';
+
+  static const String deleteUsers = '$baseUrl/api/delete/users';
 }

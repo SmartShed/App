@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../controllers/forms/opening.dart';
 import '../../../models/opened_form.dart';
 import '../../widgets/drawer.dart';
 import 'const.dart' as const_file;
@@ -21,24 +20,20 @@ class FormPageMobile extends StatefulWidget {
 }
 
 class _FormPageMobileState extends State<FormPageMobile> {
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _initForm();
-  }
 
-  void _initForm() async {
-    form = await FormOpeningController.getForm(widget.id);
-    setState(() => isLoading = false);
+    const_file.id = widget.id;
+    const_file.data = widget.data;
+    const_file.changeState = setState;
+
+    initForm();
   }
 
   @override
   Widget build(BuildContext context) {
-    const_file.data = widget.data;
     const_file.context = context;
-    const_file.changeState = setState;
 
     if (isLoading) return buildLoading();
 

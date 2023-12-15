@@ -4,16 +4,16 @@ import '../../responsive/responsive_layout.dart';
 import 'desktop.dart';
 import 'mobile.dart';
 
-class DashboardPage extends StatelessWidget {
-  static const String routeName = '/dashboard';
+class ManageFormsPage extends StatelessWidget {
+  static const String routeName = '/manage-forms';
 
-  const DashboardPage({super.key});
+  const ManageFormsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const ResponsiveLayout(
-      mobileBody: DashboardPageMobile(),
-      desktopBody: DashboardPageDesktop(),
+      mobileBody: ManageFormsPageMobile(),
+      desktopBody: ManageFormsPageDesktop(),
     );
   }
 }

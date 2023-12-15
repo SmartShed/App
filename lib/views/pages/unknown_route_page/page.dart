@@ -6,7 +6,7 @@ import '../../../constants/images.dart';
 import '../../pages.dart';
 
 class UnknownRoutePage extends StatelessWidget {
-  static const String routeName = '/unknown-route';
+  static const String routeName = '/404';
 
   const UnknownRoutePage({super.key});
 

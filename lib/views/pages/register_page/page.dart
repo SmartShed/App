@@ -9,9 +9,9 @@ import '../../../controllers/auth/register.dart';
 import '../../../controllers/toast/toast.dart';
 import '../../pages.dart';
 import '../../responsive/dimensions.dart';
+import '../../widgets/loading_dialog.dart';
 import 'register_step1.dart';
 import 'register_step2.dart';
-import '../../widgets/loading_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
   static const String routeName = '/register';
