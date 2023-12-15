@@ -150,7 +150,9 @@ class _QuestionTileState extends State<QuestionTile> {
                   },
                 ),
               ),
-            if (widget.question.isExpanded && widget.question.isAnswered)
+            if (widget.question.isExpanded &&
+                widget.question.isAnswered &&
+                widget.question.history.isNotEmpty)
               // Show answered by and answered at
               Padding(
                 padding: const EdgeInsets.only(top: 5.0),
