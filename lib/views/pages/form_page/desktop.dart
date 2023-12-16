@@ -23,13 +23,7 @@ class _FormPageDesktopState extends State<FormPageDesktop> {
   @override
   void initState() {
     super.initState();
-
-    const_file.id = widget.id;
-    const_file.data = widget.data;
-    const_file.changeState = setState;
-    const_file.isDesktop = true;
-
-    initForm();
+    initConst(widget.id, widget.data, setState, true);
   }
 
   @override

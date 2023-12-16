@@ -7,18 +7,52 @@ import '../../../models/unopened_form.dart';
 import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
+Map<String, List<SmartShedUnopenedForm>> formsForAllSections = {};
+Map<String, List<SmartShedOpenedForm>> recentlyOpenedFormsForAllSections = {};
+Map<String, List<SmartShedOpenedForm>> allOpenedFormsForAllSections = {};
+
 late String title;
 
-List<SmartShedUnopenedForm> formsForSection = [];
-List<SmartShedOpenedForm> recentlyOpenedForms = [];
-List<SmartShedOpenedForm> allOpenedForms = [];
+late List<SmartShedUnopenedForm> formsForSection;
+late List<SmartShedOpenedForm> recentlyOpenedFormsForSection;
+late List<SmartShedOpenedForm> allOpenedFormsForSection;
 
-bool isFormsForSectionLoading = true;
-bool isRecentlyOpenedFormsLoading = true;
-bool isAllOpenedFormsLoading = true;
+late bool isFormsForSectionLoading;
+late bool isRecentlyOpenedFormsLoading;
+late bool isAllOpenedFormsLoading;
 
 late BuildContext context;
 late void Function(void Function()) changeState;
+
+void initConst(
+  String sectionTitle,
+  void Function(void Function()) setState,
+) {
+  title = sectionTitle;
+  changeState = setState;
+
+  isFormsForSectionLoading = true;
+  isRecentlyOpenedFormsLoading = true;
+  isAllOpenedFormsLoading = true;
+
+  if (formsForAllSections[title] == null) {
+    formsForAllSections[title] = [];
+  }
+
+  if (recentlyOpenedFormsForAllSections[title] == null) {
+    recentlyOpenedFormsForAllSections[title] = [];
+  }
+
+  if (allOpenedFormsForAllSections[title] == null) {
+    allOpenedFormsForAllSections[title] = [];
+  }
+
+  formsForSection = formsForAllSections[title]!;
+  recentlyOpenedFormsForSection = recentlyOpenedFormsForAllSections[title]!;
+  allOpenedFormsForSection = allOpenedFormsForAllSections[title]!;
+
+  init();
+}
 
 void init() {
   DashboardForAllController.init();
@@ -31,25 +65,19 @@ void init() {
 
 Future<void> initFormsForSection() async {
   formsForSection = await DashboardForAllController.getFormsForSection(title);
-  changeState(() {
-    isFormsForSectionLoading = false;
-  });
+  changeState(() => isFormsForSectionLoading = false);
 }
 
 Future<void> initRecentlyOpenedForms() async {
-  recentlyOpenedForms =
+  recentlyOpenedFormsForSection =
       await DashboardForMeController.getRecentlyOpenedFormsForSection(title);
-  changeState(() {
-    isRecentlyOpenedFormsLoading = false;
-  });
+  changeState(() => isRecentlyOpenedFormsLoading = false);
 }
 
 Future<void> initAllOpenedForms() async {
-  allOpenedForms =
+  allOpenedFormsForSection =
       await DashboardForAllController.getOpenedFormsForSection(title);
-  changeState(() {
-    isAllOpenedFormsLoading = false;
-  });
+  changeState(() => isAllOpenedFormsLoading = false);
 }
 
 AppBar buildAppBar() {
@@ -114,7 +142,7 @@ Widget buildRecentlyOpenedFormsList() {
     children: [
       const SizedBox(height: 20),
       Text(
-        !isRecentlyOpenedFormsLoading && recentlyOpenedForms.isEmpty
+        !isRecentlyOpenedFormsLoading && recentlyOpenedFormsForSection.isEmpty
             ? 'No Recently Opened Forms Found'
             : 'Recently Opened Forms',
         style: const TextStyle(
@@ -138,11 +166,11 @@ Widget buildRecentlyOpenedFormsList() {
           : ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: recentlyOpenedForms.length,
+              itemCount: recentlyOpenedFormsForSection.length,
               itemBuilder: (context, index) {
                 return OpenedFormTile(
                   index: index,
-                  openedForm: recentlyOpenedForms[index],
+                  openedForm: recentlyOpenedFormsForSection[index],
                 );
               },
               separatorBuilder: (context, index) {
@@ -159,7 +187,7 @@ Widget buildAllOpenedFormsList() {
     children: [
       const SizedBox(height: 20),
       Text(
-        !isAllOpenedFormsLoading && allOpenedForms.isEmpty
+        !isAllOpenedFormsLoading && allOpenedFormsForSection.isEmpty
             ? 'No Opened Forms Found'
             : 'All Opened Forms',
         style: const TextStyle(
@@ -183,11 +211,11 @@ Widget buildAllOpenedFormsList() {
           : ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: allOpenedForms.length,
+              itemCount: allOpenedFormsForSection.length,
               itemBuilder: (context, index) {
                 return OpenedFormTile(
                   index: index,
-                  openedForm: allOpenedForms[index],
+                  openedForm: allOpenedFormsForSection[index],
                 );
               },
               separatorBuilder: (context, index) {

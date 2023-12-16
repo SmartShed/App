@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/forms/opening.dart';
@@ -7,13 +8,35 @@ import '../../pages.dart';
 import '../../widgets/loading_dialog.dart';
 import '../../widgets/text_field.dart';
 
-TextEditingController locoNameController = TextEditingController();
-TextEditingController locoNumberController = TextEditingController();
+late String formId;
+late String title;
+late String descriptionEnglish;
+late String descriptionHindi;
 
-AppBar buildAppBar(String title, Function()? onPressed) {
+late BuildContext context;
+
+late TextEditingController locoNameController;
+late TextEditingController locoNumberController;
+
+void initConst(
+  String formID,
+  String formTitle,
+  String formDescriptionEnglish,
+  String formDescriptionHindi,
+) {
+  formId = formID;
+  title = formTitle;
+  descriptionEnglish = formDescriptionEnglish;
+  descriptionHindi = formDescriptionHindi;
+
+  locoNameController = TextEditingController();
+  locoNumberController = TextEditingController();
+}
+
+AppBar buildAppBar() {
   return AppBar(
     title: Text(
-      title,
+      "Create $title Form",
       style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
@@ -22,22 +45,16 @@ AppBar buildAppBar(String title, Function()? onPressed) {
       textAlign: TextAlign.center,
     ),
     centerTitle: true,
-    actions: [
+    actions: const [
       IconButton(
-        onPressed: onPressed,
-        icon: const Icon(Icons.add_box_outlined),
+        onPressed: onTap,
+        icon: Icon(Icons.add_box_outlined),
       ),
     ],
   );
 }
 
-Widget buildMainBody(
-  BuildContext context,
-  String formId,
-  String title,
-  String descriptionEnglish,
-  String descriptionHindi,
-) {
+Widget buildMainBody() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -83,17 +100,20 @@ Widget buildMainBody(
               controller: locoNameController,
               hintText: 'Enter Loco Name',
               isTextCentered: true,
+              textCapitalization: TextCapitalization.characters,
+              keyboardType: TextInputType.text,
             ),
             const SizedBox(height: 20),
             MyTextField(
               controller: locoNumberController,
               hintText: 'Enter Loco Number',
               isTextCentered: true,
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                onTap(context, formId);
+                onTap();
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(
@@ -117,10 +137,7 @@ Widget buildMainBody(
   );
 }
 
-void onTap(
-  BuildContext context,
-  String formId,
-) async {
+void onTap() async {
   showDialog(
     context: context,
     barrierDismissible: false,

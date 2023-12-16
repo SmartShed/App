@@ -25,6 +25,7 @@ class _ForgotPasswordStep1State extends State<ForgotPasswordStep1> {
           autoFocus: true,
           hintText: "Email",
           obscureText: false,
+          keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 20),
       ],

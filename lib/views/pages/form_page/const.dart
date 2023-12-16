@@ -14,39 +14,41 @@ import '../../widgets/question_tile.dart';
 import '../../widgets/text_field.dart';
 
 late String id;
-SmartShedOpenedForm? data;
-SmartShedForm? form;
+late SmartShedOpenedForm? data;
+late SmartShedForm? form;
 
-bool isLoading = true;
-bool isAnswersShown = false;
-bool isSearchBoxOpen = false;
-bool isShowDetails = false;
-bool isDesktop = false;
+late bool isLoading;
+late bool isAnswersShown;
+late bool isSearchBoxOpen;
+late bool isShowDetails;
+late bool isDesktop;
 
-final searchController = TextEditingController();
+late TextEditingController searchController;
 late BuildContext context;
 late void Function(void Function()) changeState;
 
-// History
-/*
-{
-  'qusID': [
-    {
-      'editedBy': 'Name',
-      'editedAt': 'Date',
-      'oldAns': 'Old Answer',
-      'newAns': 'New Answer',
-    },
-    {
-      'editedBy': 'Name',
-      'editedAt': 'Date',
-      'oldAns': 'Old Answer',
-      'newAns': 'New Answer',
-    },
-  ],
-}
-*/
 final Map<String, List<Map<String, dynamic>>> qusIdToHistory = {};
+
+void initConst(
+  String formId,
+  SmartShedOpenedForm? formData,
+  void Function(void Function()) setState,
+  bool isUserDesktop,
+) {
+  id = formId;
+  data = formData;
+  changeState = setState;
+  isDesktop = isUserDesktop;
+
+  isLoading = true;
+  isAnswersShown = false;
+  isSearchBoxOpen = false;
+  isShowDetails = false;
+
+  searchController = TextEditingController();
+
+  initForm();
+}
 
 void initForm() async {
   form = await FormOpeningController.getForm(id);
@@ -60,22 +62,6 @@ void fillHistory() {
   for (var question in form!.questions) {
     question.history = [];
   }
-
-  /*
-  form.history = [
-      {
-          "editedBy": "Name"
-          "editedAt": "2023-12-14T15:28:37.335Z",
-          "changes": [
-              {
-                  "questionID": "657b1ed1f9f54037c11efb94",
-                  "oldValue": "Old Answer",
-                  "newValue": "New Answer"
-              }
-          ],
-      }
-  ],
-  */
 
   for (var history in form!.history) {
     for (var change in history['changes']) {
@@ -566,6 +552,7 @@ Widget buildSearchBox() {
           onChanged: (value) {
             changeState(() {});
           },
+          keyboardType: TextInputType.text,
         )),
   );
 }

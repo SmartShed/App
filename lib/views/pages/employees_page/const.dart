@@ -504,6 +504,7 @@ Widget buildAddEmployee(List<String> list, String title) {
           hintText: title,
           isTextCentered: true,
           initialValue: list[index],
+          keyboardType: TextInputType.emailAddress,
         ),
         leading: IconButton(
           onPressed: () {},

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/colors.dart';
 import '../../widgets/drawer.dart';
+import 'const.dart' as const_file;
 import 'const.dart';
 
 class CreateFormPageDesktop extends StatefulWidget {
@@ -24,10 +25,23 @@ class CreateFormPageDesktop extends StatefulWidget {
 
 class _CreateFormPageDesktopState extends State<CreateFormPageDesktop> {
   @override
+  void initState() {
+    super.initState();
+    initConst(
+      widget.formId,
+      widget.title,
+      widget.descriptionEnglish,
+      widget.descriptionHindi,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const_file.context = context;
+
     return Scaffold(
       backgroundColor: ColorConstants.bg,
-      appBar: buildAppBar("Create ${widget.title} Form", () {}),
+      appBar: buildAppBar(),
       body: Row(
         children: [
           const MyDrawer(),
@@ -37,13 +51,7 @@ class _CreateFormPageDesktopState extends State<CreateFormPageDesktop> {
                 horizontal: MediaQuery.of(context).size.width * 0.15,
                 vertical: 40,
               ),
-              child: buildMainBody(
-                context,
-                widget.formId,
-                widget.title,
-                widget.descriptionEnglish,
-                widget.descriptionHindi,
-              ),
+              child: buildMainBody(),
             ),
           ),
         ],

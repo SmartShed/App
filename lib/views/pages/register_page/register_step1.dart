@@ -67,6 +67,7 @@ class _RegisterStep1State extends State<RegisterStep1> {
           onEditingComplete: changeFocusToPassword,
           readOnly: widget.isRegisterWithGoogle,
           onTap: disableRegisterWithGoogle,
+          keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 20),
         MyTextField(
@@ -79,6 +80,7 @@ class _RegisterStep1State extends State<RegisterStep1> {
           onEditingComplete: changeFocusToConfirmPassword,
           readOnly: widget.isRegisterWithGoogle,
           onTap: disableRegisterWithGoogle,
+          keyboardType: TextInputType.visiblePassword,
         ),
         const SizedBox(height: 20),
         MyTextField(
@@ -91,6 +93,7 @@ class _RegisterStep1State extends State<RegisterStep1> {
           onEditingComplete: () {},
           readOnly: widget.isRegisterWithGoogle,
           onTap: disableRegisterWithGoogle,
+          keyboardType: TextInputType.visiblePassword,
         ),
         const SizedBox(height: 20),
         const SizedBox(height: 40),

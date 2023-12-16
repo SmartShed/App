@@ -23,7 +23,7 @@ class ForgotPasswordStep2 extends StatefulWidget {
 }
 
 class _ForgotPasswordStep2State extends State<ForgotPasswordStep2> {
-  int _counter = 120;
+  int _counter = 60;
   bool _isTimerRunning = false;
   late Timer _timer;
 
@@ -65,6 +65,7 @@ class _ForgotPasswordStep2State extends State<ForgotPasswordStep2> {
           autoFocus: true,
           hintText: "OTP",
           obscureText: false,
+          keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 20),
         Text("Resend OTP in $_counter seconds"),

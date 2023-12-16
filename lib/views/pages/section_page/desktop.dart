@@ -20,9 +20,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
   @override
   void initState() {
     super.initState();
-    const_file.title = widget.title;
-    const_file.changeState = setState;
-    init();
+    initConst(widget.title, setState);
   }
 
   @override

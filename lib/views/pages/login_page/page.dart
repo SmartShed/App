@@ -172,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                                         .requestFocus(passwordFocusNode);
                                   });
                                 },
+                                keyboardType: TextInputType.emailAddress,
                               ),
                               const SizedBox(height: 20),
                               MyTextField(
@@ -181,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: "Password",
                                 obscureText: hidePassword,
                                 suffixIcon: _passwordIcon(),
+                                keyboardType: TextInputType.visiblePassword,
                               ),
                               const SizedBox(height: 20),
                               Row(

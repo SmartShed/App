@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../constants/colors.dart';
 
@@ -16,6 +17,7 @@ class MyTextField extends StatelessWidget {
   final void Function()? onTap;
   final void Function(String)? onChanged;
   final bool? isTextCentered;
+  final TextCapitalization textCapitalization;
 
   const MyTextField({
     Key? key,
@@ -32,6 +34,7 @@ class MyTextField extends StatelessWidget {
     this.onTap,
     this.onChanged,
     this.isTextCentered,
+    this.textCapitalization = TextCapitalization.none,
   }) : super(key: key);
 
   @override
@@ -68,6 +71,7 @@ class MyTextField extends StatelessWidget {
             ? TextEditingController(text: initialValue)
             : controller,
         maxLines: 1,
+        textCapitalization: textCapitalization,
       ),
     );
   }

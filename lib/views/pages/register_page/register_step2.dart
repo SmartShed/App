@@ -45,6 +45,8 @@ class _RegisterStep2State extends State<RegisterStep2> {
           obscureText: false,
           suffixIcon: _nameIcon(),
           onEditingComplete: changeFocusToPosition,
+          keyboardType: TextInputType.name,
+          textCapitalization: TextCapitalization.words,
         ),
         const SizedBox(height: 20),
         MyDropdown(

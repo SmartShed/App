@@ -23,12 +23,7 @@ class _FormPageMobileState extends State<FormPageMobile> {
   @override
   void initState() {
     super.initState();
-
-    const_file.id = widget.id;
-    const_file.data = widget.data;
-    const_file.changeState = setState;
-
-    initForm();
+    initConst(widget.id, widget.data, setState, false);
   }
 
   @override
