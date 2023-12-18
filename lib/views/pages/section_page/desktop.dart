@@ -25,6 +25,8 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    const_file.context = context;
+
     return Scaffold(
       appBar: buildAppBar(),
       body: RefreshIndicator(

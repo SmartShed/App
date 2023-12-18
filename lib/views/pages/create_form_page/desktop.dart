@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
 import '../../widgets/drawer.dart';
 import 'const.dart' as const_file;
 import 'const.dart';
@@ -40,7 +39,6 @@ class _CreateFormPageDesktopState extends State<CreateFormPageDesktop> {
     const_file.context = context;
 
     return Scaffold(
-      backgroundColor: ColorConstants.bg,
       appBar: buildAppBar(),
       body: Row(
         children: [

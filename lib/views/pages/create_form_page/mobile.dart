@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
 import '../../widgets/drawer.dart';
 import 'const.dart' as const_file;
 import 'const.dart';
