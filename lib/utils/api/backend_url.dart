@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:smartshed/controllers/env/controller.dart';
+import 'package:smartshed/utils/api/google_sheets.dart';
 
 import '../../constants/api.dart';
 import '../../controllers/logger/log.dart';
@@ -9,14 +11,11 @@ class BackendUrlAPIHandler {
   static Future<String> _getBackendUrl() async {
     _logger.info('Getting backend url');
 
-    final Dio dio = Dio();
-    final response = await dio.get(
-      APIConstants.getBackendUrlFromGoogleSheet,
-    );
+    final response = await GoogleSheetApiHandler.getBackendUrl();
 
     _logger.info('Backend url retrieved successfully');
 
-    String backendUrl = response.data['values'][0][0];
+    String backendUrl = response[0][0];
 
     backendUrl = backendUrl.trim();
 
@@ -34,8 +33,9 @@ class BackendUrlAPIHandler {
       APIConstants.setBaseUrl(backendUrl);
     } catch (e) {
       _logger.error('Error while setting backend url');
-      _logger.info('Setting backend url to default url');
-      APIConstants.setDefaultBaseUrl();
+      _logger.info(
+          'Setting default backend url to ${EnvController.getDefaultBackendUrl()}');
+      APIConstants.setBaseUrl(EnvController.getDefaultBackendUrl());
     }
   }
 }

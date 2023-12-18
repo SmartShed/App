@@ -34,7 +34,7 @@ class AuthAPIHandler {
         'user': response.data['user'],
       };
     } on DioException catch (e) {
-      _logger.error('Error registering user: $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -63,7 +63,7 @@ class AuthAPIHandler {
         'user': response.data['user'],
       };
     } on DioException catch (e) {
-      _logger.error('Error registering user with Google: $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -91,7 +91,7 @@ class AuthAPIHandler {
         'user': response.data['user'],
       };
     } on DioException catch (e) {
-      _logger.error('Error logging in user: $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -118,7 +118,7 @@ class AuthAPIHandler {
         'user': response.data['user'],
       };
     } on DioException catch (e) {
-      _logger.error('Error logging in user with Google: $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -144,7 +144,7 @@ class AuthAPIHandler {
         'user': response.data,
       };
     } on DioException catch (e) {
-      _logger.error('Error fetching user details');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -170,7 +170,7 @@ class AuthAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error logging out user');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -194,7 +194,7 @@ class AuthAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error sending OTP to $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -219,7 +219,7 @@ class AuthAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error validating OTP for $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -245,7 +245,7 @@ class AuthAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error resetting password for $email');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
