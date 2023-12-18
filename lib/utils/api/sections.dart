@@ -32,8 +32,7 @@ class SectionsAPIHandler {
         'sections': response.data['sections'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling getAllSections API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -62,8 +61,7 @@ class SectionsAPIHandler {
         'forms': response.data['forms'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling getFormsBySection API with section: $sectionIdOrName: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -92,8 +90,7 @@ class SectionsAPIHandler {
         'forms': response.data['forms'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling getOpenedFormsBySection API with section: $sectionIdOrName: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],

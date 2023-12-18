@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:smartshed/utils/api/google_sheets.dart';
 
 import '../../constants/api.dart';
 import '../../controllers/logger/log.dart';
@@ -31,7 +32,7 @@ class EmployeesAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error adding employees');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -53,7 +54,7 @@ class EmployeesAPIHandler {
         'employees': response.data['employees'],
       };
     } on DioException catch (e) {
-      _logger.error('Error getting employees');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -64,18 +65,17 @@ class EmployeesAPIHandler {
   Future<Map<String, dynamic>> getEmployeesFromGoogleSheet() async {
     try {
       _logger.info('Getting employees from Google Sheet');
-      final response = await _dio.get(
-        APIConstants.getEmployeesFromGoogleSheet,
-      );
+
+      final response = await GoogleSheetApiHandler.getEmployees();
 
       _logger.info('Employees retrieved successfully');
       return {
         'status': 'success',
         'message': 'Employees retrieved successfully',
-        'employees': response.data['values'],
+        'employees': response,
       };
-    } on DioException {
-      _logger.error('Error getting employees from Google Sheet');
+    } catch (e) {
+      _logger.error(e);
       return {
         'status': 'error',
         'message': 'Error getting employees from Google Sheet',
@@ -100,7 +100,7 @@ class EmployeesAPIHandler {
         'users': response.data['users'],
       };
     } on DioException catch (e) {
-      _logger.error('Error getting users');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -124,7 +124,7 @@ class EmployeesAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error('Error deleting users');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],

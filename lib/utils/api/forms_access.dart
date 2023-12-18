@@ -33,8 +33,7 @@ class FormsAccessAPIHandler {
         'forms': response.data['forms'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling getRecentForms API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -63,8 +62,7 @@ class FormsAccessAPIHandler {
         'forms': response.data['forms'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling getRecentForms API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],

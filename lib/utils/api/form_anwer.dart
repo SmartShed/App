@@ -35,8 +35,7 @@ class FormsAnswerAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger
-          .error('Error calling saveForm API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -65,8 +64,7 @@ class FormsAnswerAPIHandler {
         'message': response.data['message'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling submitForm API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],

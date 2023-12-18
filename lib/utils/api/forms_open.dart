@@ -43,8 +43,7 @@ class FormsOpeningAPIHandler {
         'form': response.data['form'],
       };
     } on DioException catch (e) {
-      _logger.error(
-          'Error calling createForm API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
@@ -72,8 +71,7 @@ class FormsOpeningAPIHandler {
         'form': response.data['form'],
       };
     } on DioException catch (e) {
-      _logger
-          .error('Error calling getForm API: ${e.response!.data['message']}');
+      _logger.error(e);
       return {
         'status': 'error',
         'message': e.response!.data['message'],
