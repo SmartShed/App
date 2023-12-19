@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../controllers/dashboard/notifications.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/section.dart';
 import '../../pages.dart';
+import '../../widgets/notification_icon.dart';
 import '../../widgets/opened_form_tile.dart';
 import '../../widgets/section_tile.dart';
 
@@ -17,9 +19,14 @@ bool isRecentlyOpenedFormsLoading = true;
 late BuildContext context;
 late void Function(void Function()) changeState;
 
+NotificationsController notificationsController = NotificationsController();
+
 void init() {
   DashboardForAllController.init();
   DashboardForMeController.init();
+  notificationsController.fetchNotifications(
+    onDone: () => changeState(() {}),
+  );
 
   _initSections();
   _initRecentlyOpenedForms();
@@ -52,11 +59,12 @@ AppBar buildAppBar() {
     ),
     centerTitle: true,
     actions: [
-      IconButton(
-        onPressed: () {
+      NotificationIcon(
+        iconData: Icons.notifications,
+        onTap: () {
           GoRouter.of(context).push(Pages.notifications);
         },
-        icon: const Icon(Icons.notifications),
+        notificationCount: notificationsController.unreadNotificationsCount,
       ),
     ],
   );

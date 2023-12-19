@@ -13,11 +13,30 @@ class NotificationsPageMobile extends StatefulWidget {
 
 class _NotificationsPageMobileState extends State<NotificationsPageMobile> {
   @override
+  void initState() {
+    super.initState();
+    changeState = setState;
+    getNotifications();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
       drawer: const MyDrawer(),
-      body: buildBody(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await notificationsController.fetchNotifications();
+          changeState(() {});
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 20,
+          ),
+          child: buildBody(),
+        ),
+      ),
     );
   }
 }

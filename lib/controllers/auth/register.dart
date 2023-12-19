@@ -14,10 +14,15 @@ class RegisterController {
   }
 
   static Future<Map<String, dynamic>?> register(
-      String email, String password, String name, String position) async {
+    String email,
+    String password,
+    String name,
+    String position,
+    String section,
+  ) async {
     _logger.info('Registering user: $email');
-    Map<String, dynamic> response =
-        await _authAPIHandler.register(email, password, name, position);
+    Map<String, dynamic> response = await _authAPIHandler.register(
+        email, password, name, position, section);
 
     if (response['status'] == 'success') {
       XAuthTokenCacheHandler.saveToken(response['auth_token']);
@@ -31,10 +36,14 @@ class RegisterController {
   }
 
   static Future<Map<String, dynamic>?> registerWithGoogle(
-      String email, String name, String position) async {
+    String email,
+    String name,
+    String position,
+    String section,
+  ) async {
     _logger.info('Registering user with Google: $email');
-    Map<String, dynamic> response =
-        await _authAPIHandler.registerWithGoogle(email, name, position);
+    Map<String, dynamic> response = await _authAPIHandler.registerWithGoogle(
+        email, name, position, section);
 
     if (response['status'] == 'success') {
       XAuthTokenCacheHandler.saveToken(response['auth_token']);

@@ -13,7 +13,12 @@ class AuthAPIHandler {
   final Dio _dio = Dio();
 
   Future<Map<String, dynamic>> register(
-      String email, String password, String name, String position) async {
+    String email,
+    String password,
+    String name,
+    String position,
+    String section,
+  ) async {
     try {
       _logger.info('Registering user: $email');
       final response = await _dio.post(
@@ -23,6 +28,7 @@ class AuthAPIHandler {
           'password': password,
           'name': name,
           'position': position,
+          'section': section,
         },
       );
 
@@ -43,7 +49,11 @@ class AuthAPIHandler {
   }
 
   Future<Map<String, dynamic>> registerWithGoogle(
-      String email, String name, String position) async {
+    String email,
+    String name,
+    String position,
+    String section,
+  ) async {
     try {
       _logger.info('Registering user with Google: $email');
       final response = await _dio.post(
@@ -52,6 +62,7 @@ class AuthAPIHandler {
           'email': email,
           'name': name,
           'position': position,
+          'section': section,
         },
       );
 

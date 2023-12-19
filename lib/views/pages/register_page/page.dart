@@ -41,6 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController confirmPasswordController;
   late TextEditingController nameController;
   late TextEditingController positionController;
+  late TextEditingController sectionController;
 
   late ScrollController scrollController;
 
@@ -55,6 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
     confirmPasswordController = TextEditingController();
     nameController = TextEditingController();
     positionController = TextEditingController();
+    sectionController = TextEditingController();
     scrollController = ScrollController();
   }
 
@@ -65,6 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
     confirmPasswordController.dispose();
     nameController.dispose();
     positionController.dispose();
+    sectionController.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -231,6 +234,7 @@ class _RegisterPageState extends State<RegisterPage> {
       content: RegisterStep2(
         nameController: nameController,
         positionController: positionController,
+        sectionController: sectionController,
       ),
       isActive: currentStep >= 1,
       state: currentStep <= 1 ? StepState.editing : StepState.complete,
@@ -338,6 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String confirmPassword = confirmPasswordController.text;
     String name = nameController.text;
     String position = positionController.text;
+    String section = sectionController.text;
 
     if (email.isEmpty) {
       ToastController.warning("Email cannot be empty");
@@ -379,6 +384,11 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    if (position != "Authority" && section.isEmpty) {
+      ToastController.warning("Section cannot be empty");
+      return;
+    }
+
     position = position.toLowerCase();
 
     if (!isGoogleSignIn && password != confirmPassword) {
@@ -401,28 +411,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (isGoogleSignIn) {
       response = await RegisterController.registerWithGoogle(
-        email,
-        name,
-        position,
-      );
+          email, name, position, section);
     } else {
       response = await RegisterController.register(
-        email,
-        password,
-        name,
-        position,
-      );
+          email, password, name, position, section);
     }
 
     if (!context.mounted) return;
-    // Navigator.pop(context);
     GoRouter.of(context).pop();
 
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-      // Navigator.pushNamedAndRemoveUntil(
-      // context, Pages.dashboard, (Route<dynamic> route) => false);
+
       GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);

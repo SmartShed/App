@@ -13,6 +13,13 @@ class NotificationsPageDesktop extends StatefulWidget {
 
 class _NotificationsPageDesktopState extends State<NotificationsPageDesktop> {
   @override
+  void initState() {
+    super.initState();
+    changeState = setState;
+    getNotifications();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
@@ -20,7 +27,13 @@ class _NotificationsPageDesktopState extends State<NotificationsPageDesktop> {
         children: [
           const MyDrawer(),
           Expanded(
-            child: buildBody(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: 20,
+              ),
+              child: buildBody(),
+            ),
           ),
         ],
       ),

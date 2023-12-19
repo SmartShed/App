@@ -21,7 +21,7 @@ class SectionsAPIHandler {
         APIConstants.sections,
         options: Options(
           headers: {
-            'auth_token': XAuthTokenCacheHandler.token!,
+            'auth_token': XAuthTokenCacheHandler.token ?? '',
           },
         ),
       );

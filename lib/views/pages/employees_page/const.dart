@@ -39,6 +39,9 @@ void init() async {
   supervisorEmails = [''];
   workerEmails = [''];
 
+  isShowingAddEmployee = false;
+  isShowingRemoveEmployee = true;
+
   Map<String, List<SmartShedUser>> users = await EmployeesController.getUsers(
     forSupervisor: LoginController.isSupervisor,
   );

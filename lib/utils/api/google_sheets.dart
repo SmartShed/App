@@ -17,7 +17,8 @@ class GoogleSheetApiHandler {
       'type': 'service_account',
       'client_id': EnvController.getEnv('GOOGLE_CLIENT_ID'),
       'client_email': EnvController.getEnv('GOOGLE_CLIENT_EMAIL'),
-      'private_key': EnvController.getEnv('GOOGLE_PRIVATE_KEY'),
+      'private_key':
+          EnvController.getEnv('GOOGLE_PRIVATE_KEY').replaceAll('\\n', '\n'),
     });
 
     return await clientViaServiceAccount(credentials, _scopes);

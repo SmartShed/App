@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../../controllers/dashboard/for_all.dart';
+import '../../../models/section.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/text_field.dart';
 
 class RegisterStep2 extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController positionController;
+  final TextEditingController sectionController;
 
   const RegisterStep2({
     Key? key,
     required this.nameController,
     required this.positionController,
+    required this.sectionController,
   }) : super(key: key);
 
   @override
@@ -20,10 +24,15 @@ class RegisterStep2 extends StatefulWidget {
 class _RegisterStep2State extends State<RegisterStep2> {
   late FocusNode positionFocusNode;
   String? selectedValue;
+  bool isSectionLoading = true;
+
+  List<String> positionArray = ['Authority', 'Supervisor', 'Worker'];
+  late List<String> sectionArray;
 
   @override
   void initState() {
     super.initState();
+    initSectionArray();
     positionFocusNode = FocusNode();
   }
 
@@ -31,6 +40,16 @@ class _RegisterStep2State extends State<RegisterStep2> {
   void dispose() {
     positionFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> initSectionArray() async {
+    final List<SmartShedSection> sections =
+        await DashboardForAllController.getSections();
+
+    setState(() {
+      sectionArray = sections.map((e) => e.title).toList();
+      isSectionLoading = false;
+    });
   }
 
   @override
@@ -53,8 +72,19 @@ class _RegisterStep2State extends State<RegisterStep2> {
           focusNode: positionFocusNode,
           hintText: 'Position',
           controller: widget.positionController,
-          items: const ['Worker', 'Supervisor', 'Authority'],
+          items: positionArray,
+          onChanged: () => setState(() {}),
         ),
+        const SizedBox(height: 20),
+        if (widget.positionController.text != '' &&
+            widget.positionController.text != 'Authority')
+          isSectionLoading
+              ? const Center(child: CircularProgressIndicator())
+              : MyDropdown(
+                  hintText: 'Section',
+                  controller: widget.sectionController,
+                  items: sectionArray,
+                ),
         const SizedBox(height: 20),
       ],
     );

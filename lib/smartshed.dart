@@ -5,18 +5,18 @@ import 'constants/colors.dart';
 import 'controllers/auth/login.dart';
 import 'controllers/env/controller.dart';
 import 'controllers/logger/log.dart';
-import 'controllers/routes/controller.dart';
-import 'utils/api/backend_url.dart';
+import 'controllers/routes/router.dart';
+import 'controllers/smartshed/backend.dart';
 
 class SmartShed extends StatelessWidget {
   const SmartShed({super.key});
 
   static Future init() async {
     GoRouter.optionURLReflectsImperativeAPIs = true;
-    LoggerService.init(Level.all);
+    LoggerService.init(Level.off);
     await EnvController.init();
-    await BackendUrlAPIHandler.setBackendUrl();
-    LoginController.init();
+    await BackendController.setBackendUrl();
+    await LoginController.init();
   }
 
   @override

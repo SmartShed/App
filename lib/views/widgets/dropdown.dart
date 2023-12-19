@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import '../../constants/colors.dart';
 
 class MyDropdown extends StatelessWidget {
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final String hintText;
   final TextEditingController controller;
   final List<String> items;
+  final void Function()? onChanged;
 
   const MyDropdown({
     Key? key,
-    required this.focusNode,
+    this.focusNode,
     required this.hintText,
     required this.controller,
     required this.items,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -36,13 +38,14 @@ class MyDropdown extends StatelessWidget {
       items: items.map((String item) {
         return DropdownMenuItem<String>(
           value: item,
-          child: Text(
-            item,
-          ),
+          child: Text(item),
         );
       }).toList(),
       onChanged: (value) {
         controller.text = value!;
+        if (onChanged != null) {
+          onChanged!();
+        }
       },
     );
   }

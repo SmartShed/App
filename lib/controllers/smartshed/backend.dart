@@ -1,12 +1,10 @@
-import 'package:dio/dio.dart';
-import 'package:smartshed/controllers/env/controller.dart';
-import 'package:smartshed/utils/api/google_sheets.dart';
-
 import '../../constants/api.dart';
+import '../../controllers/env/controller.dart';
 import '../../controllers/logger/log.dart';
+import '../../utils/api/google_sheets.dart';
 
-class BackendUrlAPIHandler {
-  static final _logger = LoggerService.getLogger('BackendUrlAPIHandler');
+class BackendController {
+  static final _logger = LoggerService.getLogger('BackendController');
 
   static Future<String> _getBackendUrl() async {
     _logger.info('Getting backend url');
