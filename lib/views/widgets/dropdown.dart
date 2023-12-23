@@ -35,6 +35,7 @@ class MyDropdown extends StatelessWidget {
           ),
         ),
       ),
+      value: controller.text == '' ? null : controller.text,
       items: items.map((String item) {
         return DropdownMenuItem<String>(
           value: item,

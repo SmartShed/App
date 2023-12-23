@@ -159,7 +159,7 @@ class _QuestionTileState extends State<QuestionTile> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
-                    "Answered by ${widget.question.history.first['editedBy']} on ${SmartShedQuestion.formattedDate(widget.question.history.first['editedAt'])}",
+                    "Answered by ${widget.question.history.first.editedBy} on ${SmartShedQuestion.formattedDate(widget.question.history.first.editedAt)}",
                     style: const TextStyle(
                       fontSize: 12.0,
                       color: Colors.grey,
@@ -261,7 +261,7 @@ class _QuestionTileState extends State<QuestionTile> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.question.history.length,
             itemBuilder: (context, index) {
-              if (widget.question.history[index]['newAns'] == null) {
+              if (widget.question.history[index].newValue == null) {
                 return const SizedBox.shrink();
               }
 
@@ -272,7 +272,7 @@ class _QuestionTileState extends State<QuestionTile> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.question.history[index]['editedBy'],
+                          widget.question.history[index].editedBy,
                           style: const TextStyle(
                             fontSize: 12.0,
                             color: Colors.grey,
@@ -283,7 +283,7 @@ class _QuestionTileState extends State<QuestionTile> {
                       Expanded(
                         child: Text(
                           SmartShedQuestion.formattedDate(
-                            widget.question.history[index]['editedAt'],
+                            widget.question.history[index].editedAt,
                           ),
                           style: const TextStyle(
                             fontSize: 12.0,
@@ -295,7 +295,7 @@ class _QuestionTileState extends State<QuestionTile> {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          widget.question.history[index]['newAns'],
+                          widget.question.history[index].newValue!,
                           style: const TextStyle(
                             fontSize: 12.0,
                             color: Colors.grey,

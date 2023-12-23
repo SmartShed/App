@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/opened_form.dart';
-import '../../widgets/drawer.dart';
+import '../../../widgets/drawer.dart';
 import 'const.dart' as const_file;
 import 'const.dart';
 
-class FormPageMobile extends StatefulWidget {
+// ignore: camel_case_types
+class Manage_ManageFormPageMobile extends StatefulWidget {
   final String id;
-  final SmartShedOpenedForm? data;
 
-  const FormPageMobile({
-    Key? key,
-    required this.id,
-    this.data,
-  }) : super(key: key);
+  const Manage_ManageFormPageMobile({Key? key, required this.id})
+      : super(key: key);
 
   @override
-  State<FormPageMobile> createState() => _FormPageMobileState();
+  State<Manage_ManageFormPageMobile> createState() =>
+      _Manage_ManageFormPageMobileState();
 }
 
-class _FormPageMobileState extends State<FormPageMobile>
-    with SingleTickerProviderStateMixin {
+// ignore: camel_case_types
+class _Manage_ManageFormPageMobileState
+    extends State<Manage_ManageFormPageMobile> {
   @override
   void initState() {
     super.initState();
-    initConst(widget.id, widget.data, setState, false, this);
+    initConst(widget.id, setState);
   }
 
   @override
@@ -37,23 +35,18 @@ class _FormPageMobileState extends State<FormPageMobile>
   Widget build(BuildContext context) {
     const_file.context = context;
 
-    if (isLoading) return buildLoading();
-
     return Scaffold(
       appBar: buildAppBar(),
       drawer: const MyDrawer(),
-      floatingActionButton: buildFloatingActionButton(),
       body: Scrollbar(
         thickness: 5,
-        controller: scrollController,
         child: SingleChildScrollView(
-          controller: scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 5,
               vertical: 10,
             ),
-            child: buildMainBody(),
+            child: buildBody(),
           ),
         ),
       ),

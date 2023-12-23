@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../constants/colors.dart';
 
@@ -72,6 +71,7 @@ class MyTextField extends StatelessWidget {
             : controller,
         maxLines: 1,
         textCapitalization: textCapitalization,
+        autocorrect: false,
       ),
     );
   }

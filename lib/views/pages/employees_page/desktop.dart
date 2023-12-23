@@ -16,7 +16,7 @@ class _EmployeesPageDesktopState extends State<EmployeesPageDesktop> {
   void initState() {
     super.initState();
     const_file.changeState = setState;
-    init();
+    initConst();
   }
 
   @override
@@ -27,7 +27,7 @@ class _EmployeesPageDesktopState extends State<EmployeesPageDesktop> {
       appBar: buildAppBar(),
       body: RefreshIndicator(
         onRefresh: () async {
-          init();
+          initConst();
         },
         child: Row(
           children: [

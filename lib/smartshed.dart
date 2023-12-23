@@ -13,9 +13,10 @@ class SmartShed extends StatelessWidget {
 
   static Future init() async {
     GoRouter.optionURLReflectsImperativeAPIs = true;
-    LoggerService.init(Level.off);
+    LoggerService.init(Level.all);
     await EnvController.init();
-    await BackendController.setBackendUrl();
+    // await BackendController.setBackendUrl();
+    await BackendController.setBackendUrlToDefault();
     await LoginController.init();
   }
 

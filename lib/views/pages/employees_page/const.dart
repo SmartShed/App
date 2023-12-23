@@ -30,7 +30,7 @@ List<String> selectedUserIds = [];
 late BuildContext context;
 late void Function(void Function()) changeState;
 
-void init() async {
+void initConst() async {
   changeState(() {
     isLoadingUsers = true;
   });

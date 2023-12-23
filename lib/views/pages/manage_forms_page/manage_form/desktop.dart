@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/opened_form.dart';
-import '../../widgets/drawer.dart';
+import '../../../widgets/drawer.dart';
 import 'const.dart' as const_file;
 import 'const.dart';
 
-class FormPageDesktop extends StatefulWidget {
+// ignore: camel_case_types
+class Manage_ManageFormPageDesktop extends StatefulWidget {
   final String id;
-  final SmartShedOpenedForm? data;
 
-  const FormPageDesktop({
-    Key? key,
-    required this.id,
-    this.data,
-  }) : super(key: key);
+  const Manage_ManageFormPageDesktop({Key? key, required this.id})
+      : super(key: key);
 
   @override
-  State<FormPageDesktop> createState() => _FormPageDesktopState();
+  State<Manage_ManageFormPageDesktop> createState() =>
+      _Manage_ManageFormPageDesktopState();
 }
 
-class _FormPageDesktopState extends State<FormPageDesktop>
-    with SingleTickerProviderStateMixin {
+// ignore: camel_case_types
+class _Manage_ManageFormPageDesktopState
+    extends State<Manage_ManageFormPageDesktop> {
   @override
   void initState() {
     super.initState();
-    initConst(widget.id, widget.data, setState, true, this);
+    initConst(widget.id, setState);
   }
 
   @override
@@ -37,26 +35,21 @@ class _FormPageDesktopState extends State<FormPageDesktop>
   Widget build(BuildContext context) {
     const_file.context = context;
 
-    if (isLoading) return buildLoading();
-
     return Scaffold(
       appBar: buildAppBar(),
-      floatingActionButton: buildFloatingActionButton(),
       body: Row(
         children: [
           const MyDrawer(),
           Expanded(
             child: Scrollbar(
               thickness: 5,
-              controller: scrollController,
               child: SingleChildScrollView(
-                controller: scrollController,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  child: buildMainBody(),
+                  child: buildBody(),
                 ),
               ),
             ),

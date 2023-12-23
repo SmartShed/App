@@ -46,10 +46,6 @@ class RouteController {
           builder: (context, state) => const NotificationsPage(),
         ),
         GoRoute(
-          path: Pages.manageForms,
-          builder: (context, state) => const ManageFormsPage(),
-        ),
-        GoRoute(
           path: "${Pages.section}/:title",
           builder: (context, state) => SectionPage(
             title: state.pathParameters['title']!,
@@ -81,18 +77,50 @@ class RouteController {
           path: Pages.employees,
           builder: (context, state) => const EmployeesPage(),
         ),
+        GoRoute(
+          path: Pages.approveForms,
+          builder: (context, state) => const ApproveFormsPage(),
+        ),
+        GoRoute(
+          path: Pages.manageForms,
+          builder: (context, state) => const ManageFormsPage(),
+        ),
+        GoRoute(
+          path: Pages.manageCreateSection,
+          builder: (context, state) => const Manage_CreateSectionPage(),
+        ),
+        GoRoute(
+          path: "${Pages.manageCreateForm}/:title",
+          builder: (context, state) {
+            if (state.pathParameters['title'] == null) {
+              return const UnknownRoutePage();
+            }
+
+            return Manage_CreateFormPage(
+              title: state.pathParameters['title']!,
+            );
+          },
+        ),
+        GoRoute(
+          path: "${Pages.manageManageForm}/:id",
+          builder: (context, state) {
+            if (state.pathParameters['id'] == null) {
+              return const UnknownRoutePage();
+            }
+
+            return Manage_ManageFormPage(
+              id: state.pathParameters['id']!,
+            );
+          },
+        ),
       ],
       errorBuilder: (context, state) => const UnknownRoutePage(),
       redirect: (context, state) async {
-        if (state.uri.toString() == Pages.splash) {
-          return null;
-        }
+        String currentRoute = state.uri.toString();
 
-        if (state.uri.toString() == Pages.register) {
-          return null;
-        }
-
-        if (state.uri.toString() == Pages.forgotPassword) {
+        if (currentRoute == Pages.splash ||
+            currentRoute == Pages.register ||
+            currentRoute == Pages.forgotPassword) {
           return null;
         }
 
@@ -102,13 +130,14 @@ class RouteController {
           return Pages.login;
         }
 
-        if (state.uri.toString() == Pages.login ||
-            state.uri.toString() == Pages.register) {
+        if (currentRoute == Pages.login || currentRoute == Pages.register) {
           return Pages.dashboard;
         }
 
-        if (state.uri.toString() == Pages.employees &&
-            LoginController.isWorker) {
+        if (LoginController.isWorker &&
+            (currentRoute == Pages.employees ||
+                currentRoute == Pages.approveForms ||
+                currentRoute == Pages.manageForms)) {
           return Pages.dashboard;
         }
 

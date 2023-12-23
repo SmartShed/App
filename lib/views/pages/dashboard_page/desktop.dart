@@ -16,7 +16,7 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
   void initState() {
     super.initState();
     const_file.changeState = setState;
-    init();
+    initConst();
   }
 
   @override
@@ -26,7 +26,7 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
     return Scaffold(
       appBar: buildAppBar(),
       body: RefreshIndicator(
-        onRefresh: () async => init(),
+        onRefresh: () async => initConst(),
         child: Row(
           children: [
             const MyDrawer(),

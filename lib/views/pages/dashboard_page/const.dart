@@ -21,7 +21,7 @@ late void Function(void Function()) changeState;
 
 NotificationsController notificationsController = NotificationsController();
 
-void init() {
+void initConst() {
   DashboardForAllController.init();
   DashboardForMeController.init();
   notificationsController.fetchNotifications(

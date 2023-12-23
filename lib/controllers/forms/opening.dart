@@ -9,10 +9,6 @@ class FormOpeningController {
   static final FormsOpeningAPIHandler _formsOpeningAPIHandler =
       FormsOpeningAPIHandler();
 
-  static Future<void> init() async {
-    _logger.info('Initializing FormOpeningController');
-  }
-
   static Future<SmartShedOpenedForm?> createForm(
       String formId, String locoName, String locoNumber) async {
     if (locoName.isEmpty || locoNumber.isEmpty) {
