@@ -37,7 +37,7 @@ class SmartShedOpenedForm {
       locoNumber: json['locoNumber'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      createdBy: json['createdBy'],
+      createdBy: json['createdBy']['name'],
       lockStatus: json['lockStatus'],
     );
   }

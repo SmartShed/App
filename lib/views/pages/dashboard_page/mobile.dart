@@ -16,7 +16,7 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
   void initState() {
     super.initState();
     const_file.changeState = setState;
-    init();
+    initConst();
   }
 
   @override
@@ -27,7 +27,7 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
       appBar: buildAppBar(),
       drawer: const MyDrawer(),
       body: RefreshIndicator(
-        onRefresh: () async => init(),
+        onRefresh: () async => initConst(),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(

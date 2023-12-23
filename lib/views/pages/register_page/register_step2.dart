@@ -46,8 +46,8 @@ class _RegisterStep2State extends State<RegisterStep2> {
     final List<SmartShedSection> sections =
         await DashboardForAllController.getSections();
 
+    sectionArray = sections.map((e) => e.title).toList();
     setState(() {
-      sectionArray = sections.map((e) => e.title).toList();
       isSectionLoading = false;
     });
   }

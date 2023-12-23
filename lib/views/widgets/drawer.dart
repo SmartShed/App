@@ -6,25 +6,112 @@ import '../../constants/images.dart';
 import '../../controllers/auth/login.dart';
 import '../pages.dart';
 
-class DrawerText {
-  static const String dashboard = "Dashboard";
-  static const String notifications = "Notifications";
-  static const String manageForms = "Manage Forms";
-  static const String profile = "Profile";
-  static const String emp = "Employees";
-  static const String logout = "Logout";
+late BuildContext globalContext;
+
+class DrawerItem {
+  final String title;
+  final IconData icon;
+  final void Function() onTap;
+  final List<String> pagesToHighlight;
+
+  const DrawerItem({
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    this.pagesToHighlight = const [],
+  });
 }
+
+List<DrawerItem> drawerItems = [
+  DrawerItem(
+    title: "Dashboard",
+    icon: Icons.dashboard,
+    onTap: () {
+      GoRouter.of(globalContext).go(Pages.dashboard);
+    },
+    pagesToHighlight: [
+      Pages.dashboard,
+      Pages.section,
+      Pages.createForm,
+      Pages.form,
+    ],
+  ),
+  DrawerItem(
+    title: "Notifications",
+    icon: Icons.notifications,
+    onTap: () {
+      GoRouter.of(globalContext).push(Pages.notifications);
+      GoRouter.of(globalContext).pop();
+    },
+    pagesToHighlight: [Pages.notifications],
+  ),
+  if (!LoginController.isWorker)
+    DrawerItem(
+      title: "Approve Forms",
+      icon: Icons.checklist,
+      onTap: () {
+        GoRouter.of(globalContext).push(Pages.approveForms);
+        GoRouter.of(globalContext).pop();
+      },
+      pagesToHighlight: [Pages.approveForms],
+    ),
+  DrawerItem(
+    title: "Profile",
+    icon: Icons.person,
+    onTap: () {
+      GoRouter.of(globalContext).push(Pages.profile);
+      GoRouter.of(globalContext).pop();
+    },
+    pagesToHighlight: [Pages.profile],
+  ),
+  if (!LoginController.isWorker)
+    DrawerItem(
+      title: "Employees",
+      icon: Icons.people,
+      onTap: () {
+        GoRouter.of(globalContext).push(Pages.employees);
+        GoRouter.of(globalContext).pop();
+      },
+      pagesToHighlight: [Pages.employees],
+    ),
+  DrawerItem(
+    title: "Manage Forms",
+    icon: Icons.list_alt,
+    onTap: () {
+      GoRouter.of(globalContext).push(Pages.manageForms);
+      GoRouter.of(globalContext).pop();
+    },
+    pagesToHighlight: [
+      Pages.manageForms,
+      Pages.manageCreateSection,
+      Pages.manageCreateForm,
+      Pages.manageManageForm,
+    ],
+  ),
+  DrawerItem(
+    title: "Logout",
+    icon: Icons.logout,
+    onTap: () {
+      showDialog(
+        context: globalContext,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const LogoutPage();
+        },
+      );
+    },
+    pagesToHighlight: [Pages.logout],
+  ),
+];
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String currentRoute =
-        GoRouter.of(context).routeInformationProvider.value.uri.toString();
-
+    globalContext = context;
     double height = MediaQuery.of(context).size.height;
-    double startHeight = height * 0.05;
+    double startHeight = height * 0.075;
 
     return Drawer(
       backgroundColor: ColorConstants.bg,
@@ -60,161 +147,40 @@ class MyDrawer extends StatelessWidget {
             endIndent: 10,
             height: 40,
           ),
-          ListTile(
-            leading: Icon(
-              Icons.dashboard,
-              color: _isHighlighted(currentRoute, DrawerText.dashboard)
-                  ? ColorConstants.primary
-                  : Colors.black,
-            ),
-            title: Text(
-              DrawerText.dashboard,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: _isHighlighted(currentRoute, DrawerText.dashboard)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              GoRouter.of(context).go(Pages.dashboard);
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.notifications,
-              color: _isHighlighted(currentRoute, DrawerText.notifications)
-                  ? ColorConstants.primary
-                  : Colors.black,
-            ),
-            title: Text(
-              DrawerText.notifications,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight:
-                    _isHighlighted(currentRoute, DrawerText.notifications)
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              GoRouter.of(context).push(Pages.notifications);
-              GoRouter.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.list_alt,
-              color: _isHighlighted(currentRoute, DrawerText.manageForms)
-                  ? ColorConstants.primary
-                  : Colors.black,
-            ),
-            title: Text(
-              DrawerText.manageForms,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: _isHighlighted(currentRoute, DrawerText.manageForms)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              GoRouter.of(context).push(Pages.manageForms);
-              GoRouter.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.person,
-              color: _isHighlighted(currentRoute, DrawerText.profile)
-                  ? ColorConstants.primary
-                  : Colors.black,
-            ),
-            title: Text(
-              DrawerText.profile,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: _isHighlighted(currentRoute, DrawerText.profile)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              GoRouter.of(context).push(Pages.profile);
-              GoRouter.of(context).pop();
-            },
-          ),
-          if (!LoginController.isWorker)
-            ListTile(
-              leading: Icon(Icons.people,
-                  color: _isHighlighted(currentRoute, DrawerText.emp)
-                      ? ColorConstants.primary
-                      : Colors.black),
-              title: Text(
-                DrawerText.emp,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: _isHighlighted(currentRoute, DrawerText.emp)
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-              onTap: () {
-                GoRouter.of(context).push(Pages.employees);
-                GoRouter.of(context).pop();
-              },
-            ),
-          ListTile(
-            leading: Icon(
-              Icons.logout,
-              color: _isHighlighted(currentRoute, DrawerText.logout)
-                  ? ColorConstants.primary
-                  : Colors.black,
-            ),
-            title: Text(
-              DrawerText.logout,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: _isHighlighted(currentRoute, DrawerText.logout)
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              // Show logout dialog
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return const LogoutPage();
-                },
-              );
-            },
-          ),
+          for (DrawerItem item in drawerItems) buildListTile(item),
         ],
       ),
     );
   }
-}
 
-bool _isHighlighted(String currentRoute, String text) {
-  switch (text) {
-    case DrawerText.dashboard:
-      return currentRoute.startsWith(Pages.dashboard) ||
-          currentRoute.startsWith(Pages.section) ||
-          currentRoute.startsWith(Pages.createForm) ||
-          currentRoute.startsWith(Pages.form);
-    case DrawerText.notifications:
-      return currentRoute.startsWith(Pages.notifications);
-    case DrawerText.manageForms:
-      return currentRoute.startsWith(Pages.manageForms);
-    case DrawerText.profile:
-      return currentRoute.startsWith(Pages.profile);
-    case DrawerText.emp:
-      return currentRoute.startsWith(Pages.employees);
-    case DrawerText.logout:
-      return currentRoute.startsWith(Pages.logout);
-    default:
-      return false;
+  Widget buildListTile(DrawerItem item) {
+    final String currentRoute = GoRouter.of(globalContext)
+        .routeInformationProvider
+        .value
+        .uri
+        .toString();
+
+    bool isHighlighted = false;
+    for (String page in item.pagesToHighlight) {
+      if (currentRoute.startsWith(page)) {
+        isHighlighted = true;
+        break;
+      }
+    }
+
+    return ListTile(
+      leading: Icon(
+        item.icon,
+        color: isHighlighted ? ColorConstants.primary : Colors.black,
+      ),
+      title: Text(
+        item.title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      onTap: item.onTap,
+    );
   }
 }

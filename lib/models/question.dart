@@ -2,6 +2,29 @@ import 'package:intl/intl.dart';
 
 import '../constants/settings.dart';
 
+class SmartShedQuestionHistory {
+  String editedBy;
+  String editedAt;
+  String? oldValue;
+  String? newValue;
+
+  SmartShedQuestionHistory({
+    required this.editedBy,
+    required this.editedAt,
+    this.oldValue,
+    this.newValue,
+  });
+
+  factory SmartShedQuestionHistory.fromJson(Map<String, dynamic> json) {
+    return SmartShedQuestionHistory(
+      editedBy: json['editedBy'],
+      editedAt: json['editedAt'],
+      oldValue: json['oldValue'] ?? '',
+      newValue: json['newValue'] ?? '',
+    );
+  }
+}
+
 class SmartShedQuestion {
   final String id;
   final String questionID;
@@ -13,25 +36,7 @@ class SmartShedQuestion {
   bool isExpanded = false;
   bool isAnsChanged = false;
 
-  // History
-  /*
-  [
-    {
-      'editedBy': 'Name',
-      'editedAt': 'Date',
-      'oldAns': 'Old Answer',
-      'newAns': 'New Answer',
-    },
-    {
-      'editedBy': 'Name',
-      'editedAt': 'Date',
-      'oldAns': 'Old Answer',
-      'newAns': 'New Answer',
-    },
-  ]
-  */
-
-  List<Map<String, dynamic>> history = [];
+  List<SmartShedQuestionHistory> history = [];
 
   SmartShedQuestion({
     required this.id,

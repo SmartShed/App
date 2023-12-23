@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/forms/opening.dart';
@@ -45,12 +44,6 @@ AppBar buildAppBar() {
       textAlign: TextAlign.center,
     ),
     centerTitle: true,
-    actions: const [
-      IconButton(
-        onPressed: onTap,
-        icon: Icon(Icons.add_box_outlined),
-      ),
-    ],
   );
 }
 
@@ -146,7 +139,6 @@ void onTap() async {
     ),
   );
 
-  FormOpeningController.init();
   SmartShedOpenedForm? createdForm = await FormOpeningController.createForm(
     formId,
     locoNameController.text,
@@ -164,4 +156,9 @@ void onTap() async {
   } else {
     GoRouter.of(context).go(Pages.dashboard);
   }
+}
+
+void disposeConst() {
+  locoNameController.dispose();
+  locoNumberController.dispose();
 }

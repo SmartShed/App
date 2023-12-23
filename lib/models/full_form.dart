@@ -61,7 +61,7 @@ class SmartShedForm {
       submittedCount: json['submittedCount'],
       lockStatus: json['lockStatus'],
       access: json['access'].cast<String>(),
-      createdBy: json['createdBy'],
+      createdBy: json['createdBy']['name'],
       history: json['history'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),

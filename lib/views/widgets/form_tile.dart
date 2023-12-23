@@ -10,11 +10,13 @@ import 'tooltip.dart';
 class FormTile extends StatefulWidget {
   final int index;
   final SmartShedUnopenedForm form;
+  final String onTapRoute;
 
   const FormTile({
     Key? key,
     required this.index,
     required this.form,
+    this.onTapRoute = Pages.createForm,
   }) : super(key: key);
 
   @override
@@ -140,7 +142,20 @@ class _FormTileState extends State<FormTile> {
   }
 
   void _onTap(BuildContext context) {
-    GoRouter.of(context).push(Pages.createForm, extra: widget.form);
+    switch (widget.onTapRoute) {
+      case Pages.createForm:
+        GoRouter.of(context).push(
+          Pages.createForm,
+          extra: widget.form,
+        );
+        break;
+      case Pages.manageManageForm:
+        GoRouter.of(context)
+            .push("${Pages.manageManageForm}/${widget.form.id}");
+        break;
+      default:
+        GoRouter.of(context).push(widget.onTapRoute);
+    }
   }
 }
 

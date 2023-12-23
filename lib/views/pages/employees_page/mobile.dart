@@ -16,7 +16,7 @@ class _EmployeesPageMobileState extends State<EmployeesPageMobile> {
   void initState() {
     super.initState();
     const_file.changeState = setState;
-    init();
+    initConst();
   }
 
   @override
@@ -28,7 +28,7 @@ class _EmployeesPageMobileState extends State<EmployeesPageMobile> {
       drawer: const MyDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
-          init();
+          initConst();
         },
         child: SingleChildScrollView(
           child: Padding(

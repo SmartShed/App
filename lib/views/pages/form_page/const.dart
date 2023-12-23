@@ -1,59 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// import 'package:pdf/pdf.dart';
+// import 'package:printing/printing.dart';
+// import 'package:pdf/widgets.dart' as pw;
+
+import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/forms/answering.dart';
 import '../../../controllers/forms/opening.dart';
 import '../../../models/full_form.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/question.dart';
+import '../../../models/section.dart';
 import '../../../models/sub_form.dart';
 import '../../pages.dart';
 import '../../widgets/drawer.dart';
+import '../../widgets/dropdown.dart';
 import '../../widgets/loading_dialog.dart';
 import '../../widgets/question_tile.dart';
 import '../../widgets/text_field.dart';
+import 'print.dart';
 
 late String id;
 late SmartShedOpenedForm? data;
 late SmartShedForm? form;
 
+late List<String> sections;
+
 late bool isLoading;
+late bool isSectionLoading;
 late bool isAnswersShown;
 late bool isSearchBoxOpen;
+late bool isEmployeeNameFilter;
+late bool isEmployeeSectionFilter;
 late bool isShowDetails;
 late bool isDesktop;
 
 late TextEditingController searchController;
+late TextEditingController employeeNameController;
+late TextEditingController employeeSectionController;
+
+late ScrollController scrollController;
+late AnimationController animationController;
+late bool isScrollToTopVisible;
+
 late BuildContext context;
+late dynamic state;
 late void Function(void Function()) changeState;
 
-final Map<String, List<Map<String, dynamic>>> qusIdToHistory = {};
+final Map<String, List<SmartShedQuestionHistory>> qusIdToHistory = {};
 
 void initConst(
   String formId,
   SmartShedOpenedForm? formData,
   void Function(void Function()) setState,
   bool isUserDesktop,
+  dynamic stateThis,
 ) {
   id = formId;
   data = formData;
   changeState = setState;
   isDesktop = isUserDesktop;
+  state = stateThis;
+
+  sections = [];
 
   isLoading = true;
+  isSectionLoading = true;
   isAnswersShown = false;
   isSearchBoxOpen = false;
+  isEmployeeNameFilter = false;
+  isEmployeeSectionFilter = false;
   isShowDetails = false;
 
   searchController = TextEditingController();
+  employeeNameController = TextEditingController();
+  employeeSectionController = TextEditingController();
+
+  scrollController = ScrollController();
+  animationController = AnimationController(
+    vsync: state as TickerProvider,
+    duration: const Duration(milliseconds: 500),
+  );
+  isScrollToTopVisible = false;
 
   initForm();
+  initSections();
+
+  addScrollListener();
 }
 
 void initForm() async {
   form = await FormOpeningController.getForm(id);
   fillHistory();
   changeState(() => isLoading = false);
+}
+
+void initSections() async {
+  final List<SmartShedSection> sectionsList =
+      await DashboardForAllController.getSections();
+
+  sections = sectionsList.map((e) => e.title).toList();
+  changeState(() => isSectionLoading = false);
 }
 
 void fillHistory() {
@@ -66,19 +114,21 @@ void fillHistory() {
   for (var history in form!.history) {
     for (var change in history['changes']) {
       final qusId = change['questionID'];
-      final oldAns = change['oldValue'];
-      final newAns = change['newValue'];
+      final oldValue = change['oldValue'];
+      final newValue = change['newValue'];
 
       if (qusIdToHistory[qusId] == null) {
         qusIdToHistory[qusId] = [];
       }
 
-      qusIdToHistory[qusId]!.add({
-        'editedBy': history['editedBy'],
-        'editedAt': history['editedAt'],
-        'oldAns': oldAns,
-        'newAns': newAns,
-      });
+      qusIdToHistory[qusId]!.add(
+        SmartShedQuestionHistory(
+          editedBy: history['editedBy'],
+          editedAt: history['editedAt'],
+          oldValue: oldValue,
+          newValue: newValue,
+        ),
+      );
     }
   }
 
@@ -107,14 +157,54 @@ AppBar buildAppBar() {
       textAlign: TextAlign.center,
     ),
     centerTitle: true,
-    actions: const [
-      IconButton(
+    actions: [
+      const IconButton(
         onPressed: saveForm,
         icon: Icon(Icons.save),
+      ),
+      IconButton(
+        onPressed: () => printForm(form!),
+        icon: const Icon(Icons.print),
       ),
     ],
     automaticallyImplyLeading: !isDesktop,
   );
+}
+
+Widget? buildFloatingActionButton() {
+  if (!isScrollToTopVisible) return null;
+
+  return ScaleTransition(
+    scale: CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastOutSlowIn,
+    ),
+    child: FloatingActionButton(
+      onPressed: () {
+        animationController.reverse();
+        scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+        );
+      },
+      mini: true,
+      tooltip: "Scroll to Top",
+      child: const Icon(Icons.arrow_upward),
+    ),
+  );
+}
+
+void addScrollListener() {
+  scrollController.addListener(() {
+    if (scrollController.position.pixels > 600 && !isScrollToTopVisible) {
+      animationController.forward();
+      changeState(() => isScrollToTopVisible = true);
+    } else if (scrollController.offset < 600 && isScrollToTopVisible) {
+      animationController.reverse();
+      changeState(() => isScrollToTopVisible = false);
+    }
+  });
 }
 
 Widget buildLoading() {
@@ -134,7 +224,10 @@ Widget buildLoading() {
               color: Colors.white,
             ),
       automaticallyImplyLeading: !isDesktop,
-      actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.save))],
+      actions: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.print)),
+      ],
     ),
     drawer: isDesktop ? null : const MyDrawer(),
     body: Row(
@@ -173,6 +266,8 @@ Widget buildMainBody() {
       buildTopInfoBar(),
       buildTopButtons(),
       if (isSearchBoxOpen) buildSearchBox(),
+      if (isEmployeeNameFilter) buildEmployeeNameFilter(),
+      if (isEmployeeSectionFilter) buildEmployeeSectionFilter(),
       const SizedBox(height: 10),
       const Text(
         "Form Questions",
@@ -450,9 +545,13 @@ Widget _buildButton({
             borderRadius: BorderRadius.circular(5),
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
     ),
@@ -477,7 +576,7 @@ Widget buildTopButtons({bool isBottom = false}) {
       ),
       child: Column(
         children: [
-          if (!isBottom)
+          if (!isBottom) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -485,6 +584,7 @@ Widget buildTopButtons({bool isBottom = false}) {
                   text: "Search Question",
                   onPressed: () {
                     changeState(() => isSearchBoxOpen = !isSearchBoxOpen);
+                    if (!isSearchBoxOpen) searchController.clear();
                   },
                 ),
                 _buildButton(
@@ -505,6 +605,30 @@ Widget buildTopButtons({bool isBottom = false}) {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildButton(
+                  text: "Filter by Name",
+                  onPressed: () {
+                    changeState(
+                        () => isEmployeeNameFilter = !isEmployeeNameFilter);
+                    if (!isEmployeeNameFilter) employeeNameController.clear();
+                  },
+                ),
+                _buildButton(
+                  text: "Filter by Section",
+                  onPressed: () {
+                    changeState(() =>
+                        isEmployeeSectionFilter = !isEmployeeSectionFilter);
+                    if (!isEmployeeSectionFilter) {
+                      employeeSectionController.clear();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -528,41 +652,116 @@ Widget buildSearchBox() {
   return Container(
     padding: const EdgeInsets.all(8),
     child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white60,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 2,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: MyTextField(
-          hintText: "Search Question",
-          controller: searchController,
-          suffixIcon: IconButton(
-            onPressed: () {
-              changeState(() => isSearchBoxOpen = false);
-            },
-            icon: const Icon(Icons.close),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white60,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
           ),
-          onChanged: (value) {
-            changeState(() {});
+        ],
+      ),
+      child: MyTextField(
+        hintText: "Search Question",
+        controller: searchController,
+        suffixIcon: IconButton(
+          onPressed: () {
+            changeState(() => isSearchBoxOpen = false);
+            searchController.clear();
           },
-          keyboardType: TextInputType.text,
-        )),
+          icon: const Icon(Icons.close),
+        ),
+        onChanged: (value) {
+          changeState(() {});
+        },
+        keyboardType: TextInputType.text,
+      ),
+    ),
   );
 }
 
-Widget buildQuestionsContainer(
-  List<SmartShedQuestion> questions,
-  SmartShedSubForm? subForm,
-) {
-  if (questions.isEmpty) return const SizedBox();
+Widget buildEmployeeNameFilter() {
+  return Container(
+    padding: const EdgeInsets.all(8),
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white60,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: MyTextField(
+        hintText: "Employee Name",
+        controller: employeeNameController,
+        suffixIcon: IconButton(
+          onPressed: () {
+            changeState(() => isEmployeeNameFilter = false);
+            employeeNameController.clear();
+          },
+          icon: const Icon(Icons.close),
+        ),
+        onChanged: (value) {
+          changeState(() {});
+        },
+        keyboardType: TextInputType.text,
+      ),
+    ),
+  );
+}
 
+Widget buildEmployeeSectionFilter() {
+  return Container(
+    padding: const EdgeInsets.all(8),
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white60,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 5),
+          Expanded(
+            child: MyDropdown(
+              hintText: 'Employee Section',
+              controller: employeeSectionController,
+              items: sections,
+              onChanged: () => changeState(() {}),
+            ),
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+            onPressed: () {
+              changeState(() => isEmployeeSectionFilter = false);
+              employeeSectionController.clear();
+            },
+            icon: const Icon(Icons.close),
+            iconSize: 18,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+List<SmartShedQuestion> getFilteredQuestions(
+    List<SmartShedQuestion> questions) {
   if (isSearchBoxOpen) {
     questions = questions.where((question) {
       return question.textEnglish
@@ -574,7 +773,30 @@ Widget buildQuestionsContainer(
     }).toList();
   }
 
+  if (isEmployeeNameFilter) {
+    questions = questions.where((question) {
+      return question.history.any((history) {
+        return history.editedBy
+            .toLowerCase()
+            .contains(employeeNameController.text.toLowerCase());
+      });
+    }).toList();
+  }
+
+  if (isEmployeeSectionFilter) {
+    // TODO: Implement this
+  }
+
+  return questions;
+}
+
+Widget buildQuestionsContainer(
+  List<SmartShedQuestion> questions,
+  SmartShedSubForm? subForm,
+) {
   if (questions.isEmpty) return const SizedBox();
+  List<SmartShedQuestion> filteredQuestions = getFilteredQuestions(questions);
+  if (filteredQuestions.isEmpty) return const SizedBox();
 
   return Container(
     padding: const EdgeInsets.all(8),
@@ -640,7 +862,7 @@ Widget buildQuestionsContainer(
             ),
           const SizedBox(height: 20),
           // Questions
-          ...questions.map(
+          ...filteredQuestions.map(
             (question) => Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: QuestionTile(
@@ -687,4 +909,55 @@ void submitForm() async {
   if (!context.mounted) return;
   GoRouter.of(context).pop();
   GoRouter.of(context).go(Pages.dashboard);
+}
+
+// void printForm() async {
+//   // showDialog(
+//   //   context: context,
+//   //   barrierDismissible: false,
+//   //   builder: (context) => const LoadingDialog(
+//   //     title: "Printing Form...",
+//   //   ),
+//   // );
+
+//   // await Future.delayed(const Duration(seconds: 2));
+//   // await FormAnsweringController.printForm(form!);
+
+//   String pdfTitle = "${form!.title} - ${form!.locoName} ${form!.locoNumber}";
+
+//   final doc = pw.Document(
+//     title: pdfTitle,
+//     version: PdfVersion.pdf_1_5,
+//     author: 'SmartShed',
+//     keywords: 'SmartShed, PDF, Form',
+//     creator: 'SmartShed',
+//     subject: 'SmartShed Form',
+//     pageMode: PdfPageMode.fullscreen,
+//   );
+//   doc.addPage(pw.Page(
+//       pageFormat: PdfPageFormat.a4,
+//       build: (pw.Context context) {
+//         return pw.Center(
+//           child: pw.Text(
+//             'Hello World',
+//             style: const pw.TextStyle(fontSize: 40),
+//           ),
+//         ); // Center
+//       }));
+//   await Printing.layoutPdf(
+//     name: pdfTitle,
+//     onLayout: (PdfPageFormat format) async => doc.save(),
+//   );
+
+//   // if (!context.mounted) return;
+//   // GoRouter.of(context).pop();
+// }
+
+void disposeConst() {
+  searchController.dispose();
+  employeeNameController.dispose();
+  employeeSectionController.dispose();
+
+  scrollController.dispose();
+  animationController.dispose();
 }
