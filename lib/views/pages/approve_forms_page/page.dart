@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartshed/utils/api/forms_approve.dart';
 
 import '../../responsive/responsive_layout.dart';
 import 'desktop.dart';
@@ -11,6 +12,8 @@ class ApproveFormsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FormsApproveApiHandler().getUnapprovedForms();
+
     return const ResponsiveLayout(
       mobileBody: ApproveFormsPageMobile(),
       desktopBody: ApproveFormsPageDesktop(),

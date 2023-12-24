@@ -1,15 +1,8 @@
-// SmartShedNotification({
-//   required this.id,
-//   required this.contentEnglish,
-//   required this.contentHindi,
-//   required this.createdAt,
-//   required this.isRead,
-//   required this.formId,
-// });
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/notification.dart';
+import '../pages.dart';
 
 class NotificationTile extends StatelessWidget {
   final SmartShedNotification notification;
@@ -107,6 +100,14 @@ class NotificationTile extends StatelessWidget {
           ),
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
+            if (notification.formId != null) {
+              GoRouter.of(context).push("${Pages.form}/${notification.formId}");
+            }
+            // else if (notification.userId != null) {
+            //   GoRouter.of(context)
+            //       .push("${Pages.profile}/${notification.userId}");
+            // }
+
             onNotificationMarkAsRead(notification.id);
           },
         ),

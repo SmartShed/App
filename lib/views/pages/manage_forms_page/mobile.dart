@@ -31,13 +31,19 @@ class _ManageFormsPageMobileState extends State<ManageFormsPageMobile> {
     return Scaffold(
       appBar: buildAppBar(),
       drawer: const MyDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          initSections();
+          initForms();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            child: buildBody(),
           ),
-          child: buildBody(),
         ),
       ),
     );

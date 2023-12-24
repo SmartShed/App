@@ -20,6 +20,12 @@ class _DashboardPageMobileState extends State<DashboardPageMobile> {
   }
 
   @override
+  void didChangeDependencies() {
+    initConst();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const_file.context = context;
 

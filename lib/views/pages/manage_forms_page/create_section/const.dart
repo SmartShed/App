@@ -81,7 +81,7 @@ void createSection() async {
   );
 
   bool isSectionCreated =
-      await SmartShedController.createSection(sectionNameController.text);
+      await SmartShedController.addSection(sectionNameController.text);
 
   if (!context.mounted) return;
   GoRouter.of(context).pop();

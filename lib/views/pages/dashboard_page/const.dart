@@ -28,6 +28,8 @@ void initConst() {
     onDone: () => changeState(() {}),
   );
 
+  changeState(() {});
+
   _initSections();
   _initRecentlyOpenedForms();
 }
@@ -60,6 +62,7 @@ AppBar buildAppBar() {
     centerTitle: true,
     actions: [
       NotificationIcon(
+        key: ValueKey<int>(notificationsController.unreadNotificationsCount),
         iconData: Icons.notifications,
         onTap: () {
           GoRouter.of(context).push(Pages.notifications);

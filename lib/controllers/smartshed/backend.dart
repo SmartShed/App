@@ -38,7 +38,8 @@ class BackendController {
   }
 
   static Future<void> setBackendUrlToDefault() async {
-    _logger.info('Setting backend url to default');
+    _logger.info(
+        'Setting backend url to default to ${EnvController.getDefaultBackendUrl()}');
     APIConstants.setBaseUrl(EnvController.getDefaultBackendUrl());
   }
 }

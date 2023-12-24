@@ -15,8 +15,7 @@ class _NotificationsPageMobileState extends State<NotificationsPageMobile> {
   @override
   void initState() {
     super.initState();
-    changeState = setState;
-    getNotifications();
+    initConst(setState);
   }
 
   @override

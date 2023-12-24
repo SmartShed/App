@@ -74,20 +74,21 @@ List<DrawerItem> drawerItems = [
       },
       pagesToHighlight: [Pages.employees],
     ),
-  DrawerItem(
-    title: "Manage Forms",
-    icon: Icons.list_alt,
-    onTap: () {
-      GoRouter.of(globalContext).push(Pages.manageForms);
-      GoRouter.of(globalContext).pop();
-    },
-    pagesToHighlight: [
-      Pages.manageForms,
-      Pages.manageCreateSection,
-      Pages.manageCreateForm,
-      Pages.manageManageForm,
-    ],
-  ),
+  if (!LoginController.isWorker)
+    DrawerItem(
+      title: "Manage Forms",
+      icon: Icons.list_alt,
+      onTap: () {
+        GoRouter.of(globalContext).push(Pages.manageForms);
+        GoRouter.of(globalContext).pop();
+      },
+      pagesToHighlight: [
+        Pages.manageForms,
+        Pages.manageCreateSection,
+        Pages.manageCreateForm,
+        Pages.manageManageForm,
+      ],
+    ),
   DrawerItem(
     title: "Logout",
     icon: Icons.logout,

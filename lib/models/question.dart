@@ -5,12 +5,14 @@ import '../constants/settings.dart';
 class SmartShedQuestionHistory {
   String editedBy;
   String editedAt;
+  String? section;
   String? oldValue;
   String? newValue;
 
   SmartShedQuestionHistory({
     required this.editedBy,
     required this.editedAt,
+    this.section,
     this.oldValue,
     this.newValue,
   });
@@ -19,6 +21,7 @@ class SmartShedQuestionHistory {
     return SmartShedQuestionHistory(
       editedBy: json['editedBy'],
       editedAt: json['editedAt'],
+      section: json['section'] ?? '',
       oldValue: json['oldValue'] ?? '',
       newValue: json['newValue'] ?? '',
     );

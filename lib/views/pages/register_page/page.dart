@@ -401,6 +401,10 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    if (position == "authority") {
+      section = "";
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,

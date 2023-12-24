@@ -104,7 +104,7 @@ void createForm() async {
     ),
   );
 
-  bool isFormCreated = await SmartShedController.createForm(
+  bool isFormCreated = await SmartShedController.addForm(
     sectionTitle,
     formTitleController.text,
     descriptionEnglishController.text,

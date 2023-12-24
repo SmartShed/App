@@ -31,6 +31,16 @@ class APIConstants {
   static String sections = '$baseUrl/api/sections';
   static String recentlyOpenedForms = '$baseUrl/api/workers/forms';
 
+  // Notifications
+  static String getNotifications =
+      '$baseUrl/api/notifications/getnotifications';
+  static String markNotificationAsRead =
+      '$baseUrl/api/notifications/marknotificationasread/:id';
+  static String deleteNotification =
+      '$baseUrl/api/notifications/deletenotification/:id';
+  static String deleteAllNotifications =
+      '$baseUrl/api/notifications/deleteallnotifications';
+
   // Sections
   static String formsBySectionIdOrName =
       '$baseUrl/api/sections/:idOrName/forms';
@@ -41,6 +51,7 @@ class APIConstants {
   // Forms
   static String createForm = '$baseUrl/api/workers/forms/create';
   static String getForm = '$baseUrl/api/workers/forms/:id';
+  static String getUnopenedForm = '$baseUrl/api/workers/forms/opening/:id';
   static String recentlyOpenedFormsForSection =
       '$baseUrl/api/workers/section/:idOrName/forms';
 
@@ -51,9 +62,29 @@ class APIConstants {
   // Creation
   static String employees = '$baseUrl/api/create/employees';
   static String addSection = '$baseUrl/api/create/section';
-  static String addForms = '$baseUrl/api/create/forms';
-  static String addSubForms = '$baseUrl/api/create/sub-forms';
-  static String addQuestions = '$baseUrl/api/create/questions';
+  static String addForm = '$baseUrl/api/create/form';
+  static String addSubForm = '$baseUrl/api/create/sub-form';
+  static String addQuestion = '$baseUrl/api/create/question';
 
   static String deleteUsers = '$baseUrl/api/delete/users';
+
+  // Supervisors
+  static String getUnapprovedFormsForSupervisor =
+      '$baseUrl/api/supervisors/forms/unapproved';
+  static String getApprovedFormsForSupervisor =
+      '$baseUrl/api/supervisors/forms/approved';
+  static String approveFormForSupervisor =
+      '$baseUrl/api/supervisors/forms/approve';
+  static String rejectFormForSupervisor =
+      '$baseUrl/api/supervisors/forms/reject';
+
+  // Authorities
+  static String getUnapprovedFormsForAuthority =
+      '$baseUrl/api/authorities/forms/unapproved';
+  static String getApprovedFormsForAuthority =
+      '$baseUrl/api/authorities/forms/approved';
+  static String approveFormForAuthority =
+      '$baseUrl/api/authorities/forms/approve';
+  static String rejectFormForAuthority =
+      '$baseUrl/api/authorities/forms/reject';
 }

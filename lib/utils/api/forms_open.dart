@@ -78,4 +78,33 @@ class FormsOpeningAPIHandler {
       };
     }
   }
+
+  Future<Map<String, dynamic>> getUnopenedForm(String formId) async {
+    try {
+      _logger.info('Calling getUnopenedForm API for form $formId');
+
+      final response = await _dio.get(
+        APIConstants.getUnopenedForm.replaceFirst(':id', formId),
+        options: Options(
+          headers: {
+            'auth_token': XAuthTokenCacheHandler.token!,
+          },
+        ),
+      );
+
+      _logger.info('getUnopenedForm API called successfully');
+
+      return {
+        'status': 'success',
+        'message': response.data['message'],
+        'form': response.data['form'],
+      };
+    } on DioException catch (e) {
+      _logger.error(e);
+      return {
+        'status': 'error',
+        'message': e.response!.data['message'],
+      };
+    }
+  }
 }

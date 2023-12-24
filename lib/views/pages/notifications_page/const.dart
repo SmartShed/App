@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:smartshed/controllers/dashboard/notifications.dart';
-import 'package:smartshed/views/widgets/notification_tile.dart';
+
+import '../../../controllers/dashboard/notifications.dart';
+import '../../../models/notification.dart';
+import '../../widgets/notification_tile.dart';
 
 late void Function(void Function()) changeState;
 
 NotificationsController notificationsController = NotificationsController();
 
 bool isLoading = true;
+bool isShowingAllNotifications = false;
+
+void initConst(void Function(void Function()) setState) {
+  changeState = setState;
+
+  isLoading = true;
+  isShowingAllNotifications = false;
+
+  getNotifications();
+}
 
 void getNotifications() async {
   changeState(() => isLoading = true);
@@ -27,12 +39,12 @@ AppBar buildAppBar() {
   );
 }
 
-Widget buildNotificationsList() {
+Widget buildNotificationsList(List<SmartShedNotification> notifications) {
   return ListView.separated(
-    itemCount: notificationsController.unreadNotificationsCount,
+    itemCount: notifications.length,
     itemBuilder: (context, index) {
       return NotificationTile(
-        notification: notificationsController.notifications[index],
+        notification: notifications[index],
         onNotificationDelete: (notificationId) {
           notificationsController.deleteNotification(notificationId);
           changeState(() {});
@@ -54,7 +66,10 @@ Widget buildButtons() {
     children: [
       ElevatedButton(
         onPressed: () async {
-          changeState(() => isLoading = true);
+          changeState(() => {
+                isLoading = true,
+                isShowingAllNotifications = false,
+              });
           await notificationsController.fetchNotifications();
           changeState(() => isLoading = false);
         },
@@ -78,7 +93,7 @@ Widget buildButtons() {
       ),
       ElevatedButton(
         onPressed: () async {
-          notificationsController.notifications.clear();
+          await notificationsController.deleteAllNotifications();
           changeState(() {});
         },
         child: const Row(
@@ -104,21 +119,44 @@ Widget buildButtons() {
 }
 
 Widget noNotifications() {
-  return const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.notifications_off,
-          size: 100,
+  return const Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.notifications_off,
+        size: 100,
+        color: Colors.grey,
+      ),
+      SizedBox(height: 20),
+      Text(
+        'No notifications',
+        style: TextStyle(
+          fontSize: 20,
           color: Colors.grey,
         ),
-        SizedBox(height: 20),
+      ),
+    ],
+  );
+}
+
+Widget buildLoadReadNotificationsButton() {
+  return ElevatedButton(
+    onPressed: () {
+      changeState(() => isShowingAllNotifications = true);
+    },
+    child: const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.more_horiz,
+          color: Colors.white,
+        ),
+        SizedBox(width: 10),
         Text(
-          'No notifications',
+          'All Notifications',
           style: TextStyle(
-            fontSize: 20,
-            color: Colors.grey,
+            color: Colors.white,
           ),
         ),
       ],
@@ -129,13 +167,24 @@ Widget noNotifications() {
 Widget buildBody() {
   return Column(
     children: [
-      Expanded(
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : notificationsController.notifications.isEmpty
-                ? noNotifications()
-                : buildNotificationsList(),
-      ),
+      if (!isShowingAllNotifications)
+        Expanded(
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : notificationsController.unreadNotifications.isEmpty
+                  ? noNotifications()
+                  : buildNotificationsList(
+                      notificationsController.unreadNotifications),
+        ),
+      if (notificationsController.readNotifications.isNotEmpty &&
+          !isShowingAllNotifications)
+        buildLoadReadNotificationsButton(),
+      if (isShowingAllNotifications)
+        Expanded(
+          child: buildNotificationsList(
+            notificationsController.readNotifications,
+          ),
+        ),
       const SizedBox(height: 20),
       buildButtons(),
       const SizedBox(height: 10),

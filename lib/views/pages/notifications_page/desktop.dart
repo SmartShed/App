@@ -15,8 +15,7 @@ class _NotificationsPageDesktopState extends State<NotificationsPageDesktop> {
   @override
   void initState() {
     super.initState();
-    changeState = setState;
-    getNotifications();
+    initConst(setState);
   }
 
   @override

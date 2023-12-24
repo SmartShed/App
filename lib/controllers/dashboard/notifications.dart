@@ -1,8 +1,12 @@
-import 'package:smartshed/controllers/logger/log.dart';
-import 'package:smartshed/models/notification.dart';
+import '../../models/notification.dart';
+import '../../utils/api/notifications.dart';
+import '../logger/log.dart';
 
 class NotificationsController {
   final _logger = LoggerService.getLogger('NotificationsController');
+
+  final NotificationApiHandler _notificationApiHandler =
+      NotificationApiHandler();
 
   NotificationsController._internal();
 
@@ -15,6 +19,14 @@ class NotificationsController {
 
   List<SmartShedNotification> get notifications => _notifications;
 
+  List<SmartShedNotification> get unreadNotifications => _notifications
+      .where((notification) => notification.isRead == false)
+      .toList();
+
+  List<SmartShedNotification> get readNotifications => _notifications
+      .where((notification) => notification.isRead == true)
+      .toList();
+
   int get unreadNotificationsCount => _notifications
       .where((notification) => notification.isRead == false)
       .toList()
@@ -22,50 +34,66 @@ class NotificationsController {
 
   Future<void> fetchNotifications({void Function()? onDone}) async {
     _logger.info('Fetching notifications');
-    _notifications.clear();
-    await Future.delayed(const Duration(seconds: 1), () {
-      _notifications.add(SmartShedNotification(
-        id: '1',
-        contentEnglish: 'This is a test notification 1',
-        contentHindi: 'यह एक परीक्षण सूचना है 1',
-        isRead: false,
-        createdAt: DateTime.now(),
-        formId: '1',
-      ));
-      _notifications.add(SmartShedNotification(
-        id: '2',
-        contentEnglish: 'This is a test notification 2',
-        contentHindi: 'यह एक परीक्षण सूचना है 2',
-        isRead: false,
-        createdAt: DateTime.now(),
-        formId: '1',
-      ));
-    });
+    final response = await _notificationApiHandler.getNotifications();
 
-    _logger.info('Notifications fetched');
+    if (response['status'] == 'success') {
+      _notifications.clear();
+      response['notifications'].forEach((notification) {
+        _notifications.add(SmartShedNotification.fromJson(notification));
+      });
+      _logger.info('Notifications fetched successfully');
+    } else {
+      _logger.error('Error while fetching notifications');
+    }
+
     onDone?.call();
   }
 
   Future<void> markNotificationAsRead(String notificationId) async {
     _logger.info('Marking notification as read: $notificationId');
-    final notification = _notifications
-        .firstWhere((notification) => notification.id == notificationId);
 
-    notification.isRead = true;
+    notifications
+        .firstWhere((notification) => notification.id == notificationId)
+        .isRead = true;
 
-    _logger.info('Notification marked as read: $notificationId');
+    final response =
+        await _notificationApiHandler.markNotificationAsRead(notificationId);
+
+    if (response['status'] == 'success') {
+      _logger.info('Notification marked as read: $notificationId');
+    } else {
+      _logger
+          .error('Error while marking notification as read: $notificationId');
+    }
   }
 
   Future<void> deleteNotification(String notificationId) async {
     _logger.info('Deleting notification: $notificationId');
-    _notifications
+
+    notifications
         .removeWhere((notification) => notification.id == notificationId);
-    _logger.info('Notification deleted: $notificationId');
+
+    final response =
+        await _notificationApiHandler.deleteNotification(notificationId);
+
+    if (response['status'] == 'success') {
+      _logger.info('Notification deleted: $notificationId');
+    } else {
+      _logger.error('Error while deleting notification: $notificationId');
+    }
   }
 
   Future<void> deleteAllNotifications() async {
     _logger.info('Deleting all notifications');
-    _notifications.clear();
-    _logger.info('All notifications deleted');
+
+    notifications.clear();
+
+    final response = await _notificationApiHandler.deleteAllNotifications();
+
+    if (response['status'] == 'success') {
+      _logger.info('All notifications deleted');
+    } else {
+      _logger.error('Error while deleting all notifications');
+    }
   }
 }

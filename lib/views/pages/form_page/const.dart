@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// import 'package:pdf/pdf.dart';
-// import 'package:printing/printing.dart';
-// import 'package:pdf/widgets.dart' as pw;
-
+import '../../../controllers/auth/login.dart';
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/forms/answering.dart';
+import '../../../controllers/forms/approving.dart';
 import '../../../controllers/forms/opening.dart';
 import '../../../models/full_form.dart';
 import '../../../models/opened_form.dart';
@@ -125,6 +123,7 @@ void fillHistory() {
         SmartShedQuestionHistory(
           editedBy: history['editedBy'],
           editedAt: history['editedAt'],
+          section: history['section'],
           oldValue: oldValue,
           newValue: newValue,
         ),
@@ -264,7 +263,7 @@ Widget buildMainBody() {
   return Column(
     children: [
       buildTopInfoBar(),
-      buildTopButtons(),
+      buildButtons(),
       if (isSearchBoxOpen) buildSearchBox(),
       if (isEmployeeNameFilter) buildEmployeeNameFilter(),
       if (isEmployeeSectionFilter) buildEmployeeSectionFilter(),
@@ -283,7 +282,7 @@ Widget buildMainBody() {
           subForm,
         ),
       ),
-      buildTopButtons(isBottom: true),
+      buildButtons(isBottom: true),
       const SizedBox(height: 40),
     ],
   );
@@ -558,7 +557,7 @@ Widget _buildButton({
   );
 }
 
-Widget buildTopButtons({bool isBottom = false}) {
+Widget buildButtons({bool isBottom = false}) {
   return Container(
     padding: const EdgeInsets.all(8),
     child: Container(
@@ -642,6 +641,20 @@ Widget buildTopButtons({bool isBottom = false}) {
               ),
             ],
           ),
+          if (form!.submittedCount > 0 && !LoginController.isWorker)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildButton(
+                  text: "Approve Form",
+                  onPressed: approveForm,
+                ),
+                _buildButton(
+                  text: "Reject Form",
+                  onPressed: rejectForm,
+                ),
+              ],
+            ),
         ],
       ),
     ),
@@ -784,7 +797,15 @@ List<SmartShedQuestion> getFilteredQuestions(
   }
 
   if (isEmployeeSectionFilter) {
-    // TODO: Implement this
+    questions = questions.where((question) {
+      return question.history.any((history) {
+        if (history.section == null) return false;
+
+        return history.section!
+            .toLowerCase()
+            .contains(employeeSectionController.text.toLowerCase());
+      });
+    }).toList();
   }
 
   return questions;
@@ -911,47 +932,37 @@ void submitForm() async {
   GoRouter.of(context).go(Pages.dashboard);
 }
 
-// void printForm() async {
-//   // showDialog(
-//   //   context: context,
-//   //   barrierDismissible: false,
-//   //   builder: (context) => const LoadingDialog(
-//   //     title: "Printing Form...",
-//   //   ),
-//   // );
+void approveForm() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => const LoadingDialog(
+      title: "Approving Form...",
+    ),
+  );
 
-//   // await Future.delayed(const Duration(seconds: 2));
-//   // await FormAnsweringController.printForm(form!);
+  await FormApprovingController.approveForm(id);
 
-//   String pdfTitle = "${form!.title} - ${form!.locoName} ${form!.locoNumber}";
+  if (!context.mounted) return;
+  GoRouter.of(context).pop();
+  GoRouter.of(context).go(Pages.dashboard);
+}
 
-//   final doc = pw.Document(
-//     title: pdfTitle,
-//     version: PdfVersion.pdf_1_5,
-//     author: 'SmartShed',
-//     keywords: 'SmartShed, PDF, Form',
-//     creator: 'SmartShed',
-//     subject: 'SmartShed Form',
-//     pageMode: PdfPageMode.fullscreen,
-//   );
-//   doc.addPage(pw.Page(
-//       pageFormat: PdfPageFormat.a4,
-//       build: (pw.Context context) {
-//         return pw.Center(
-//           child: pw.Text(
-//             'Hello World',
-//             style: const pw.TextStyle(fontSize: 40),
-//           ),
-//         ); // Center
-//       }));
-//   await Printing.layoutPdf(
-//     name: pdfTitle,
-//     onLayout: (PdfPageFormat format) async => doc.save(),
-//   );
+void rejectForm() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => const LoadingDialog(
+      title: "Rejecting Form...",
+    ),
+  );
 
-//   // if (!context.mounted) return;
-//   // GoRouter.of(context).pop();
-// }
+  await FormApprovingController.rejectForm(id);
+
+  if (!context.mounted) return;
+  GoRouter.of(context).pop();
+  GoRouter.of(context).go(Pages.dashboard);
+}
 
 void disposeConst() {
   searchController.dispose();

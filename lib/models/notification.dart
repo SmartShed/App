@@ -8,7 +8,8 @@ class SmartShedNotification {
   String contentHindi;
   DateTime createdAt;
   bool isRead;
-  String formId;
+  String? formId;
+  String? userId;
 
   SmartShedNotification({
     required this.id,
@@ -16,17 +17,19 @@ class SmartShedNotification {
     required this.contentHindi,
     required this.createdAt,
     required this.isRead,
-    required this.formId,
+    this.formId,
+    this.userId,
   });
 
   factory SmartShedNotification.fromJson(Map<String, dynamic> json) {
     return SmartShedNotification(
-      id: json['id'],
+      id: json['_id'],
       contentEnglish: json['contentEnglish'],
       contentHindi: json['contentHindi'],
       createdAt: DateTime.parse(json['createdAt']),
       isRead: json['isRead'],
       formId: json['formId'],
+      userId: json['userId'],
     );
   }
 

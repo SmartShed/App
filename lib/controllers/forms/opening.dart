@@ -1,4 +1,5 @@
 import '../../models/full_form.dart';
+import '../../models/full_unopened_form.dart';
 import '../../models/opened_form.dart';
 import '../../utils/api/forms_open.dart';
 import '../logger/log.dart';
@@ -38,6 +39,19 @@ class FormOpeningController {
 
     if (response['status'] == 'success') {
       return SmartShedForm.fromJson(response['form']);
+    } else {
+      ToastController.error(response['message']);
+      return null;
+    }
+  }
+
+  static Future<SmartShedFullUnopenedForm?> getUnopenedForm(
+      String formId) async {
+    _logger.info('Fetching unopened form with formId: $formId');
+    final response = await _formsOpeningAPIHandler.getUnopenedForm(formId);
+
+    if (response['status'] == 'success') {
+      return SmartShedFullUnopenedForm.fromJson(response['form']);
     } else {
       ToastController.error(response['message']);
       return null;
