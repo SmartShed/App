@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import '../../constants/colors.dart';
 import '../../models/question.dart';
+import '../localization/form.dart';
 
 class QuestionTile extends StatefulWidget {
   final Key qKey;
@@ -52,7 +54,10 @@ class _QuestionTileState extends State<QuestionTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Q${widget.questionNumber}.",
+                  context.formatString(
+                    Form_LocaleData.question_number.getString(context),
+                    [widget.questionNumber],
+                  ),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -97,7 +102,9 @@ class _QuestionTileState extends State<QuestionTile> {
                     });
                   },
                   child: Text(
-                    widget.question.isExpanded ? "Hide Answer" : "Show Answer",
+                    widget.question.isExpanded
+                        ? Form_LocaleData.hide_answer.getString(context)
+                        : Form_LocaleData.show_answer.getString(context),
                     style: const TextStyle(
                       fontSize: 12.0,
                       color: Colors.grey,
@@ -126,6 +133,8 @@ class _QuestionTileState extends State<QuestionTile> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: TextFormField(
                   maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade500),
@@ -159,7 +168,16 @@ class _QuestionTileState extends State<QuestionTile> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
-                    "Answered by ${widget.question.history.first.editedBy} on ${SmartShedQuestion.formattedDate(widget.question.history.first.editedAt)}",
+                    context.formatString(
+                      Form_LocaleData.answerd_by_name_on_date_time
+                          .getString(context),
+                      [
+                        widget.question.history.first.editedBy,
+                        SmartShedQuestion.formattedDate(
+                          widget.question.history.first.editedAt,
+                        ),
+                      ],
+                    ),
                     style: const TextStyle(
                       fontSize: 12.0,
                       color: Colors.grey,
@@ -181,7 +199,9 @@ class _QuestionTileState extends State<QuestionTile> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        _isShowingHistory ? "Hide History" : "Show History",
+                        _isShowingHistory
+                            ? Form_LocaleData.hide_history.getString(context)
+                            : Form_LocaleData.show_history.getString(context),
                         style: const TextStyle(
                           fontSize: 12.0,
                           color: Colors.grey,
@@ -213,36 +233,36 @@ class _QuestionTileState extends State<QuestionTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
-                  "Edited By",
-                  style: TextStyle(
+                  Form_LocaleData.edited_by.getString(context),
+                  style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(width: 5.0),
+              const SizedBox(width: 5.0),
               Expanded(
                 child: Text(
-                  "Edited At",
-                  style: TextStyle(
+                  Form_LocaleData.edited_at.getString(context),
+                  style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(width: 5.0),
+              const SizedBox(width: 5.0),
               Expanded(
                 flex: 2,
                 child: Text(
-                  "Filled Answer",
-                  style: TextStyle(
+                  Form_LocaleData.filled_answer.getString(context),
+                  style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,

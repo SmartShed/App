@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import '../../../controllers/dashboard/notifications.dart';
 import '../../../models/notification.dart';
+import '../../localization/notifications.dart';
 import '../../widgets/notification_tile.dart';
 
+late BuildContext context;
 late void Function(void Function()) changeState;
 
 NotificationsController notificationsController = NotificationsController();
@@ -28,9 +31,9 @@ void getNotifications() async {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'Notifications',
-      style: TextStyle(
+    title: Text(
+      Notifications_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -73,18 +76,18 @@ Widget buildButtons() {
           await notificationsController.fetchNotifications();
           changeState(() => isLoading = false);
         },
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.refresh,
               color: Colors.white,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
-              'Refresh',
-              style: TextStyle(
+              Notifications_LocaleData.refresh.getString(context),
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),
@@ -96,18 +99,18 @@ Widget buildButtons() {
           await notificationsController.deleteAllNotifications();
           changeState(() {});
         },
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.delete,
               color: Colors.white,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
-              'Delete All',
-              style: TextStyle(
+              Notifications_LocaleData.delete_all.getString(context),
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),
@@ -119,18 +122,18 @@ Widget buildButtons() {
 }
 
 Widget noNotifications() {
-  return const Column(
+  return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Icon(
+      const Icon(
         Icons.notifications_off,
         size: 100,
         color: Colors.grey,
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       Text(
-        'No notifications',
-        style: TextStyle(
+        Notifications_LocaleData.no_notifications.getString(context),
+        style: const TextStyle(
           fontSize: 20,
           color: Colors.grey,
         ),
@@ -144,18 +147,18 @@ Widget buildLoadReadNotificationsButton() {
     onPressed: () {
       changeState(() => isShowingAllNotifications = true);
     },
-    child: const Row(
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
+        const Icon(
           Icons.more_horiz,
           color: Colors.white,
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(
-          'All Notifications',
-          style: TextStyle(
+          Notifications_LocaleData.all_notifications.getString(context),
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),

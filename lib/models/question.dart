@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../constants/settings.dart';
+import '../controllers/settings/settings.dart';
 
 class SmartShedQuestionHistory {
   String editedBy;
@@ -64,7 +64,7 @@ class SmartShedQuestion {
   }
 
   static String formattedDate(String date) {
-    return DateFormat(SettingsConstants.dateTimeFormat)
+    return DateFormat(UserSettingsController.dateTimeFormat)
         .format(DateTime.parse(date));
   }
 }

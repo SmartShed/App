@@ -6,8 +6,8 @@ import '../logger/log.dart';
 import 'google_sign_in.dart';
 
 class LoginController {
-  static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
   static final _logger = LoggerService.getLogger('LoginController');
+  static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
 
   static Future<void> init() async {
     await XAuthTokenCacheHandler.init();

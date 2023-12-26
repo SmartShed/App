@@ -34,7 +34,6 @@ class FormsApproveApiHandler {
   Future<Map<String, dynamic>> getUnapprovedForms() async {
     try {
       _logger.info('Calling getUnapprovedForms API');
-      print(_getUnapprovedFormsApi());
       final response = await _dio.get(
         _getUnapprovedFormsApi(),
         options: Options(

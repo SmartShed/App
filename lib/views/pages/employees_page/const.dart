@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/smartshed/employees.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/user.dart';
+import '../../localization/employees.dart';
+import '../../localization/toast.dart';
 import '../../widgets/loading_dialog.dart';
 import '../../widgets/text_field.dart';
 import '../../widgets/user_tile.dart';
@@ -42,9 +46,16 @@ void initConst() async {
   isShowingAddEmployee = false;
   isShowingRemoveEmployee = true;
 
-  Map<String, List<SmartShedUser>> users = await EmployeesController.getUsers(
+  Map<String, List<SmartShedUser>>? users = await EmployeesController.getUsers(
     forSupervisor: LoginController.isSupervisor,
   );
+
+  if (!context.mounted) return;
+  if (users == null) {
+    ToastController.error(
+        Toast_LocaleData.error_while_fetching_users.getString(context));
+    return;
+  }
 
   authorityUsers = users['authority']!;
   supervisorUsers = users['supervisor']!;
@@ -61,9 +72,9 @@ void initConst() async {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'EMPLOYEES',
-      style: TextStyle(
+    title: Text(
+      Employees_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -86,8 +97,8 @@ Widget buildEmployeeFormButton() {
       children: [
         Text(
           isShowingAddEmployee
-              ? "Hide Add Employee Form"
-              : "Show Add Employee Form",
+              ? Employees_LocaleData.hide_add_employee_form.getString(context)
+              : Employees_LocaleData.show_add_employee_form.getString(context),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -133,7 +144,8 @@ Widget buildLoadEmployeesFromGoogleSheetButton() {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Load Employees From Google Sheet",
+          Employees_LocaleData.load_employees_from_google_sheet
+              .getString(context),
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -155,14 +167,14 @@ Widget buildAddEmployeeButton() {
     onPressed: () {
       submit();
     },
-    child: const Padding(
-      padding: EdgeInsets.symmetric(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 10,
       ),
       child: Text(
-        "Add Employees",
-        style: TextStyle(
+        Employees_LocaleData.add_employees.getString(context),
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
           color: Colors.white,
@@ -181,10 +193,19 @@ Widget buildAddEmployeeForm() {
         buildLoadEmployeesFromGoogleSheetButton(),
         const SizedBox(height: 20),
         if (LoginController.isAuthority) ...[
-          buildAddEmployee(authorityEmails, "Authority Email"),
-          buildAddEmployee(supervisorEmails, "Supervisor Email"),
+          buildAddEmployee(
+            authorityEmails,
+            Employees_LocaleData.authority_email.getString(context),
+          ),
+          buildAddEmployee(
+            supervisorEmails,
+            Employees_LocaleData.supervisor_email.getString(context),
+          ),
         ],
-        buildAddEmployee(workerEmails, "Worker Email"),
+        buildAddEmployee(
+          workerEmails,
+          Employees_LocaleData.worker_email.getString(context),
+        ),
         const SizedBox(height: 30),
         buildAddEmployeeButton(),
         const SizedBox(height: 30),
@@ -207,8 +228,8 @@ Widget buildRemoveEmployeeFormButton() {
       children: [
         Text(
           isShowingRemoveEmployee
-              ? "Hide Manage Employee"
-              : "Show Manage Employee",
+              ? Employees_LocaleData.hide_manage_employee.getString(context)
+              : Employees_LocaleData.show_manage_employee.getString(context),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -230,14 +251,14 @@ Widget buildRemoveEmployeeFormButton() {
 Widget buildRemoveEmployeeButton() {
   return ElevatedButton(
     onPressed: selectedUserIds.isEmpty ? null : deleteSelectedUsers,
-    child: const Padding(
-      padding: EdgeInsets.symmetric(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 10,
       ),
       child: Text(
-        "Delete Users",
-        style: TextStyle(
+        Employees_LocaleData.delete_employees.getString(context),
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
           color: Colors.white,
@@ -265,8 +286,10 @@ Widget buildRemoveEmployeeUserList() {
                 children: [
                   Text(
                     isShowingAuthority
-                        ? "Hide Authorities"
-                        : "Show Authorities",
+                        ? Employees_LocaleData.hide_authorities
+                            .getString(context)
+                        : Employees_LocaleData.show_authorities
+                            .getString(context),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -305,8 +328,10 @@ Widget buildRemoveEmployeeUserList() {
                 children: [
                   Text(
                     isShowingSupervisor
-                        ? "Hide Supervisors"
-                        : "Show Supervisors",
+                        ? Employees_LocaleData.hide_supervisors
+                            .getString(context)
+                        : Employees_LocaleData.show_supervisors
+                            .getString(context),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -343,7 +368,9 @@ Widget buildRemoveEmployeeUserList() {
             child: Row(
               children: [
                 Text(
-                  isShowingWorker ? "Hide Workers" : "Show Workers",
+                  isShowingWorker
+                      ? Employees_LocaleData.hide_workers.getString(context)
+                      : Employees_LocaleData.show_workers.getString(context),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -393,16 +420,31 @@ void loadEmployeesFromGoogleSheet() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Loading Employees...",
+    builder: (context) => LoadingDialog(
+      title: Employees_LocaleData.loading_employees.getString(context),
     ),
   );
 
-  Map<String, List<String>> employeesFromGoogleSheet =
+  Map<String, List<String>>? employeesFromGoogleSheet =
       await EmployeesController.getEmployeesFromGoogleSheet();
 
-  Map<String, List<String>> employees =
+  if (!context.mounted) return;
+  if (employeesFromGoogleSheet == null) {
+    ToastController.error(Toast_LocaleData
+        .error_while_fetching_employees_from_google_sheet
+        .getString(context));
+    return;
+  }
+
+  Map<String, List<String>>? employees =
       await EmployeesController.getEmployees();
+
+  if (!context.mounted) return;
+  if (employees == null) {
+    ToastController.error(
+        Toast_LocaleData.error_while_fetching_employees.getString(context));
+    return;
+  }
 
   authorityEmails = [
     ...authorityEmails,
@@ -485,7 +527,8 @@ Widget buildAddEmployee(List<String> list, String title) {
                       const Icon(Icons.add),
                       const SizedBox(height: 5),
                       Text(
-                        "Add $title",
+                        context.formatString(
+                            Employees_LocaleData.add_employee_title, [title]),
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -543,8 +586,8 @@ void submit() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Adding Employees...",
+    builder: (context) => LoadingDialog(
+      title: Employees_LocaleData.adding_employees.getString(context),
     ),
   );
 
@@ -559,7 +602,16 @@ void submit() async {
   }
   emails.add(workerEmails);
 
-  await EmployeesController.addEmployees(emails);
+  bool isAdded = await EmployeesController.addEmployees(emails);
+
+  if (!context.mounted) return;
+  if (isAdded) {
+    ToastController.success(
+        Toast_LocaleData.employee_added_successfully.getString(context));
+  } else {
+    ToastController.error(
+        Toast_LocaleData.error_adding_employee.getString(context));
+  }
 
   authorityEmails = [''];
   supervisorEmails = [''];
@@ -600,17 +652,33 @@ void deleteSelectedUsers() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Deleting Employees...",
+    builder: (context) => LoadingDialog(
+      title: Employees_LocaleData.deleting_employees.getString(context),
     ),
   );
 
-  await EmployeesController.deleteUsers(selectedUserIds);
+  bool isDeleted = await EmployeesController.deleteUsers(selectedUserIds);
+
+  if (!context.mounted) return;
+  if (isDeleted) {
+    ToastController.success(
+        Toast_LocaleData.users_deleted_successfully.getString(context));
+  } else {
+    ToastController.error(
+        Toast_LocaleData.error_deleting_users.getString(context));
+  }
 
   // Reload users
-  Map<String, List<SmartShedUser>> users = await EmployeesController.getUsers(
+  Map<String, List<SmartShedUser>>? users = await EmployeesController.getUsers(
     forSupervisor: LoginController.isSupervisor,
   );
+
+  if (!context.mounted) return;
+  if (users == null) {
+    ToastController.error(
+        Toast_LocaleData.error_while_fetching_users.getString(context));
+    return;
+  }
 
   authorityUsers = users['authority']!;
   supervisorUsers = users['supervisor']!;

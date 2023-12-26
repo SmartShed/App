@@ -1,17 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/images.dart';
 import '../../controllers/auth/login.dart';
+import '../localization/drawer.dart';
 import '../pages.dart';
-
-late BuildContext globalContext;
 
 class DrawerItem {
   final String title;
   final IconData icon;
-  final void Function() onTap;
+  final void Function(BuildContext context) onTap;
   final List<String> pagesToHighlight;
 
   const DrawerItem({
@@ -24,10 +25,10 @@ class DrawerItem {
 
 List<DrawerItem> drawerItems = [
   DrawerItem(
-    title: "Dashboard",
+    title: Drawer_LocaleData.dashboard,
     icon: Icons.dashboard,
-    onTap: () {
-      GoRouter.of(globalContext).go(Pages.dashboard);
+    onTap: (BuildContext context) {
+      GoRouter.of(context).go(Pages.dashboard);
     },
     pagesToHighlight: [
       Pages.dashboard,
@@ -37,50 +38,50 @@ List<DrawerItem> drawerItems = [
     ],
   ),
   DrawerItem(
-    title: "Notifications",
+    title: Drawer_LocaleData.notifications,
     icon: Icons.notifications,
-    onTap: () {
-      GoRouter.of(globalContext).push(Pages.notifications);
-      GoRouter.of(globalContext).pop();
+    onTap: (BuildContext context) {
+      GoRouter.of(context).push(Pages.notifications);
+      _popDrawer(context);
     },
     pagesToHighlight: [Pages.notifications],
   ),
   if (!LoginController.isWorker)
     DrawerItem(
-      title: "Approve Forms",
+      title: Drawer_LocaleData.approve_forms,
       icon: Icons.checklist,
-      onTap: () {
-        GoRouter.of(globalContext).push(Pages.approveForms);
-        GoRouter.of(globalContext).pop();
+      onTap: (BuildContext context) {
+        GoRouter.of(context).push(Pages.approveForms);
+        _popDrawer(context);
       },
       pagesToHighlight: [Pages.approveForms],
     ),
   DrawerItem(
-    title: "Profile",
+    title: Drawer_LocaleData.profile,
     icon: Icons.person,
-    onTap: () {
-      GoRouter.of(globalContext).push(Pages.profile);
-      GoRouter.of(globalContext).pop();
+    onTap: (BuildContext context) {
+      GoRouter.of(context).push(Pages.profile);
+      _popDrawer(context);
     },
     pagesToHighlight: [Pages.profile],
   ),
   if (!LoginController.isWorker)
     DrawerItem(
-      title: "Employees",
+      title: Drawer_LocaleData.employees,
       icon: Icons.people,
-      onTap: () {
-        GoRouter.of(globalContext).push(Pages.employees);
-        GoRouter.of(globalContext).pop();
+      onTap: (BuildContext context) {
+        GoRouter.of(context).push(Pages.employees);
+        _popDrawer(context);
       },
       pagesToHighlight: [Pages.employees],
     ),
   if (!LoginController.isWorker)
     DrawerItem(
-      title: "Manage Forms",
+      title: Drawer_LocaleData.manage_forms,
       icon: Icons.list_alt,
-      onTap: () {
-        GoRouter.of(globalContext).push(Pages.manageForms);
-        GoRouter.of(globalContext).pop();
+      onTap: (BuildContext context) {
+        GoRouter.of(context).push(Pages.manageForms);
+        _popDrawer(context);
       },
       pagesToHighlight: [
         Pages.manageForms,
@@ -90,11 +91,20 @@ List<DrawerItem> drawerItems = [
       ],
     ),
   DrawerItem(
-    title: "Logout",
+    title: Drawer_LocaleData.settings,
+    icon: Icons.settings,
+    onTap: (BuildContext context) {
+      GoRouter.of(context).push(Pages.settings);
+      _popDrawer(context);
+    },
+    pagesToHighlight: [Pages.settings],
+  ),
+  DrawerItem(
+    title: Drawer_LocaleData.logout,
     icon: Icons.logout,
-    onTap: () {
+    onTap: (BuildContext context) {
       showDialog(
-        context: globalContext,
+        context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return const LogoutPage();
@@ -110,7 +120,6 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    globalContext = context;
     double height = MediaQuery.of(context).size.height;
     double startHeight = height * 0.075;
 
@@ -129,9 +138,9 @@ class MyDrawer extends StatelessWidget {
               ImageConstants.logo,
               height: 40,
             ),
-            title: const Text(
-              "SmartShed",
-              style: TextStyle(
+            title: Text(
+              Drawer_LocaleData.smartshed.getString(context),
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: ColorConstants.primary,
@@ -148,18 +157,15 @@ class MyDrawer extends StatelessWidget {
             endIndent: 10,
             height: 40,
           ),
-          for (DrawerItem item in drawerItems) buildListTile(item),
+          for (DrawerItem item in drawerItems) buildListTile(item, context),
         ],
       ),
     );
   }
 
-  Widget buildListTile(DrawerItem item) {
-    final String currentRoute = GoRouter.of(globalContext)
-        .routeInformationProvider
-        .value
-        .uri
-        .toString();
+  Widget buildListTile(DrawerItem item, BuildContext context) {
+    final String currentRoute =
+        GoRouter.of(context).routeInformationProvider.value.uri.toString();
 
     bool isHighlighted = false;
     for (String page in item.pagesToHighlight) {
@@ -175,13 +181,17 @@ class MyDrawer extends StatelessWidget {
         color: isHighlighted ? ColorConstants.primary : Colors.black,
       ),
       title: Text(
-        item.title,
+        item.title.getString(context),
         style: TextStyle(
           fontSize: 18,
           fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      onTap: item.onTap,
+      onTap: () => item.onTap(context),
     );
   }
+}
+
+void _popDrawer(BuildContext context) {
+  if (!kIsWeb) GoRouter.of(context).pop();
 }

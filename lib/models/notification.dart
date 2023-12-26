@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../constants/settings.dart';
+import '../controllers/settings/settings.dart';
 
 class SmartShedNotification {
   String id;
@@ -34,5 +34,5 @@ class SmartShedNotification {
   }
 
   String get createdAtString =>
-      DateFormat(SettingsConstants.dateTimeFormat).format(createdAt);
+      DateFormat(UserSettingsController.dateTimeFormat).format(createdAt);
 }

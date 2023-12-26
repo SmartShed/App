@@ -113,6 +113,10 @@ class RouteController {
             );
           },
         ),
+        GoRoute(
+          path: Pages.settings,
+          builder: (context, state) => const SettingsPage(),
+        ),
       ],
       errorBuilder: (context, state) => const UnknownRoutePage(),
       redirect: (context, state) async {

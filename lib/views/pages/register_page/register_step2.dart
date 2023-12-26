@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/section.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/text_field.dart';
@@ -43,8 +44,26 @@ class _RegisterStep2State extends State<RegisterStep2> {
   }
 
   Future<void> initSectionArray() async {
-    final List<SmartShedSection> sections =
+    final List<SmartShedSection>? sections =
         await DashboardForAllController.getSections();
+
+    if (sections == null) {
+      if (!context.mounted) return;
+      ToastController.error(
+        'Error while fetching sections',
+      );
+      setState(() {
+        isSectionLoading = false;
+      });
+      return;
+    }
+
+    if (sections.isEmpty) {
+      if (!context.mounted) return;
+      ToastController.error(
+        'No section found',
+      );
+    }
 
     sectionArray = sections.map((e) => e.title).toList();
     setState(() {

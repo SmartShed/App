@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/section.dart';
 import '../../../models/unopened_form.dart';
+import '../../localization/manage_forms.dart';
+import '../../localization/toast.dart';
 import '../../pages.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/form_tile.dart';
@@ -29,8 +33,25 @@ void initConst(void Function(void Function()) setState) {
 
 void initSections() async {
   changeState(() => isLoadingSections = true);
-  final List<SmartShedSection> sectionsList =
+  final List<SmartShedSection>? sectionsList =
       await DashboardForAllController.getSections();
+
+  if (sectionsList == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_sections.getString(context),
+    );
+    changeState(() => isLoadingSections = false);
+    return;
+  }
+
+  if (sectionsList.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_section_found.getString(context),
+    );
+  }
+
   sections =
       sectionsList.map((SmartShedSection section) => section.title).toList();
   changeState(() => isLoadingSections = false);
@@ -38,10 +59,29 @@ void initSections() async {
 
 void initForms() async {
   if (sectionController.text.isEmpty) return;
-
   changeState(() => isLoadingForms = true);
-  forms = await DashboardForAllController.getFormsForSection(
-      sectionController.text);
+
+  List<SmartShedUnopenedForm>? formsList =
+      await DashboardForAllController.getFormsForSection(
+          sectionController.text);
+
+  if (formsList == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_unopened_form.getString(context),
+    );
+    changeState(() => isLoadingForms = false);
+    return;
+  }
+
+  if (formsList.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_unopened_form_found.getString(context),
+    );
+  }
+
+  forms = formsList;
   changeState(() => isLoadingForms = false);
 }
 
@@ -51,9 +91,9 @@ void disposeConst() {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'MANAGE FORMS',
-      style: TextStyle(
+    title: Text(
+      ManageForms_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -87,9 +127,9 @@ Widget buildSectionBody() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        'Create new section',
-        style: TextStyle(
+      Text(
+        ManageForms_LocaleData.create_section.getString(context),
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
@@ -107,10 +147,11 @@ Widget buildSectionBody() {
         ),
         child: Column(
           children: [
-            const Text(
-              'If you want to add new section, please click the button below.',
+            Text(
+              ManageForms_LocaleData.new_section_button_message
+                  .getString(context),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -127,9 +168,9 @@ Widget buildSectionBody() {
                 ),
                 side: const BorderSide(color: Colors.grey),
               ),
-              child: const Text(
-                'Add new section',
-                style: TextStyle(
+              child: Text(
+                ManageForms_LocaleData.add_section.getString(context),
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   // color: Colors.white,
@@ -142,9 +183,9 @@ Widget buildSectionBody() {
       const SizedBox(height: 20),
       const Divider(),
       const SizedBox(height: 20),
-      const Text(
-        'Choose section to manage',
-        style: TextStyle(
+      Text(
+        ManageForms_LocaleData.choose_section_to_manage.getString(context),
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
@@ -155,7 +196,8 @@ Widget buildSectionBody() {
           : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: MyDropdown(
-                hintText: 'Choose section',
+                hintText:
+                    ManageForms_LocaleData.choose_section.getString(context),
                 controller: sectionController,
                 items: sections,
                 onChanged: () => initForms(),
@@ -169,7 +211,7 @@ Widget buildSectionBody() {
 Widget buildFormBody() {
   return sectionController.text.isEmpty
       ? Text(
-          'Choose section to manage forms of that section',
+          ManageForms_LocaleData.choose_section_message.getString(context),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -180,7 +222,11 @@ Widget buildFormBody() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Create new form in ${sectionController.text}',
+              context.formatString(
+                ManageForms_LocaleData.create_new_form_in_section
+                    .getString(context),
+                [sectionController.text],
+              ),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -200,7 +246,11 @@ Widget buildFormBody() {
               child: Column(
                 children: [
                   Text(
-                    'If you want to add new form in ${sectionController.text}, please click the button below.',
+                    context.formatString(
+                      ManageForms_LocaleData.new_form_button_message
+                          .getString(context),
+                      [sectionController.text],
+                    ),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,
@@ -221,7 +271,11 @@ Widget buildFormBody() {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: Text(
-                      'Add new form in ${sectionController.text}',
+                      context.formatString(
+                        ManageForms_LocaleData.add_form_in_section
+                            .getString(context),
+                        [sectionController.text],
+                      ),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -235,9 +289,9 @@ Widget buildFormBody() {
             const SizedBox(height: 20),
             const Divider(),
             const SizedBox(height: 20),
-            const Text(
-              'Choose form to manage',
-              style: TextStyle(
+            Text(
+              ManageForms_LocaleData.choose_form_to_manage.getString(context),
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
@@ -247,9 +301,10 @@ Widget buildFormBody() {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 !isLoadingForms && forms.isEmpty
-                    ? const Text(
-                        'No Forms Found',
-                        style: TextStyle(
+                    ? Text(
+                        ManageForms_LocaleData.no_forms_found
+                            .getString(context),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                         ),

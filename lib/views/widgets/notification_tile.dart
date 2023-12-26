@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/notification.dart';
+import '../localization/notifications.dart';
 import '../pages.dart';
 
 class NotificationTile extends StatelessWidget {
@@ -41,18 +43,20 @@ class NotificationTile extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Delete Notification'),
-              content: const Text(
-                'Are you sure you want to delete this notification?',
+              title: Text(Notifications_LocaleData.delete_notification
+                  .getString(context)),
+              content: Text(
+                Notifications_LocaleData.ask_delete_notification
+                    .getString(context),
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('No'),
+                  child: Text(Notifications_LocaleData.no.getString(context)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Yes'),
+                  child: Text(Notifications_LocaleData.yes.getString(context)),
                 ),
               ],
             );

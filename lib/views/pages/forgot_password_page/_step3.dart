@@ -59,7 +59,6 @@ class _ForgotPasswordStep3State extends State<ForgotPasswordStep3> {
           hintText: "Confirm Password",
           obscureText: hideConfirmPassword,
           suffixIcon: _confirmPasswordIcon(),
-          onEditingComplete: () {},
           keyboardType: TextInputType.visiblePassword,
         ),
         const SizedBox(height: 20),

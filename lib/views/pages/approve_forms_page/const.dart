@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:smartshed/views/localization/approve_forms.dart';
 
 import '../../../controllers/forms/approving.dart';
 import '../../../models/opened_form.dart';
@@ -19,6 +21,11 @@ void initConst(void Function(void Function()) setState) {
   _initForms();
 }
 
+void disposeConst() {
+  forms = [];
+  isFormsLoading = true;
+}
+
 Future<void> _initForms() async {
   changeState(() => isFormsLoading = true);
   forms = await FormApprovingController.getUnapprovedForms();
@@ -27,9 +34,9 @@ Future<void> _initForms() async {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'APPROVE FORMS',
-      style: TextStyle(
+    title: Text(
+      ApproveForms_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -44,8 +51,8 @@ Widget buildBody() {
     children: [
       Text(
         !isFormsLoading && forms.isEmpty
-            ? 'No Forms Found'
-            : 'Forms to Approve',
+            ? ApproveForms_LocaleData.no_form_found.getString(context)
+            : ApproveForms_LocaleData.forms_to_approve.getString(context),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,

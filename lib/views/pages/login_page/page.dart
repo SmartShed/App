@@ -91,8 +91,8 @@ class _LoginPageState extends State<LoginPage> {
     _initilize();
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
+        reverse: true,
         child: Stack(
           children: [
             Column(
@@ -330,7 +330,6 @@ class _LoginPageState extends State<LoginPage> {
     if (response!['status'] == 'success') {
       ToastController.success(response['message']);
       if (!context.mounted) return;
-
       GoRouter.of(context).go(Pages.dashboard);
     } else {
       ToastController.error(response['message']);

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
 import '../../../controllers/dashboard/notifications.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/section.dart';
+import '../../localization/dashboard.dart';
+import '../../localization/toast.dart';
 import '../../pages.dart';
 import '../../widgets/notification_icon.dart';
 import '../../widgets/opened_form_tile.dart';
@@ -35,15 +39,49 @@ void initConst() {
 }
 
 Future<void> _initSections() async {
-  sections = await DashboardForAllController.getSections();
+  List<SmartShedSection>? sectionsList =
+      await DashboardForAllController.getSections();
 
-  changeState(() {
-    isSectionLoading = false;
-  });
+  if (sectionsList == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_sections.getString(context),
+    );
+    changeState(() => isSectionLoading = false);
+    return;
+  }
+
+  if (sectionsList.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_section_found.getString(context),
+    );
+  }
+
+  sections = sectionsList;
+  changeState(() => isSectionLoading = false);
 }
 
 Future<void> _initRecentlyOpenedForms() async {
-  recentlyOpenedForms = await DashboardForMeController.getRecentlyOpenedForms();
+  List<SmartShedOpenedForm>? recentlyForms =
+      await DashboardForMeController.getRecentlyOpenedForms();
+
+  if (recentlyForms == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_recently_opened_forms
+          .getString(context),
+    );
+    changeState(() => isRecentlyOpenedFormsLoading = false);
+    return;
+  }
+
+  if (recentlyForms.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_recently_opened_form_found.getString(context),
+    );
+  }
 
   changeState(() {
     isRecentlyOpenedFormsLoading = false;
@@ -52,9 +90,9 @@ Future<void> _initRecentlyOpenedForms() async {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'DASHBOARD',
-      style: TextStyle(
+    title: Text(
+      Dashboard_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -79,8 +117,8 @@ Widget buildSectionsList() {
     children: [
       Text(
         !isSectionLoading && sections.isEmpty
-            ? 'No Sections Found'
-            : 'Sections',
+            ? Dashboard_LocaleData.no_section_found.getString(context)
+            : Dashboard_LocaleData.sections.getString(context),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,
@@ -123,8 +161,9 @@ Widget buildRecentlyOpenedFormsList() {
     children: [
       Text(
         !isRecentlyOpenedFormsLoading && recentlyOpenedForms.isEmpty
-            ? 'No Recently Opened Forms'
-            : 'Recently Opened Forms',
+            ? Dashboard_LocaleData.no_recently_opened_form_found
+                .getString(context)
+            : Dashboard_LocaleData.recently_opened_forms.getString(context),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,

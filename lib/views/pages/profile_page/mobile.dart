@@ -12,6 +12,7 @@ class ProfilePageMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const_file.context = context;
     const_file.user = user;
 
     return Scaffold(

@@ -17,6 +17,7 @@ class MyTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool? isTextCentered;
   final TextCapitalization textCapitalization;
+  final int? maxLines;
 
   const MyTextField({
     Key? key,
@@ -34,6 +35,7 @@ class MyTextField extends StatelessWidget {
     this.onChanged,
     this.isTextCentered,
     this.textCapitalization = TextCapitalization.none,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class MyTextField extends StatelessWidget {
       child: TextField(
         focusNode: autoFocus ? null : focusNode,
         autofocus: autoFocus,
+        textDirection: TextDirection.ltr,
         decoration: InputDecoration(
           hintText: hintText,
           isDense: true,
@@ -69,7 +72,7 @@ class MyTextField extends StatelessWidget {
         controller: initialValue.isNotEmpty
             ? TextEditingController(text: initialValue)
             : controller,
-        maxLines: 1,
+        maxLines: maxLines,
         textCapitalization: textCapitalization,
         autocorrect: false,
       ),

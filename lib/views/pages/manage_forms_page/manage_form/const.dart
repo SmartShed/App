@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../controllers/forms/opening.dart';
 import '../../../../controllers/smartshed/smartshed.dart';
 import '../../../../controllers/toast/toast.dart';
 import '../../../../models/full_unopened_form.dart';
+import '../../../localization/manage_manage_form.dart';
+import '../../../localization/toast.dart';
 import '../../../widgets/loading_dialog.dart';
 import '../../../widgets/text_field.dart';
 
@@ -42,8 +45,10 @@ void initForm() async {
   changeState(() => isFormLoading = true);
   form = await FormOpeningController.getUnopenedForm(formId);
 
+  if (!context.mounted) return;
   if (form == null) {
-    ToastController.error('Failed to load form');
+    ToastController.error(
+        Manage_ManageForm_LocaleData.failed_to_load.getString(context));
     return;
   }
 
@@ -52,9 +57,9 @@ void initForm() async {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'MANAGE FORM',
-      style: TextStyle(
+    title: Text(
+      Manage_ManageForm_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -72,9 +77,9 @@ Widget buildBody() {
           children: [
             buildTopInfoBar(),
             const SizedBox(height: 10),
-            const Text(
-              "Form Questions",
-              style: TextStyle(
+            Text(
+              Manage_ManageForm_LocaleData.form_questions.getString(context),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -86,13 +91,13 @@ Widget buildBody() {
                 subForm,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: ElevatedButton(
                 onPressed: addSubForm,
                 child: Text(
-                  "Add Sub Form",
-                  style: TextStyle(
+                  Manage_ManageForm_LocaleData.add_sub_form.getString(context),
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -141,7 +146,7 @@ Widget buildTopInfoBar() {
               child: Column(
                 children: [
                   Text(
-                    "Title",
+                    Manage_ManageForm_LocaleData.form_title.getString(context),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade700,
@@ -158,7 +163,8 @@ Widget buildTopInfoBar() {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Description",
+                    Manage_ManageForm_LocaleData.form_description
+                        .getString(context),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade700,
@@ -303,9 +309,9 @@ Widget buildQuestionsContainer(
               onPressed: () {
                 addQuestion(subForm);
               },
-              child: const Text(
-                "Add Question",
-                style: TextStyle(
+              child: Text(
+                Manage_ManageForm_LocaleData.add_question.getString(context),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -343,7 +349,10 @@ Widget buildQuestion(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Q$questionNumber.",
+          context.formatString(
+            Manage_ManageForm_LocaleData.question_number,
+            [questionNumber],
+          ),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -385,7 +394,7 @@ void addQuestion(SmartShedUnopenedFormSubForm? subForm) {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text("Add Question"),
+      title: Text(Manage_ManageForm_LocaleData.add_question.getString(context)),
       content: SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -393,12 +402,14 @@ void addQuestion(SmartShedUnopenedFormSubForm? subForm) {
             mainAxisSize: MainAxisSize.min,
             children: [
               MyTextField(
-                hintText: "Question in English",
+                hintText: Manage_ManageForm_LocaleData.question_in_english
+                    .getString(context),
                 controller: questionEnglishController,
               ),
               const SizedBox(height: 10),
               MyTextField(
-                hintText: "Question in Hindi",
+                hintText: Manage_ManageForm_LocaleData.question_in_hindi
+                    .getString(context),
                 controller: questionHindiController,
               ),
             ],
@@ -407,53 +418,55 @@ void addQuestion(SmartShedUnopenedFormSubForm? subForm) {
       ),
       actions: [
         OutlinedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
-            side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.grey),
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.grey),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
             ),
-          ),
-          onPressed: () {
-            String questionEnglish = questionEnglishController.text.trim();
-            String questionHindi = questionHindiController.text.trim();
+            onPressed: () {
+              String questionEnglish = questionEnglishController.text.trim();
+              String questionHindi = questionHindiController.text.trim();
 
-            if (questionEnglish.isEmpty && questionHindi.isEmpty) {
-              ToastController.warning('Please fill at least one field');
-              return;
-            }
+              if (questionEnglish.isEmpty && questionHindi.isEmpty) {
+                ToastController.warning(Manage_ManageForm_LocaleData
+                    .fill_atleast_one
+                    .getString(context));
+                return;
+              }
 
-            _addQuestion(
-              questionEnglish,
-              questionHindi,
-              subForm,
-            );
+              _addQuestion(
+                questionEnglish,
+                questionHindi,
+                subForm,
+              );
 
-            Navigator.of(context).pop();
-          },
-          child: const Text("Add Question"),
-        ),
+              Navigator.of(context).pop();
+            },
+            child: Text(
+                Manage_ManageForm_LocaleData.add_question.getString(context))),
         OutlinedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
-            side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.grey),
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.grey),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
             ),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Cancel"),
-        ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child:
+                Text(Manage_ManageForm_LocaleData.cancel.getString(context))),
       ],
     ),
   );
@@ -467,8 +480,8 @@ void _addQuestion(
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Adding Question...",
+    builder: (context) => LoadingDialog(
+      title: Manage_ManageForm_LocaleData.adding_question.getString(context),
     ),
   );
 
@@ -484,7 +497,14 @@ void _addQuestion(
   if (!context.mounted) return;
   GoRouter.of(context).pop();
 
-  if (addedQuestion == null) return;
+  if (addedQuestion == null) {
+    ToastController.error(
+        Toast_LocaleData.error_adding_question.getString(context));
+    return;
+  }
+
+  ToastController.success(
+      Toast_LocaleData.question_added_successfully.getString(context));
 
   if (subForm == null) {
     formQuestions.add(addedQuestion);
@@ -511,7 +531,9 @@ void addSubForm() {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text("Add Sub Form"),
+      title: Text(
+        Manage_ManageForm_LocaleData.add_sub_form.getString(context),
+      ),
       content: SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -519,17 +541,20 @@ void addSubForm() {
             mainAxisSize: MainAxisSize.min,
             children: [
               MyTextField(
-                hintText: "Title in English",
+                hintText: Manage_ManageForm_LocaleData.title_in_english
+                    .getString(context),
                 controller: titleEnglishController,
               ),
               const SizedBox(height: 10),
               MyTextField(
-                hintText: "Title in Hindi",
+                hintText: Manage_ManageForm_LocaleData.title_in_hindi
+                    .getString(context),
                 controller: titleHindiController,
               ),
               const SizedBox(height: 10),
               MyTextField(
-                hintText: "Note (Optional)",
+                hintText: Manage_ManageForm_LocaleData.note_optional
+                    .getString(context),
                 controller: noteController,
               ),
             ],
@@ -538,54 +563,56 @@ void addSubForm() {
       ),
       actions: [
         OutlinedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
-            side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.grey),
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.grey),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
             ),
-          ),
-          onPressed: () {
-            String titleEnglish = titleEnglishController.text.trim();
-            String titleHindi = titleHindiController.text.trim();
-            String note = noteController.text.trim();
+            onPressed: () {
+              String titleEnglish = titleEnglishController.text.trim();
+              String titleHindi = titleHindiController.text.trim();
+              String note = noteController.text.trim();
 
-            if (titleEnglish.isEmpty && titleHindi.isEmpty) {
-              ToastController.warning('Please fill at least one field');
-              return;
-            }
+              if (titleEnglish.isEmpty && titleHindi.isEmpty) {
+                ToastController.warning(Manage_ManageForm_LocaleData
+                    .fill_atleast_one
+                    .getString(context));
+                return;
+              }
 
-            _addSubForm(
-              titleEnglish,
-              titleHindi,
-              note,
-            );
+              _addSubForm(
+                titleEnglish,
+                titleHindi,
+                note,
+              );
 
-            Navigator.of(context).pop();
-          },
-          child: const Text("Add Sub Form"),
-        ),
+              Navigator.of(context).pop();
+            },
+            child: Text(
+                Manage_ManageForm_LocaleData.add_sub_form.getString(context))),
         OutlinedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
-            side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.grey),
-            ),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey.shade100),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.grey),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
             ),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Cancel"),
-        ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child:
+                Text(Manage_ManageForm_LocaleData.cancel.getString(context))),
       ],
     ),
   );
@@ -599,8 +626,8 @@ void _addSubForm(
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Adding Sub Form...",
+    builder: (context) => LoadingDialog(
+      title: Manage_ManageForm_LocaleData.adding_sub_form.getString(context),
     ),
   );
 
@@ -615,9 +642,15 @@ void _addSubForm(
   if (!context.mounted) return;
   GoRouter.of(context).pop();
 
-  if (addedSubForm == null) return;
+  if (addedSubForm == null) {
+    ToastController.error(
+        Toast_LocaleData.error_adding_sub_form.getString(context));
+    return;
+  }
+
+  ToastController.success(
+      Toast_LocaleData.sub_form_added_successfully.getString(context));
 
   form!.subForms.add(addedSubForm);
-
   changeState(() {});
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smartshed/views/localization/toast.dart';
 
 import '../../../../controllers/smartshed/smartshed.dart';
 import '../../../../controllers/toast/toast.dart';
+import '../../../localization/manage_create_form.dart';
 import '../../../widgets/loading_dialog.dart';
 import '../../../widgets/text_field.dart';
 
@@ -24,9 +27,9 @@ void initConst(BuildContext ctx, String formSectionTitle) {
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'CREATE FORM',
-      style: TextStyle(
+    title: Text(
+      Manage_CreateForm_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -40,18 +43,21 @@ Widget buildBody() {
     children: [
       const SizedBox(height: 20),
       Text(
-        'Create Form for $sectionTitle',
+        context.formatString(
+          Manage_CreateForm_LocaleData.create_form_for_section,
+          [sectionTitle],
+        ),
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       const SizedBox(height: 20),
       Text(
-        'Enter the details of the form you want to create.',
+        Manage_CreateForm_LocaleData.enter_form_details.getString(context),
         style: Theme.of(context).textTheme.bodyLarge,
         textAlign: TextAlign.center,
       ),
       const SizedBox(height: 40),
       MyTextField(
-        hintText: 'Form Title',
+        hintText: Manage_CreateForm_LocaleData.form_title.getString(context),
         controller: formTitleController,
         isTextCentered: true,
         keyboardType: TextInputType.text,
@@ -59,7 +65,8 @@ Widget buildBody() {
       ),
       const SizedBox(height: 20),
       MyTextField(
-        hintText: 'English Description (Optional)',
+        hintText:
+            Manage_CreateForm_LocaleData.english_description.getString(context),
         controller: descriptionEnglishController,
         isTextCentered: true,
         keyboardType: TextInputType.text,
@@ -67,7 +74,8 @@ Widget buildBody() {
       ),
       const SizedBox(height: 20),
       MyTextField(
-        hintText: 'Hindi Description (Optional)',
+        hintText:
+            Manage_CreateForm_LocaleData.hindi_description.getString(context),
         controller: descriptionHindiController,
         isTextCentered: true,
         keyboardType: TextInputType.text,
@@ -82,9 +90,9 @@ Widget buildBody() {
             vertical: 12,
           ),
         ),
-        child: const Text(
-          'Create Form',
-          style: TextStyle(
+        child: Text(
+          Manage_CreateForm_LocaleData.create_form.getString(context),
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: Colors.white,
             fontSize: 20,
@@ -96,11 +104,18 @@ Widget buildBody() {
 }
 
 void createForm() async {
+  if (formTitleController.text.isEmpty ||
+      descriptionEnglishController.text.isEmpty ||
+      descriptionHindiController.text.isEmpty) {
+    ToastController.error(Toast_LocaleData.enter_all_fields.getString(context));
+    return;
+  }
+
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Creating Form...",
+    builder: (context) => LoadingDialog(
+      title: Manage_CreateForm_LocaleData.creating_form.getString(context),
     ),
   );
 
@@ -115,8 +130,12 @@ void createForm() async {
   GoRouter.of(context).pop();
 
   if (isFormCreated) {
-    ToastController.success('Form created successfully');
+    ToastController.success(
+        Toast_LocaleData.form_added_successfully.getString(context));
     if (!context.mounted) return;
     GoRouter.of(context).pop();
+  } else {
+    ToastController.error(
+        Toast_LocaleData.error_adding_form.getString(context));
   }
 }

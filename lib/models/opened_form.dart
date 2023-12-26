@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../constants/settings.dart';
+import '../controllers/settings/settings.dart';
 
 class SmartShedOpenedForm {
   String id;
@@ -58,11 +58,11 @@ class SmartShedOpenedForm {
   }
 
   String get createdAtString =>
-      DateFormat(SettingsConstants.dateTimeFormat).format(createdAt);
+      DateFormat(UserSettingsController.dateTimeFormat).format(createdAt);
 
   String get createdAtDateString =>
-      DateFormat(SettingsConstants.dateFormat).format(createdAt);
+      DateFormat(UserSettingsController.dateFormat).format(createdAt);
 
   String get updatedAtString =>
-      DateFormat(SettingsConstants.dateTimeFormat).format(updatedAt);
+      DateFormat(UserSettingsController.dateTimeFormat).format(updatedAt);
 }

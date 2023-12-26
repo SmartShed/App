@@ -3,14 +3,13 @@ import '../../models/question.dart';
 import '../../models/sub_form.dart';
 import '../../utils/api/forms_answer.dart';
 import '../logger/log.dart';
-import '../toast/toast.dart';
 
 class FormAnsweringController {
   static final _logger = LoggerService.getLogger('FormAnsweringController');
   static final FormsAnswerAPIHandler _formsAnswerAPIHandler =
       FormsAnswerAPIHandler();
 
-  static Future<Map<String, dynamic>> saveForm(SmartShedForm form) async {
+  static Future<bool> saveForm(SmartShedForm form) async {
     _logger.info('Saving form');
 
     List<Map<String, dynamic>> answers = [];
@@ -40,16 +39,14 @@ class FormAnsweringController {
 
     if (response['status'] == 'success') {
       _logger.info('Form saved successfully');
-      ToastController.success('Form saved successfully');
+      return true;
     } else {
       _logger.error('Error saving form');
-      ToastController.error('Error saving form');
+      return false;
     }
-
-    return response;
   }
 
-  static Future<Map<String, dynamic>> submitForm(SmartShedForm form) async {
+  static Future<bool> submitForm(SmartShedForm form) async {
     _logger.info('Submitting form');
 
     List<Map<String, dynamic>> answers = [];
@@ -75,12 +72,10 @@ class FormAnsweringController {
 
     if (response['status'] == 'success') {
       _logger.info('Form submitted successfully');
-      ToastController.success('Form submitted successfully');
+      return true;
     } else {
       _logger.error('Error submitting form');
-      ToastController.error('Error submitting form');
+      return false;
     }
-
-    return response;
   }
 }

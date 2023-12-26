@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import '../../../constants/colors.dart';
 import '../../../models/user.dart';
+import '../../localization/profile.dart';
 
+late BuildContext context;
 late SmartShedUser user;
 
 String get initials =>
@@ -10,9 +13,9 @@ String get initials =>
 
 AppBar buildAppBar() {
   return AppBar(
-    title: const Text(
-      'PROFILE',
-      style: TextStyle(
+    title: Text(
+      Profile_LocaleData.title.getString(context),
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.center,
@@ -39,9 +42,9 @@ Widget buildProfile() {
         ),
       ),
       const SizedBox(height: 20),
-      const Text(
-        'Name',
-        style: TextStyle(
+      Text(
+        Profile_LocaleData.name.getString(context),
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w300,
         ),
@@ -55,9 +58,9 @@ Widget buildProfile() {
         ),
       ),
       const SizedBox(height: 15),
-      const Text(
-        'Email',
-        style: TextStyle(
+      Text(
+        Profile_LocaleData.email.getString(context),
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w300,
         ),
@@ -71,9 +74,9 @@ Widget buildProfile() {
         ),
       ),
       const SizedBox(height: 15),
-      const Text(
-        'Position',
-        style: TextStyle(
+      Text(
+        Profile_LocaleData.position.getString(context),
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w300,
         ),

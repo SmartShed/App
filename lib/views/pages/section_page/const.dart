@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/dashboard/for_me.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/unopened_form.dart';
+import '../../localization/section.dart';
+import '../../localization/toast.dart';
 import '../../widgets/form_tile.dart';
 import '../../widgets/opened_form_tile.dart';
 
@@ -64,19 +68,76 @@ void init() {
 }
 
 Future<void> initFormsForSection() async {
-  formsForSection = await DashboardForAllController.getFormsForSection(title);
+  List<SmartShedUnopenedForm>? forms =
+      await DashboardForAllController.getFormsForSection(title);
+
+  if (forms == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_forms.getString(context),
+    );
+    changeState(() => isFormsForSectionLoading = false);
+    return;
+  }
+
+  if (forms.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_form_found_for_section.getString(context),
+    );
+  }
+
+  formsForSection = forms;
   changeState(() => isFormsForSectionLoading = false);
 }
 
 Future<void> initRecentlyOpenedForms() async {
-  recentlyOpenedFormsForSection =
+  List<SmartShedOpenedForm>? recentlyOpenedForms =
       await DashboardForMeController.getRecentlyOpenedFormsForSection(title);
+
+  if (recentlyOpenedForms == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_recently_opened_forms_for_section
+          .getString(context),
+    );
+    changeState(() => isRecentlyOpenedFormsLoading = false);
+    return;
+  }
+
+  if (recentlyOpenedForms.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_recently_opened_form_found_for_section
+          .getString(context),
+    );
+  }
+
+  recentlyOpenedFormsForSection = recentlyOpenedForms;
   changeState(() => isRecentlyOpenedFormsLoading = false);
 }
 
 Future<void> initAllOpenedForms() async {
-  allOpenedFormsForSection =
+  List<SmartShedOpenedForm>? openedForms =
       await DashboardForAllController.getOpenedFormsForSection(title);
+
+  if (openedForms == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_opened_forms.getString(context),
+    );
+    changeState(() => isAllOpenedFormsLoading = false);
+    return;
+  }
+
+  if (openedForms.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_opened_form_found_for_section.getString(context),
+    );
+  }
+
+  allOpenedFormsForSection = openedForms;
   changeState(() => isAllOpenedFormsLoading = false);
 }
 
@@ -98,8 +159,11 @@ Widget buildFormsList() {
     children: [
       Text(
         !isFormsForSectionLoading && formsForSection.isEmpty
-            ? 'No Forms Found'
-            : 'Forms',
+            ? Section_LocaleData.no_forms_found.getString(context)
+            : context.formatString(
+                Section_LocaleData.forms_for_section.getString(context),
+                [title],
+              ),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,
@@ -143,8 +207,9 @@ Widget buildRecentlyOpenedFormsList() {
       const SizedBox(height: 20),
       Text(
         !isRecentlyOpenedFormsLoading && recentlyOpenedFormsForSection.isEmpty
-            ? 'No Recently Opened Forms Found'
-            : 'Recently Opened Forms',
+            ? Section_LocaleData.no_recently_opened_forms_found
+                .getString(context)
+            : Section_LocaleData.recently_opened_forms.getString(context),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,
@@ -188,8 +253,8 @@ Widget buildAllOpenedFormsList() {
       const SizedBox(height: 20),
       Text(
         !isAllOpenedFormsLoading && allOpenedFormsForSection.isEmpty
-            ? 'No Opened Forms Found'
-            : 'All Opened Forms',
+            ? Section_LocaleData.no_opened_forms_found.getString(context)
+            : Section_LocaleData.opened_forms.getString(context),
         style: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20,

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smartshed/controllers/toast/toast.dart';
+import 'package:smartshed/views/localization/toast.dart';
 
 import '../../../controllers/forms/opening.dart';
 import '../../../models/opened_form.dart';
+import '../../localization/create_form.dart';
 import '../../pages.dart';
 import '../../widgets/loading_dialog.dart';
 import '../../widgets/text_field.dart';
@@ -35,7 +39,7 @@ void initConst(
 AppBar buildAppBar() {
   return AppBar(
     title: Text(
-      "Create $title Form",
+      context.formatString(CreateForm_LocaleData.title, [title]),
       style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),
@@ -91,7 +95,7 @@ Widget buildMainBody() {
           children: [
             MyTextField(
               controller: locoNameController,
-              hintText: 'Enter Loco Name',
+              hintText: CreateForm_LocaleData.loco_name.getString(context),
               isTextCentered: true,
               textCapitalization: TextCapitalization.characters,
               keyboardType: TextInputType.text,
@@ -99,7 +103,7 @@ Widget buildMainBody() {
             const SizedBox(height: 20),
             MyTextField(
               controller: locoNumberController,
-              hintText: 'Enter Loco Number',
+              hintText: CreateForm_LocaleData.loco_number.getString(context),
               isTextCentered: true,
               keyboardType: TextInputType.number,
             ),
@@ -108,14 +112,14 @@ Widget buildMainBody() {
               onPressed: () {
                 onTap();
               },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
                 ),
                 child: Text(
-                  'Open Form',
-                  style: TextStyle(
+                  CreateForm_LocaleData.open_form.getString(context),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -131,11 +135,16 @@ Widget buildMainBody() {
 }
 
 void onTap() async {
+  if (locoNameController.text.isEmpty || locoNumberController.text.isEmpty) {
+    ToastController.error(Toast_LocaleData.enter_all_fields.getString(context));
+    return;
+  }
+
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Opening Form...",
+    builder: (context) => LoadingDialog(
+      title: CreateForm_LocaleData.opening_form.getString(context),
     ),
   );
 
@@ -148,14 +157,19 @@ void onTap() async {
   if (!context.mounted) return;
   GoRouter.of(context).pop();
 
-  if (createdForm != null) {
-    GoRouter.of(context).go(
-      "${Pages.form}/${createdForm.id}",
-      extra: createdForm,
-    );
-  } else {
+  if (createdForm == null) {
+    ToastController.error(
+        Toast_LocaleData.error_creating_form.getString(context));
     GoRouter.of(context).go(Pages.dashboard);
+    return;
   }
+
+  ToastController.success(
+      Toast_LocaleData.form_created_successfully.getString(context));
+  GoRouter.of(context).go(
+    "${Pages.form}/${createdForm.id}",
+    extra: createdForm,
+  );
 }
 
 void disposeConst() {

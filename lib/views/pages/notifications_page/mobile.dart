@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/drawer.dart';
+import 'const.dart' as const_file;
 import 'const.dart';
 
 class NotificationsPageMobile extends StatefulWidget {
@@ -20,6 +21,8 @@ class _NotificationsPageMobileState extends State<NotificationsPageMobile> {
 
   @override
   Widget build(BuildContext context) {
+    const_file.context = context;
+
     return Scaffold(
       appBar: buildAppBar(),
       drawer: const MyDrawer(),

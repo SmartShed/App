@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constants/colors.dart';
 import '../../models/opened_form.dart';
 import '../../views/pages.dart';
+import '../localization/form.dart';
 import 'tooltip.dart';
 
 class OpenedFormTile extends StatefulWidget {
@@ -131,7 +133,9 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  showInfo ? "Hide Details" : "Show Details",
+                  showInfo
+                      ? Form_LocaleData.hide_details.getString(context)
+                      : Form_LocaleData.show_details.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -191,7 +195,8 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
         ),
         const SizedBox(height: 4),
         MyTooltip(
-          text: "Created At: ${widget.openedForm.createdAtString}",
+          text:
+              "${Form_LocaleData.created_at.getString(context)}: ${widget.openedForm.createdAtString}",
           textStyle: const TextStyle(
             fontSize: 13,
             color: Colors.black54,
@@ -199,7 +204,8 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
         ),
         const SizedBox(height: 2),
         MyTooltip(
-          text: "Updated At: ${widget.openedForm.updatedAtString}",
+          text:
+              "${Form_LocaleData.updated_at.getString(context)}: ${widget.openedForm.updatedAtString}",
           textStyle: const TextStyle(
             fontSize: 13,
             color: Colors.black54,
@@ -207,7 +213,8 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
         ),
         const SizedBox(height: 2),
         MyTooltip(
-          text: "Created By: ${widget.openedForm.createdBy}",
+          text:
+              "${Form_LocaleData.created_by.getString(context)}: ${widget.openedForm.createdBy}",
           textStyle: const TextStyle(
             fontSize: 13,
             color: Colors.black54,

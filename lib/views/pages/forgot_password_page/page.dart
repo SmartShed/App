@@ -102,8 +102,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     _initilize();
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
+        reverse: true,
         child: Stack(
           children: [
             Column(

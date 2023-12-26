@@ -1,7 +1,6 @@
 import '../../models/opened_form.dart';
 import '../../utils/api/forms_approve.dart';
 import '../logger/log.dart';
-import '../toast/toast.dart';
 
 class FormApprovingController {
   static final _logger = LoggerService.getLogger('FormApprovingController');
@@ -55,11 +54,9 @@ class FormApprovingController {
     final response = await _formsApproveApiHandler.approveForm(formId);
 
     if (response['status'] == 'success') {
-      ToastController.success(response['message']);
       return true;
     }
 
-    ToastController.error(response['message']);
     return false;
   }
 
@@ -69,11 +66,9 @@ class FormApprovingController {
     final response = await _formsApproveApiHandler.rejectForm(formId);
 
     if (response['status'] == 'success') {
-      ToastController.success(response['message']);
       return true;
     }
 
-    ToastController.error(response['message']);
     return false;
   }
 }

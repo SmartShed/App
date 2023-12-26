@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../constants/colors.dart';
 import '../../../controllers/auth/login.dart';
 import '../../../controllers/toast/toast.dart';
+import '../../localization/logout.dart';
 import '../../pages.dart';
 import '../../widgets/dialog_text_button.dart';
 import '../../widgets/loading_dialog.dart';
@@ -44,9 +46,9 @@ class LogoutPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Are you sure you want to logout?",
-              style: TextStyle(
+            Text(
+              Logout_LocaleData.logout_message.getString(context),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
@@ -54,7 +56,7 @@ class LogoutPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             DialogTextButton(
-              text: "No",
+              text: Logout_LocaleData.no.getString(context),
               onPressed: () {
                 // Navigator.pop(context);
                 GoRouter.of(context).pop();
@@ -64,7 +66,7 @@ class LogoutPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             DialogTextButton(
-              text: "Yes",
+              text: Logout_LocaleData.yes.getString(context),
               onPressed: () {
                 _logout(context);
               },
@@ -80,8 +82,8 @@ class LogoutPage extends StatelessWidget {
   void _logout(BuildContext context) async {
     showDialog(
       context: context,
-      builder: (_) => const LoadingDialog(
-        title: "Logging out...",
+      builder: (_) => LoadingDialog(
+        title: Logout_LocaleData.logging_out.getString(context),
       ),
     );
 
@@ -90,7 +92,9 @@ class LogoutPage extends StatelessWidget {
     if (!context.mounted) return;
     GoRouter.of(context).pop();
 
-    ToastController.success("Logged out successfully.");
+    ToastController.success(
+      Logout_LocaleData.logged_out.getString(context),
+    );
     if (!context.mounted) return;
     GoRouter.of(context).pop();
     GoRouter.of(context).go(Pages.login);

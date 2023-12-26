@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../controllers/auth/login.dart';
@@ -6,11 +7,14 @@ import '../../../controllers/dashboard/for_all.dart';
 import '../../../controllers/forms/answering.dart';
 import '../../../controllers/forms/approving.dart';
 import '../../../controllers/forms/opening.dart';
+import '../../../controllers/toast/toast.dart';
 import '../../../models/full_form.dart';
 import '../../../models/opened_form.dart';
 import '../../../models/question.dart';
 import '../../../models/section.dart';
 import '../../../models/sub_form.dart';
+import '../../localization/form.dart';
+import '../../localization/toast.dart';
 import '../../pages.dart';
 import '../../widgets/drawer.dart';
 import '../../widgets/dropdown.dart';
@@ -90,13 +94,37 @@ void initConst(
 
 void initForm() async {
   form = await FormOpeningController.getForm(id);
+
+  if (form == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_opening_form.getString(context),
+    );
+  }
+
   fillHistory();
   changeState(() => isLoading = false);
 }
 
 void initSections() async {
-  final List<SmartShedSection> sectionsList =
+  final List<SmartShedSection>? sectionsList =
       await DashboardForAllController.getSections();
+
+  if (sectionsList == null) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.error_while_fetching_sections.getString(context),
+    );
+    changeState(() => isSectionLoading = false);
+    return;
+  }
+
+  if (sectionsList.isEmpty) {
+    if (!context.mounted) return;
+    ToastController.error(
+      Toast_LocaleData.no_section_found.getString(context),
+    );
+  }
 
   sections = sectionsList.map((e) => e.title).toList();
   changeState(() => isSectionLoading = false);
@@ -188,7 +216,7 @@ Widget? buildFloatingActionButton() {
         );
       },
       mini: true,
-      tooltip: "Scroll to Top",
+      tooltip: Form_LocaleData.scroll_to_top.getString(context),
       child: const Icon(Icons.arrow_upward),
     ),
   );
@@ -268,9 +296,9 @@ Widget buildMainBody() {
       if (isEmployeeNameFilter) buildEmployeeNameFilter(),
       if (isEmployeeSectionFilter) buildEmployeeSectionFilter(),
       const SizedBox(height: 10),
-      const Text(
-        "Form Questions",
-        style: TextStyle(
+      Text(
+        Form_LocaleData.form_questions.getString(context),
+        style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
@@ -338,7 +366,7 @@ Widget buildTopInfoDateAndNameRow({bool fromForm = true}) {
         child: Column(
           children: [
             Text(
-              "Created Date",
+              Form_LocaleData.created_at.getString(context),
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey.shade700,
@@ -374,7 +402,7 @@ Widget buildTopInfoDateAndNameRow({bool fromForm = true}) {
         child: Column(
           children: [
             Text(
-              "Loco Name & Number",
+              Form_LocaleData.loco_name_number.getString(context),
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey.shade700,
@@ -424,7 +452,9 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                isShowDetails ? "Hide Details" : "Show Details",
+                isShowDetails
+                    ? Form_LocaleData.hide_details.getString(context)
+                    : Form_LocaleData.show_details.getString(context),
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey.shade700,
@@ -447,7 +477,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
             child: Column(
               children: [
                 Text(
-                  "Description",
+                  Form_LocaleData.description.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -475,7 +505,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Created By",
+                  Form_LocaleData.created_by.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -491,7 +521,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Created At",
+                  Form_LocaleData.created_at.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -507,7 +537,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Updated At",
+                  Form_LocaleData.updated_at.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -580,14 +610,16 @@ Widget buildButtons({bool isBottom = false}) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildButton(
-                  text: "Search Question",
+                  text: Form_LocaleData.search_question.getString(context),
                   onPressed: () {
                     changeState(() => isSearchBoxOpen = !isSearchBoxOpen);
                     if (!isSearchBoxOpen) searchController.clear();
                   },
                 ),
                 _buildButton(
-                  text: isAnswersShown ? "Hide Answers" : "Show Answers",
+                  text: isAnswersShown
+                      ? Form_LocaleData.hide_answers.getString(context)
+                      : Form_LocaleData.show_answers.getString(context),
                   onPressed: () {
                     for (var question in form!.questions) {
                       question.isExpanded = !isAnswersShown;
@@ -608,7 +640,7 @@ Widget buildButtons({bool isBottom = false}) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildButton(
-                  text: "Filter by Name",
+                  text: Form_LocaleData.filter_by_name.getString(context),
                   onPressed: () {
                     changeState(
                         () => isEmployeeNameFilter = !isEmployeeNameFilter);
@@ -616,7 +648,7 @@ Widget buildButtons({bool isBottom = false}) {
                   },
                 ),
                 _buildButton(
-                  text: "Filter by Section",
+                  text: Form_LocaleData.filter_by_section.getString(context),
                   onPressed: () {
                     changeState(() =>
                         isEmployeeSectionFilter = !isEmployeeSectionFilter);
@@ -632,11 +664,11 @@ Widget buildButtons({bool isBottom = false}) {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildButton(
-                text: "Save Form",
+                text: Form_LocaleData.save_form.getString(context),
                 onPressed: saveForm,
               ),
               _buildButton(
-                text: "Submit Form",
+                text: Form_LocaleData.submit_form.getString(context),
                 onPressed: submitForm,
               ),
             ],
@@ -646,11 +678,11 @@ Widget buildButtons({bool isBottom = false}) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildButton(
-                  text: "Approve Form",
+                  text: Form_LocaleData.approve_form.getString(context),
                   onPressed: approveForm,
                 ),
                 _buildButton(
-                  text: "Reject Form",
+                  text: Form_LocaleData.reject_form.getString(context),
                   onPressed: rejectForm,
                 ),
               ],
@@ -678,7 +710,7 @@ Widget buildSearchBox() {
         ],
       ),
       child: MyTextField(
-        hintText: "Search Question",
+        hintText: Form_LocaleData.search_question.getString(context),
         controller: searchController,
         suffixIcon: IconButton(
           onPressed: () {
@@ -713,7 +745,7 @@ Widget buildEmployeeNameFilter() {
         ],
       ),
       child: MyTextField(
-        hintText: "Employee Name",
+        hintText: Form_LocaleData.employee_name.getString(context),
         controller: employeeNameController,
         suffixIcon: IconButton(
           onPressed: () {
@@ -752,7 +784,7 @@ Widget buildEmployeeSectionFilter() {
           const SizedBox(width: 5),
           Expanded(
             child: MyDropdown(
-              hintText: 'Employee Section',
+              hintText: Form_LocaleData.employee_section.getString(context),
               controller: employeeSectionController,
               items: sections,
               onChanged: () => changeState(() {}),
@@ -905,14 +937,24 @@ void saveForm() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Saving Form...",
+    builder: (context) => LoadingDialog(
+      title: Form_LocaleData.saving_form.getString(context),
     ),
   );
 
-  await FormAnsweringController.saveForm(form!);
+  bool isSaved = await FormAnsweringController.saveForm(form!);
 
   if (!context.mounted) return;
+  if (isSaved) {
+    ToastController.success(
+      Toast_LocaleData.form_saved_successfully.getString(context),
+    );
+  } else {
+    ToastController.error(
+      Toast_LocaleData.error_saving_form.getString(context),
+    );
+  }
+
   GoRouter.of(context).pop();
 }
 
@@ -920,14 +962,24 @@ void submitForm() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Submitting Form...",
+    builder: (context) => LoadingDialog(
+      title: Form_LocaleData.submitting_form.getString(context),
     ),
   );
 
-  await FormAnsweringController.submitForm(form!);
+  bool isSubmitted = await FormAnsweringController.submitForm(form!);
 
   if (!context.mounted) return;
+  if (isSubmitted) {
+    ToastController.success(
+      Toast_LocaleData.form_submitted_successfully.getString(context),
+    );
+  } else {
+    ToastController.error(
+      Toast_LocaleData.error_submitting_form.getString(context),
+    );
+  }
+
   GoRouter.of(context).pop();
   GoRouter.of(context).go(Pages.dashboard);
 }
@@ -936,14 +988,24 @@ void approveForm() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Approving Form...",
+    builder: (context) => LoadingDialog(
+      title: Form_LocaleData.approving_form.getString(context),
     ),
   );
 
-  await FormApprovingController.approveForm(id);
+  bool isApproved = await FormApprovingController.approveForm(id);
 
   if (!context.mounted) return;
+  if (isApproved) {
+    ToastController.success(
+      Toast_LocaleData.form_approved_successfully.getString(context),
+    );
+  } else {
+    ToastController.error(
+      Toast_LocaleData.error_approving_form.getString(context),
+    );
+  }
+
   GoRouter.of(context).pop();
   GoRouter.of(context).go(Pages.dashboard);
 }
@@ -952,14 +1014,24 @@ void rejectForm() async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const LoadingDialog(
-      title: "Rejecting Form...",
+    builder: (context) => LoadingDialog(
+      title: Form_LocaleData.rejecting_form.getString(context),
     ),
   );
 
-  await FormApprovingController.rejectForm(id);
+  bool isRejected = await FormApprovingController.rejectForm(id);
 
   if (!context.mounted) return;
+  if (isRejected) {
+    ToastController.success(
+      Toast_LocaleData.form_rejected_successfully.getString(context),
+    );
+  } else {
+    ToastController.error(
+      Toast_LocaleData.error_rejecting_form.getString(context),
+    );
+  }
+
   GoRouter.of(context).pop();
   GoRouter.of(context).go(Pages.dashboard);
 }
