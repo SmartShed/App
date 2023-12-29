@@ -19,6 +19,15 @@ mixin Settings_LocaleData {
   static const String report_bug_value = 'settings_report_bug_value';
   static const String could_not_launch_url = 'settings_could_not_launch_url';
 
+  // HelpPage
+  static const String help_title = 'help_title';
+  static const String faqs = 'help_faqs';
+  static const String error_getting_faqs = 'help_error_getting_faqs';
+  static const String see_user_manual = 'help_see_user_manual';
+
+  // UserManualPage
+  static const String user_manual_title = 'user_manual_title';
+
   static const Map<String, dynamic> EN = {
     title: 'SETTINGS',
     choose_date_format: 'Choose date format',
@@ -37,6 +46,15 @@ mixin Settings_LocaleData {
     report_bug: 'Report a bug',
     report_bug_value: 'Report a bug at %a',
     could_not_launch_url: 'Could not launch %a',
+
+    // HelpPage
+    help_title: 'HELP',
+    faqs: 'FAQs',
+    error_getting_faqs: 'Error getting FAQs',
+    see_user_manual: 'See user manual',
+
+    // UserManualPage
+    user_manual_title: 'USER MANUAL',
   };
 
   static const Map<String, dynamic> HI = {
@@ -57,5 +75,14 @@ mixin Settings_LocaleData {
     report_bug: 'बग रिपोर्ट करें',
     report_bug_value: '%a पर बग रिपोर्ट करें',
     could_not_launch_url: '%a नहीं चला सका',
+
+    // HelpPage
+    help_title: 'सहायता',
+    faqs: 'सामान्य प्रश्न',
+    error_getting_faqs: 'सामान्य प्रश्न प्राप्त करने में त्रुटि',
+    see_user_manual: 'उपयोगकर्ता मैनुअल देखें',
+
+    // UserManualPage
+    user_manual_title: 'उपयोगकर्ता मैनुअल',
   };
 }

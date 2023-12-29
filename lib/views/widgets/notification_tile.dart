@@ -65,8 +65,8 @@ class NotificationTile extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), // Add rounded corners
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          color: notification.isRead ? Colors.lightBlue.shade100 : Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),

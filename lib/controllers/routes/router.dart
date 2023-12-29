@@ -11,12 +11,12 @@ class RouteController {
 
   static GoRouter generateRouter() {
     return GoRouter(
-      initialLocation: Pages.splash,
+      initialLocation: Pages.dashboard,
       routes: [
-        GoRoute(
-          path: Pages.splash,
-          builder: (context, state) => const SplashPage(),
-        ),
+        // GoRoute(
+        //   path: Pages.splash,
+        //   builder: (context, state) => const SplashPage(),
+        // ),
         GoRoute(
           path: Pages.dashboard,
           builder: (context, state) => const DashboardPage(),
@@ -117,13 +117,20 @@ class RouteController {
           path: Pages.settings,
           builder: (context, state) => const SettingsPage(),
         ),
+        GoRoute(
+          path: Pages.help,
+          builder: (context, state) => const HelpPage(),
+        ),
+        GoRoute(
+          path: Pages.userManual,
+          builder: (context, state) => const UserManual(),
+        ),
       ],
       errorBuilder: (context, state) => const UnknownRoutePage(),
       redirect: (context, state) async {
         String currentRoute = state.uri.toString();
 
-        if (currentRoute == Pages.splash ||
-            currentRoute == Pages.register ||
+        if (currentRoute == Pages.register ||
             currentRoute == Pages.forgotPassword) {
           return null;
         }

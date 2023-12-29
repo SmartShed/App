@@ -17,10 +17,8 @@ bool isShowingAllNotifications = false;
 void initConst(void Function(void Function()) setState) {
   changeState = setState;
 
-  isLoading = true;
+  isLoading = false;
   isShowingAllNotifications = false;
-
-  getNotifications();
 }
 
 void getNotifications() async {
@@ -142,22 +140,28 @@ Widget noNotifications() {
   );
 }
 
-Widget buildLoadReadNotificationsButton() {
+Widget buildLoadAllNotificationsButton() {
   return ElevatedButton(
     onPressed: () {
-      changeState(() => isShowingAllNotifications = true);
+      changeState(() => isShowingAllNotifications = !isShowingAllNotifications);
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.more_horiz,
+        Icon(
+          (notificationsController.readNotifications.isNotEmpty &&
+                  !isShowingAllNotifications)
+              ? Icons.more_horiz
+              : Icons.notifications,
           color: Colors.white,
         ),
         const SizedBox(width: 10),
         Text(
-          Notifications_LocaleData.all_notifications.getString(context),
+          (notificationsController.readNotifications.isNotEmpty &&
+                  !isShowingAllNotifications)
+              ? Notifications_LocaleData.all_notifications.getString(context)
+              : Notifications_LocaleData.new_notifications.getString(context),
           style: const TextStyle(
             color: Colors.white,
           ),
@@ -179,15 +183,13 @@ Widget buildBody() {
                   : buildNotificationsList(
                       notificationsController.unreadNotifications),
         ),
-      if (notificationsController.readNotifications.isNotEmpty &&
-          !isShowingAllNotifications)
-        buildLoadReadNotificationsButton(),
       if (isShowingAllNotifications)
         Expanded(
           child: buildNotificationsList(
-            notificationsController.readNotifications,
+            notificationsController.notifications,
           ),
         ),
+      buildLoadAllNotificationsButton(),
       const SizedBox(height: 20),
       buildButtons(),
       const SizedBox(height: 10),

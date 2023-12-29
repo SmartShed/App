@@ -9,6 +9,7 @@ mixin Drawer_LocaleData {
   static const String employees = 'drawer_employees';
   static const String manage_forms = 'drawer_manage_forms';
   static const String settings = 'drawer_settings';
+  static const String help = 'drawer_help';
   static const String logout = 'drawer_logout';
 
   static const Map<String, dynamic> EN = {
@@ -20,6 +21,7 @@ mixin Drawer_LocaleData {
     employees: 'Employees',
     manage_forms: 'Manage Forms',
     settings: 'Settings',
+    help: 'Help',
     logout: 'Logout',
   };
 
@@ -32,6 +34,7 @@ mixin Drawer_LocaleData {
     employees: 'कर्मचारी',
     manage_forms: 'फॉर्म प्रबंधित करें',
     settings: 'सेटिंग्स',
+    help: 'सहायता',
     logout: 'लॉग आउट',
   };
 }

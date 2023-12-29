@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../../constants/colors.dart';
 import '../../../controllers/settings/settings.dart';
 import '../../../controllers/toast/toast.dart';
 import '../../localization/settings.dart';
+import '../../widgets/app_info.dart';
 import '../../widgets/dropdown.dart';
 
 late BuildContext context;
@@ -18,10 +17,6 @@ late TextEditingController _timeFormatController;
 late TextEditingController _languageController;
 
 late DateTime _dateTime;
-
-const String appVersion = '1.1.0';
-final Uri devUri = Uri.parse('https://github.com/SmartShed');
-final Uri emailUri = Uri(scheme: 'mailto', path: 'smartshedteam@gmail.com');
 
 void initConst(
   void Function(void Function()) setState,
@@ -70,7 +65,7 @@ Widget buildBody() {
         const SizedBox(height: 20),
         buildResetButton(),
         const SizedBox(height: 20),
-        buildAppInfo(),
+        const AppInfo(),
         const SizedBox(height: 40),
       ],
     ),
@@ -268,215 +263,6 @@ Widget buildResetButton() {
                   color: Colors.white,
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget buildAppInfo() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: Colors.white60,
-      borderRadius: BorderRadius.circular(5),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.shade300,
-          blurRadius: 2,
-          offset: const Offset(0, 1),
-        ),
-      ],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 10,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            Settings_LocaleData.app_version.getString(context),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            appVersion,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            Settings_LocaleData.developed_by.getString(context),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.all(0),
-              ),
-              visualDensity: VisualDensity.compact,
-              surfaceTintColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              overlayColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-            ),
-            onPressed: () async {
-              try {
-                await launchUrl(
-                  devUri,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                ToastController.error(context.formatString(
-                    Settings_LocaleData.could_not_launch_url.getString(context),
-                    [devUri.toString()]));
-              }
-            },
-            child: Row(
-              children: [
-                Text(
-                  Settings_LocaleData.developed_by_value.getString(context),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: ColorConstants.primary,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                const Icon(
-                  Icons.open_in_new,
-                  size: 16,
-                  color: ColorConstants.primary,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            Settings_LocaleData.contact_us.getString(context),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.all(0),
-              ),
-              visualDensity: VisualDensity.compact,
-              surfaceTintColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              overlayColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-            ),
-            onPressed: () async {
-              try {
-                await launchUrl(
-                  emailUri,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                ToastController.error(context.formatString(
-                    Settings_LocaleData.could_not_launch_url.getString(context),
-                    [emailUri.toString()]));
-              }
-            },
-            child: Row(
-              children: [
-                Text(
-                  context.formatString(
-                    Settings_LocaleData.contact_us_value.getString(context),
-                    [emailUri.path],
-                  ),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: ColorConstants.primary,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                const Icon(
-                  Icons.open_in_new,
-                  size: 16,
-                  color: ColorConstants.primary,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            Settings_LocaleData.report_bug.getString(context),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextButton(
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.all(0),
-              ),
-              visualDensity: VisualDensity.compact,
-              surfaceTintColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-              overlayColor:
-                  MaterialStateProperty.all<Color>(Colors.transparent),
-            ),
-            onPressed: () async {
-              try {
-                await launchUrl(
-                  emailUri,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                ToastController.error(context.formatString(
-                    Settings_LocaleData.could_not_launch_url.getString(context),
-                    [emailUri.toString()]));
-              }
-            },
-            child: Row(
-              children: [
-                Text(
-                  context.formatString(
-                    Settings_LocaleData.report_bug_value.getString(context),
-                    [emailUri.path],
-                  ),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: ColorConstants.primary,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                const Icon(
-                  Icons.open_in_new,
-                  size: 16,
-                  color: ColorConstants.primary,
-                ),
-              ],
             ),
           ),
         ],

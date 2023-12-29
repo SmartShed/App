@@ -6,6 +6,7 @@ mixin Notifications_LocaleData {
   static const String delete_all = 'notifications_delete_all';
   static const String no_notifications = 'notifications_no_notifications';
   static const String all_notifications = 'notifications_all_notifications';
+  static const String new_notifications = 'notifications_new_notifications';
 
   // notification_tile
   static const String delete_notification =
@@ -21,6 +22,7 @@ mixin Notifications_LocaleData {
     delete_all: 'Delete All',
     no_notifications: 'No Notifications',
     all_notifications: 'All Notifications',
+    new_notifications: 'New Notifications',
 
     // notification_tile
     delete_notification: 'Delete Notification',
@@ -36,6 +38,7 @@ mixin Notifications_LocaleData {
     delete_all: 'सभी हटाएं',
     no_notifications: 'कोई सूचनाएं नहीं',
     all_notifications: 'सभी सूचनाएं',
+    new_notifications: 'नई सूचनाएं',
 
     // notification_tile
     delete_notification: 'सूचना हटाएं',

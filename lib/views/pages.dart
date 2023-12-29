@@ -4,6 +4,8 @@ import 'pages/dashboard_page/page.dart';
 import 'pages/employees_page/page.dart';
 import 'pages/forgot_password_page/page.dart';
 import 'pages/form_page/page.dart';
+import 'pages/help_page/page.dart';
+import 'pages/help_page/user_manual.dart';
 import 'pages/login_page/page.dart';
 import 'pages/logout_page/page.dart';
 import 'pages/manage_forms_page/create_form/page.dart';
@@ -15,7 +17,6 @@ import 'pages/profile_page/page.dart';
 import 'pages/register_page/page.dart';
 import 'pages/section_page/page.dart';
 import 'pages/settings_page/page.dart';
-import 'pages/splash_page/page.dart';
 import 'pages/unknown_route_page/page.dart';
 
 export 'pages/approve_forms_page/page.dart';
@@ -24,6 +25,8 @@ export 'pages/dashboard_page/page.dart';
 export 'pages/employees_page/page.dart';
 export 'pages/forgot_password_page/page.dart';
 export 'pages/form_page/page.dart';
+export 'pages/help_page/page.dart';
+export 'pages/help_page/user_manual.dart';
 export 'pages/login_page/page.dart';
 export 'pages/logout_page/page.dart';
 export 'pages/manage_forms_page/create_form/page.dart';
@@ -35,7 +38,6 @@ export 'pages/profile_page/page.dart';
 export 'pages/register_page/page.dart';
 export 'pages/section_page/page.dart';
 export 'pages/settings_page/page.dart';
-export 'pages/splash_page/page.dart';
 export 'pages/unknown_route_page/page.dart';
 
 class Pages {
@@ -45,6 +47,8 @@ class Pages {
   static const String employees = EmployeesPage.routeName;
   static const String forgotPassword = ForgotPasswordPage.routeName;
   static const String form = FormPage.routeName;
+  static const String help = HelpPage.routeName;
+  static const String userManual = UserManual.routeName;
   static const String login = LoginPage.routeName;
   static const String logout = LogoutPage.routeName;
   static const String manageCreateSection = Manage_CreateSectionPage.routeName;
@@ -56,6 +60,5 @@ class Pages {
   static const String register = RegisterPage.routeName;
   static const String section = SectionPage.routeName;
   static const String settings = SettingsPage.routeName;
-  static const String splash = SplashPage.routeName;
   static const String unknownRoute = UnknownRoutePage.routeName;
 }

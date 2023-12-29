@@ -19,6 +19,12 @@ class _SettingsPageMobileState extends State<SettingsPageMobile> {
   }
 
   @override
+  void dispose() {
+    disposeConst();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const_file.context = context;
 

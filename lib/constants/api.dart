@@ -1,13 +1,4 @@
 class APIConstants {
-  // AWS EC2
-  // static const String baseUrl = 'http://13.233.17.93';
-
-  // Render
-  // static const String baseUrl = 'https://smartshed-backend.onrender.com';
-
-  // Localhost
-  // static const String baseUrl = 'http://localhost:8000';
-
   static late String baseUrl;
 
   static void setBaseUrl(String url) {
@@ -87,4 +78,12 @@ class APIConstants {
       '$baseUrl/api/authorities/forms/approve';
   static String rejectFormForAuthority =
       '$baseUrl/api/authorities/forms/reject';
+
+  static String getFaqs = '$baseUrl/api/faqs/:position';
+
+  static late String userManualUrl;
+
+  static void setUserManualUrl(String url) {
+    userManualUrl = url;
+  }
 }

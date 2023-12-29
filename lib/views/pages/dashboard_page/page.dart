@@ -5,7 +5,7 @@ import 'desktop.dart';
 import 'mobile.dart';
 
 class DashboardPage extends StatelessWidget {
-  static const String routeName = '/dashboard';
+  static const String routeName = '/';
 
   const DashboardPage({super.key});
 

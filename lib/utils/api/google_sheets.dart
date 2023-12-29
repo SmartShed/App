@@ -49,10 +49,10 @@ class GoogleSheetApiHandler {
     );
   }
 
-  static Future<List<List<dynamic>>> getBackendUrl() async {
+  static Future<List<List<dynamic>>> getUrls() async {
     return await _getValues(
-      EnvController.getEnv('BACKEND_SHEET_ID'),
-      'A1:A',
+      EnvController.getEnv('URLS_SHEET_ID'),
+      'A1:B',
     );
   }
 }

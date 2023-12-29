@@ -3,37 +3,51 @@ import '../../controllers/env/controller.dart';
 import '../../controllers/logger/log.dart';
 import '../../utils/api/google_sheets.dart';
 
-class BackendController {
-  static final _logger = LoggerService.getLogger('BackendController');
+class UrlController {
+  static final _logger = LoggerService.getLogger('UrlController');
 
-  static Future<String> _getBackendUrl() async {
+  static Future<List<String>> _getUrls() async {
     _logger.info('Getting backend url');
 
-    final response = await GoogleSheetApiHandler.getBackendUrl();
+    final response = await GoogleSheetApiHandler.getUrls();
 
     _logger.info('Backend url retrieved successfully');
 
-    String backendUrl = response[0][0];
-
+    String backendUrl = response[0][1];
     backendUrl = backendUrl.trim();
+
+    String userManualUrl = response[1][1];
+    userManualUrl = userManualUrl.trim();
 
     if (backendUrl.endsWith('/')) {
       backendUrl = backendUrl.substring(0, backendUrl.length - 1);
     }
 
-    return backendUrl;
+    if (userManualUrl.endsWith('/')) {
+      userManualUrl = userManualUrl.substring(0, userManualUrl.length - 1);
+    }
+
+    return [backendUrl, userManualUrl];
   }
 
-  static Future<void> setBackendUrl() async {
+  static Future<void> setUrls() async {
     try {
-      final String backendUrl = await _getBackendUrl();
+      final List<String> urls = await _getUrls();
+      final String backendUrl = urls[0];
+
       _logger.info('Setting backend url to $backendUrl');
       APIConstants.setBaseUrl(backendUrl);
+
+      final String userManualUrl = urls[1];
+      _logger.info('Setting user manual url to $userManualUrl');
+      APIConstants.setUserManualUrl(userManualUrl);
     } catch (e) {
       _logger.error('Error while setting backend url');
       _logger.info(
           'Setting default backend url to ${EnvController.getDefaultBackendUrl()}');
       APIConstants.setBaseUrl(EnvController.getDefaultBackendUrl());
+
+      _logger.error('Error while setting user manual url');
     }
   }
 

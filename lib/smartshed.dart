@@ -8,7 +8,7 @@ import 'controllers/env/controller.dart';
 import 'controllers/logger/log.dart';
 import 'controllers/routes/router.dart';
 import 'controllers/settings/settings.dart';
-import 'controllers/smartshed/backend.dart';
+import 'controllers/smartshed/url.dart';
 
 class SmartShed extends StatefulWidget {
   const SmartShed({super.key});
@@ -17,7 +17,7 @@ class SmartShed extends StatefulWidget {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     LoggerService.init(Level.off);
     await EnvController.init();
-    await BackendController.setBackendUrl();
+    await UrlController.setUrls();
     await UserSettingsController.init();
     await LoginController.init();
   }

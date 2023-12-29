@@ -100,6 +100,15 @@ List<DrawerItem> drawerItems = [
     pagesToHighlight: [Pages.settings],
   ),
   DrawerItem(
+    title: Drawer_LocaleData.help,
+    icon: Icons.help,
+    onTap: (BuildContext context) {
+      GoRouter.of(context).push(Pages.help);
+      _popDrawer(context);
+    },
+    pagesToHighlight: [Pages.help],
+  ),
+  DrawerItem(
     title: Drawer_LocaleData.logout,
     icon: Icons.logout,
     onTap: (BuildContext context) {
@@ -170,6 +179,10 @@ class MyDrawer extends StatelessWidget {
     bool isHighlighted = false;
     for (String page in item.pagesToHighlight) {
       if (currentRoute.startsWith(page)) {
+        if (page == Pages.dashboard && currentRoute != Pages.dashboard) {
+          continue;
+        }
+
         isHighlighted = true;
         break;
       }

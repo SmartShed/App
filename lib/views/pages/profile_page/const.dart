@@ -8,8 +8,9 @@ import '../../localization/profile.dart';
 late BuildContext context;
 late SmartShedUser user;
 
-String get initials =>
-    user.name.split(' ').map((e) => e[0]).join().toUpperCase();
+String get initials {
+  return user.name.trim().split(' ').map((e) => e[0]).join().toUpperCase();
+}
 
 AppBar buildAppBar() {
   return AppBar(
