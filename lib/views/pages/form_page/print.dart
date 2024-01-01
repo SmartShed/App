@@ -431,7 +431,9 @@ Widget buildQuestion(SmartShedQuestion question) {
                 vertical: 2,
               ),
               child: Text(
-                question.history.isEmpty ? '' : question.history.first.editedBy,
+                question.history.isEmpty
+                    ? ''
+                    : question.history.first.editedBy.name,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 10,

@@ -16,11 +16,15 @@ class SmartShedUser extends HiveObject {
   @HiveField(3)
   final String position;
 
+  @HiveField(4)
+  final String? section;
+
   SmartShedUser({
     required this.id,
     required this.name,
     required this.email,
     required this.position,
+    this.section,
   });
 
   factory SmartShedUser.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,10 @@ class SmartShedUser extends HiveObject {
       name: json['name'],
       email: json['email'],
       position: json['position'],
+      section: json.containsKey('section') &&
+              (json['section'] as String).trim().isNotEmpty
+          ? json['section']
+          : null,
     );
   }
 }

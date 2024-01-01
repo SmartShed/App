@@ -5,6 +5,7 @@ mixin Profile_LocaleData {
   static const String name = 'profile_name';
   static const String email = 'profile_email';
   static const String position = 'profile_position';
+  static const String section = 'profile_section';
   static const String logout = 'profile_logout';
 
   static const Map<String, dynamic> EN = {
@@ -12,6 +13,7 @@ mixin Profile_LocaleData {
     name: 'Name',
     email: 'Email',
     position: 'Position',
+    section: 'Section',
     logout: 'Logout',
   };
 
@@ -20,6 +22,7 @@ mixin Profile_LocaleData {
     name: 'नाम',
     email: 'ईमेल',
     position: 'पद',
+    section: 'अनुभाग',
     logout: 'लॉग आउट',
   };
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../constants/colors.dart';
 import '../../models/question.dart';
 import '../localization/form.dart';
+import '../pages.dart';
 
 class QuestionTile extends StatefulWidget {
   final Key qKey;
@@ -21,6 +23,8 @@ class QuestionTile extends StatefulWidget {
 }
 
 class _QuestionTileState extends State<QuestionTile> {
+  final ExpansionTileController _expansionTileController =
+      ExpansionTileController();
   bool _isShowingHistory = false;
 
   @override
@@ -28,7 +32,7 @@ class _QuestionTileState extends State<QuestionTile> {
     return InkWell(
       onTap: () {
         setState(() {
-          widget.question.isExpanded = true;
+          _expansionTileController.expand();
         });
       },
       child: Container(
@@ -85,142 +89,173 @@ class _QuestionTileState extends State<QuestionTile> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (widget.question.isAnswered)
-                  const Icon(
-                    Icons.check_outlined,
-                    color: ColorConstants.primary,
-                    size: 20.0,
-                  ),
-                const SizedBox(width: 10.0),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      widget.question.isExpanded = !widget.question.isExpanded;
-                    });
-                  },
-                  child: Text(
-                    widget.question.isExpanded
-                        ? Form_LocaleData.hide_answer.getString(context)
-                        : Form_LocaleData.show_answer.getString(context),
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      widget.question.isExpanded = !widget.question.isExpanded;
-                    });
-                  },
-                  child: Icon(
-                    widget.question.isExpanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    color: Colors.grey,
-                    size: 20.0,
-                  ),
-                ),
-              ],
-            ),
-            if (widget.question.isExpanded)
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: TextFormField(
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade500),
-                      gapPadding: 0.0,
-                      borderRadius: BorderRadius.circular(3.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade900),
-                      gapPadding: 0.0,
-                      borderRadius: BorderRadius.circular(3.0),
-                    ),
-                    contentPadding: const EdgeInsets.all(10.0),
-                  ),
-                  initialValue: widget.question.ans,
-                  onChanged: (value) {
-                    widget.question.ans = value;
-                    widget.question.isAnsChanged = true;
-
-                    setState(() {
-                      widget.question.isAnswered = value.isEmpty ? false : true;
-                    });
-                  },
-                ),
-              ),
-            if (widget.question.isExpanded &&
-                widget.question.isAnswered &&
-                widget.question.history.isNotEmpty)
-              // Show answered by and answered at
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Text(
-                    context.formatString(
-                      Form_LocaleData.answerd_by_name_on_date_time
-                          .getString(context),
-                      [
-                        widget.question.history.first.editedBy,
-                        SmartShedQuestion.formattedDate(
-                          widget.question.history.first.editedAt,
-                        ),
-                      ],
-                    ),
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ),
-            if (widget.question.isExpanded &&
-                widget.question.history.length > 1)
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isShowingHistory = !_isShowingHistory;
-                    });
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        _isShowingHistory
-                            ? Form_LocaleData.hide_history.getString(context)
-                            : Form_LocaleData.show_history.getString(context),
-                        style: const TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Icon(
-                        _isShowingHistory
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        color: Colors.grey,
+            ListTileTheme(
+              contentPadding: const EdgeInsets.all(0),
+              dense: true,
+              minLeadingWidth: 0,
+              minVerticalPadding: 0,
+              child: ExpansionTile(
+                shape: const Border(),
+                backgroundColor: Colors.transparent,
+                collapsedBackgroundColor: Colors.transparent,
+                childrenPadding: const EdgeInsets.all(0),
+                tilePadding: const EdgeInsets.all(0),
+                trailing: const SizedBox(),
+                collapsedIconColor: Colors.grey.shade700,
+                initiallyExpanded: widget.question.isExpanded,
+                onExpansionChanged: (value) => setState(() {
+                  widget.question.isExpanded = value;
+                }),
+                controller: _expansionTileController,
+                collapsedShape: const Border(),
+                expandedAlignment: Alignment.centerLeft,
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (widget.question.isAnswered)
+                      const Icon(
+                        Icons.check_outlined,
+                        color: ColorConstants.primary,
                         size: 20.0,
                       ),
-                    ],
-                  ),
+                    const SizedBox(width: 10.0),
+                    Text(
+                      widget.question.isExpanded
+                          ? Form_LocaleData.hide_answer.getString(context)
+                          : Form_LocaleData.show_answer.getString(context),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Icon(
+                      widget.question.isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: Colors.grey.shade700,
+                      size: 12,
+                    ),
+                  ],
                 ),
+                children: [
+                  TextFormField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                        gapPadding: 0.0,
+                        borderRadius: BorderRadius.circular(3.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade900),
+                        gapPadding: 0.0,
+                        borderRadius: BorderRadius.circular(3.0),
+                      ),
+                      contentPadding: const EdgeInsets.all(10.0),
+                    ),
+                    initialValue: widget.question.ans,
+                    onChanged: (value) {
+                      widget.question.ans = value;
+                      widget.question.isAnsChanged = true;
+
+                      setState(() {
+                        widget.question.isAnswered =
+                            value.isEmpty ? false : true;
+                      });
+                    },
+                  ),
+                  if (widget.question.isAnswered &&
+                      widget.question.history.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              Pages.profile,
+                              extra: widget.question.history.first.editedBy,
+                            );
+                          },
+                          child: Text(
+                            context.formatString(
+                              Form_LocaleData.answerd_by_name_on_date_time
+                                  .getString(context),
+                              [
+                                widget.question.history.first.editedBy.name,
+                                SmartShedQuestion.formattedDate(
+                                  widget.question.history.first.editedAt,
+                                ),
+                              ],
+                            ),
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (widget.question.history.length > 1)
+                    ListTileTheme(
+                      contentPadding: const EdgeInsets.all(0),
+                      dense: true,
+                      minLeadingWidth: 0,
+                      minVerticalPadding: 0,
+                      child: ExpansionTile(
+                        shape: const Border(),
+                        backgroundColor: Colors.transparent,
+                        collapsedBackgroundColor: Colors.transparent,
+                        childrenPadding: const EdgeInsets.all(0),
+                        tilePadding: const EdgeInsets.all(0),
+                        trailing: const SizedBox(),
+                        collapsedIconColor: Colors.grey.shade700,
+                        onExpansionChanged: (value) => setState(() {
+                          _isShowingHistory = value;
+                        }),
+                        collapsedShape: const Border(),
+                        expandedAlignment: Alignment.centerLeft,
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _isShowingHistory
+                                  ? Form_LocaleData.hide_history
+                                      .getString(context)
+                                  : Form_LocaleData.show_history
+                                      .getString(context),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Icon(
+                              _isShowingHistory
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              color: Colors.grey.shade700,
+                              size: 12,
+                            ),
+                          ],
+                        ),
+                        children: [
+                          _buildHistory(),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-            if (widget.question.isExpanded && _isShowingHistory)
-              _buildHistory(),
+            ),
           ],
         ),
       ),
@@ -291,11 +326,22 @@ class _QuestionTileState extends State<QuestionTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.question.history[index].editedBy,
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.grey,
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              Pages.profile,
+                              extra: widget.question.history[index].editedBy,
+                            );
+                          },
+                          child: Text(
+                            widget.question.history[index].editedBy.section ==
+                                    null
+                                ? widget.question.history[index].editedBy.name
+                                : "${widget.question.history[index].editedBy.name} (${widget.question.history[index].editedBy.section})",
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),

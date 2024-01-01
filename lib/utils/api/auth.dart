@@ -189,6 +189,31 @@ class AuthAPIHandler {
     }
   }
 
+  Future<Map<String, dynamic>> validateToken(String authToken) async {
+    try {
+      _logger.info('Validating token');
+      final response = await _dio.get(
+        APIConstants.validateToken,
+        options: Options(
+          headers: {
+            'auth_token': authToken,
+          },
+        ),
+      );
+
+      _logger.info('Token validated successfully');
+      return {
+        'status': 'success',
+        'data': response.data,
+      };
+    } on DioException catch (e) {
+      _logger.error(e);
+      return {
+        'status': 'error',
+      };
+    }
+  }
+
   Future<Map<String, dynamic>> sendOTP(String email) async {
     try {
       _logger.info('Sending OTP to $email');

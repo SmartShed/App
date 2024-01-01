@@ -13,6 +13,7 @@ import '../../../models/opened_form.dart';
 import '../../../models/question.dart';
 import '../../../models/section.dart';
 import '../../../models/sub_form.dart';
+import '../../../models/user.dart';
 import '../../localization/form.dart';
 import '../../localization/toast.dart';
 import '../../pages.dart';
@@ -88,7 +89,6 @@ void initConst(
 
   initForm();
   initSections();
-
   addScrollListener();
 }
 
@@ -149,9 +149,8 @@ void fillHistory() {
 
       qusIdToHistory[qusId]!.add(
         SmartShedQuestionHistory(
-          editedBy: history['editedBy'],
+          editedBy: SmartShedUser.fromJson(history['editedBy']),
           editedAt: history['editedAt'],
-          section: history['section'],
           oldValue: oldValue,
           newValue: newValue,
         ),
@@ -174,6 +173,14 @@ void fillHistory() {
   }
 }
 
+bool isFormOpenForUser() {
+  if (LoginController.isWorker) {
+    return !form!.isSignedBySupervisor && !form!.isSignedByAuthority;
+  } else {
+    return !form!.isSignedByAuthority;
+  }
+}
+
 AppBar buildAppBar() {
   return AppBar(
     title: Text(
@@ -185,10 +192,12 @@ AppBar buildAppBar() {
     ),
     centerTitle: true,
     actions: [
-      const IconButton(
-        onPressed: saveForm,
-        icon: Icon(Icons.save),
-      ),
+      isFormOpenForUser()
+          ? const IconButton(
+              onPressed: saveForm,
+              icon: Icon(Icons.save),
+            )
+          : const SizedBox(),
       IconButton(
         onPressed: () => printForm(form!),
         icon: const Icon(Icons.print),
@@ -252,7 +261,6 @@ Widget buildLoading() {
             ),
       automaticallyImplyLeading: !isDesktop,
       actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.save)),
         IconButton(onPressed: () {}, icon: const Icon(Icons.print)),
       ],
     ),
@@ -337,6 +345,12 @@ Widget buildTopInfoBar({bool fromForm = true}) {
           buildTopInfoDateAndNameRow(fromForm: fromForm),
           const SizedBox(height: 10),
           buildTopInfoDetails(fromForm: fromForm),
+          if (fromForm &&
+              form!.submittedCount > 0 &&
+              form!.isSignedBySupervisor) ...[
+            const SizedBox(height: 10),
+            buildApprovalIndoBar(),
+          ]
         ],
       ),
     ),
@@ -438,43 +452,55 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
         ),
       ],
     ),
-    child: Column(
-      children: [
-        TextButton(
-          onPressed: () {
-            changeState(() => isShowDetails = !isShowDetails);
-          },
-          style: TextButton.styleFrom(
-            splashFactory: NoSplash.splashFactory,
-            visualDensity: VisualDensity.compact,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                isShowDetails
-                    ? Form_LocaleData.hide_details.getString(context)
-                    : Form_LocaleData.show_details.getString(context),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              const SizedBox(width: 5),
-              Icon(
-                isShowDetails
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
+    child: ListTileTheme(
+      contentPadding: const EdgeInsets.all(0),
+      dense: true,
+      minLeadingWidth: 0,
+      minVerticalPadding: 0,
+      child: ExpansionTile(
+        shape: const Border(),
+        backgroundColor: Colors.transparent,
+        collapsedBackgroundColor: Colors.transparent,
+        childrenPadding: const EdgeInsets.all(0),
+        tilePadding: const EdgeInsets.all(0),
+        trailing: const SizedBox(),
+        collapsedIconColor: Colors.grey.shade700,
+        onExpansionChanged: (value) => changeState(() {
+          isShowDetails = value;
+        }),
+        collapsedShape: const Border(),
+        expandedAlignment: Alignment.centerLeft,
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              isShowDetails
+                  ? Form_LocaleData.hide_details.getString(context)
+                  : Form_LocaleData.show_details.getString(context),
+              style: TextStyle(
+                fontSize: 12,
                 color: Colors.grey.shade700,
-                size: 12,
               ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(width: 5),
+            Icon(
+              isShowDetails
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              color: Colors.grey.shade700,
+              size: 12,
+            ),
+          ],
         ),
-        if (isShowDetails)
+        children: [
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   Form_LocaleData.description.getString(context),
@@ -482,6 +508,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 12,
                     color: Colors.grey.shade700,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -510,13 +537,29 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 12,
                     color: Colors.grey.shade700,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  fromForm ? form!.createdBy : data!.createdBy,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).push(
+                      Pages.profile,
+                      extra: fromForm ? form!.createdBy : data!.createdBy,
+                    );
+                  },
+                  child: Text(
+                    fromForm
+                        ? form!.createdBy.section == null
+                            ? form!.createdBy.name
+                            : '${form!.createdBy.name} (${form!.createdBy.section})'
+                        : data!.createdBy.section == null
+                            ? data!.createdBy.name
+                            : '${data!.createdBy.name} (${data!.createdBy.section})',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -526,6 +569,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 12,
                     color: Colors.grey.shade700,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -534,6 +578,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -542,6 +587,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 12,
                     color: Colors.grey.shade700,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -550,11 +596,172 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildApprovalIndoBar() {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(5),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.shade300,
+          blurRadius: 2,
+          offset: const Offset(0, 1),
+        ),
       ],
+    ),
+    child: ListTileTheme(
+      contentPadding: const EdgeInsets.all(0),
+      dense: true,
+      minLeadingWidth: 0,
+      minVerticalPadding: 0,
+      child: ExpansionTile(
+        shape: const Border(),
+        backgroundColor: Colors.transparent,
+        collapsedBackgroundColor: Colors.transparent,
+        childrenPadding: const EdgeInsets.all(0),
+        tilePadding: const EdgeInsets.all(0),
+        trailing: const SizedBox(),
+        collapsedIconColor: Colors.grey.shade700,
+        onExpansionChanged: (value) => changeState(() {
+          isShowDetails = value;
+        }),
+        collapsedShape: const Border(),
+        expandedAlignment: Alignment.centerLeft,
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              isShowDetails ? 'Hide Approval Details' : 'Show Approval Details',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(width: 5),
+            Icon(
+              isShowDetails
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              color: Colors.grey.shade700,
+              size: 12,
+            ),
+          ],
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Supervisor Approved By",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 5),
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).push(
+                      Pages.profile,
+                      extra: form!.signedSupervisor,
+                    );
+                  },
+                  child: Text(
+                    "${form!.signedSupervisor!.name} (${form!.signedSupervisor!.section})",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Supervisor Approved At",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  form!.signedSupervisorAtString,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (form!.isSignedByAuthority) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    "Authority Approved By",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 5),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(
+                        Pages.profile,
+                        extra: form!.signedAuthority,
+                      );
+                    },
+                    child: Text(
+                      form!.signedAuthority!.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Authority Approved At",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    form!.signedAuthorityAtString,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -660,20 +867,23 @@ Widget buildButtons({bool isBottom = false}) {
               ],
             ),
           ],
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildButton(
-                text: Form_LocaleData.save_form.getString(context),
-                onPressed: saveForm,
-              ),
-              _buildButton(
-                text: Form_LocaleData.submit_form.getString(context),
-                onPressed: submitForm,
-              ),
-            ],
-          ),
-          if (form!.submittedCount > 0 && !LoginController.isWorker)
+          if (isFormOpenForUser())
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildButton(
+                  text: Form_LocaleData.save_form.getString(context),
+                  onPressed: saveForm,
+                ),
+                _buildButton(
+                  text: Form_LocaleData.submit_form.getString(context),
+                  onPressed: submitForm,
+                ),
+              ],
+            ),
+          if (isFormOpenForUser() &&
+              form!.submittedCount > 0 &&
+              !LoginController.isWorker)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -821,7 +1031,7 @@ List<SmartShedQuestion> getFilteredQuestions(
   if (isEmployeeNameFilter) {
     questions = questions.where((question) {
       return question.history.any((history) {
-        return history.editedBy
+        return history.editedBy.name
             .toLowerCase()
             .contains(employeeNameController.text.toLowerCase());
       });
@@ -831,9 +1041,9 @@ List<SmartShedQuestion> getFilteredQuestions(
   if (isEmployeeSectionFilter) {
     questions = questions.where((question) {
       return question.history.any((history) {
-        if (history.section == null) return false;
+        if (history.editedBy.section == null) return false;
 
-        return history.section!
+        return history.editedBy.section!
             .toLowerCase()
             .contains(employeeSectionController.text.toLowerCase());
       });
@@ -959,6 +1169,46 @@ void saveForm() async {
 }
 
 void submitForm() async {
+  bool? isConfirmed = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text(
+        "Submit Form",
+        textAlign: TextAlign.center,
+      ),
+      content: const Text(
+        "Are you sure you want to submit this form?",
+        style: TextStyle(
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(false),
+          child: const Text(
+            "No",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(true),
+          child: const Text(
+            "Yes",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (isConfirmed == null || !isConfirmed) return;
+
+  if (!context.mounted) return;
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -985,6 +1235,46 @@ void submitForm() async {
 }
 
 void approveForm() async {
+  bool? isConfirmed = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text(
+        "Approve Form",
+        textAlign: TextAlign.center,
+      ),
+      content: const Text(
+        "Are you sure you want to approve this form?",
+        style: TextStyle(
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(false),
+          child: const Text(
+            "No",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(true),
+          child: const Text(
+            "Yes",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (isConfirmed == null || !isConfirmed) return;
+
+  if (!context.mounted) return;
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -1011,6 +1301,46 @@ void approveForm() async {
 }
 
 void rejectForm() async {
+  bool? isConfirmed = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text(
+        "Reject Form",
+        textAlign: TextAlign.center,
+      ),
+      content: const Text(
+        "Are you sure you want to reject this form?",
+        style: TextStyle(
+          fontSize: 16,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(false),
+          child: const Text(
+            "No",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () => GoRouter.of(context).pop(true),
+          child: const Text(
+            "Yes",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (isConfirmed == null || !isConfirmed) return;
+
+  if (!context.mounted) return;
   showDialog(
     context: context,
     barrierDismissible: false,

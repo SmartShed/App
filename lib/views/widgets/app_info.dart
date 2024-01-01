@@ -14,7 +14,7 @@ String? encodeQueryParameters(Map<String, String> params) {
       .join('&');
 }
 
-const String appVersion = '1.1.0';
+const String appVersion = '1.1.2';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
 
 final Uri contactUsEmailUri = Uri(

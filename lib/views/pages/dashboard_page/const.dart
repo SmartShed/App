@@ -83,6 +83,7 @@ Future<void> _initRecentlyOpenedForms() async {
     );
   }
 
+  recentlyOpenedForms = recentlyForms;
   changeState(() {
     isRecentlyOpenedFormsLoading = false;
   });

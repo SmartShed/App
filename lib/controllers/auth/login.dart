@@ -22,6 +22,7 @@ class LoginController {
 
     if (response['status'] == 'success') {
       XAuthTokenCacheHandler.saveToken(response['auth_token']);
+
       UserCacheHandler.saveUserFromJson(response['user']);
     } else {
       _logger.error('Login failed');
@@ -79,8 +80,28 @@ class LoginController {
     }
   }
 
+  static bool validatedToken = false;
+
   static Future<bool> get isLoggedIn async {
-    return XAuthTokenCacheHandler.hasToken;
+    if (!(await XAuthTokenCacheHandler.hasToken)) return false;
+    if (validatedToken) return true;
+
+    try {
+      Map<String, dynamic> response =
+          await _authAPIHandler.validateToken(XAuthTokenCacheHandler.token!);
+
+      if (response['status'] != 'success') {
+        _logger.error('Token is invalid');
+        return false;
+      }
+
+      validatedToken = response['data']['isAuthTokenValid'];
+      return response['data']['isAuthTokenValid'];
+    } catch (e) {
+      _logger.error(e);
+      _logger.error('Token is invalid');
+      return false;
+    }
   }
 
   static String? get token => XAuthTokenCacheHandler.token;

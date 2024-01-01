@@ -31,24 +31,21 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
 
     return Scaffold(
       appBar: buildAppBar(),
-      body: RefreshIndicator(
-        onRefresh: () async => initConst(),
-        child: Row(
-          children: [
-            const MyDrawer(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 30,
-                  ),
-                  child: buildMainBody(),
+      body: Row(
+        children: [
+          const MyDrawer(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 30,
                 ),
+                child: buildMainBody(),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

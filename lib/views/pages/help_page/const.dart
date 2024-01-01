@@ -92,6 +92,7 @@ Widget buildFAQ(SmartShedFAQ faq) {
       vertical: 5,
     ),
     child: ExpansionTile(
+      leading: const Icon(Icons.question_answer),
       shape: const Border(),
       backgroundColor: Colors.transparent,
       collapsedBackgroundColor: Colors.transparent,

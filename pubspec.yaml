@@ -2,7 +2,7 @@ name: smartshed
 description: SmartShed Application for Diesel Loco Shed, Pune
 publish_to: 'none' 
 
-version: 1.1.0+1
+version: 1.1.2+2
 
 environment:
   sdk: '>=3.1.2 <4.0.0'

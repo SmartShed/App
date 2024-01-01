@@ -1,18 +1,19 @@
 import 'package:intl/intl.dart';
 
 import '../controllers/settings/settings.dart';
+import 'user.dart';
 
 class SmartShedOpenedForm {
-  String id;
-  String title;
-  String descriptionEnglish;
-  String descriptionHindi;
-  String locoName;
-  String locoNumber;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String createdBy;
-  bool? lockStatus;
+  final String id;
+  final String title;
+  final String descriptionEnglish;
+  final String descriptionHindi;
+  final String locoName;
+  final String locoNumber;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final SmartShedUser createdBy;
+  final bool? lockStatus;
 
   SmartShedOpenedForm({
     required this.id,
@@ -37,24 +38,9 @@ class SmartShedOpenedForm {
       locoNumber: json['locoNumber'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      createdBy: json['createdBy']['name'],
+      createdBy: SmartShedUser.fromJson(json['createdBy']),
       lockStatus: json['lockStatus'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'descriptionEnglish': descriptionEnglish,
-      'descriptionHindi': descriptionHindi,
-      'locoName': locoName,
-      'locoNumber': locoNumber,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'createdBy': createdBy,
-      'lockStatus': lockStatus,
-    };
   }
 
   String get createdAtString =>

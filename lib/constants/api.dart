@@ -15,6 +15,7 @@ class APIConstants {
   static String validateOTP = '$baseUrl/api/auth/validate-otp';
   static String resetPassword = '$baseUrl/api/auth/reset-password';
   static String logout = '$baseUrl/api/auth/logout';
+  static String validateToken = '$baseUrl/api/auth/validate-token';
 
   static String getUsers = '$baseUrl/api/users';
 

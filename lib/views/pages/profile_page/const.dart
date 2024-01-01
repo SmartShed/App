@@ -91,6 +91,24 @@ Widget buildProfile() {
           fontWeight: FontWeight.w500,
         ),
       ),
+      if (user.section != null) ...[
+        const SizedBox(height: 15),
+        Text(
+          Profile_LocaleData.section.getString(context),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          user.section!,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ]
     ],
   );
 }

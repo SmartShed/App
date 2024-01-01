@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../controllers/settings/settings.dart';
 import 'question.dart';
 import 'sub_form.dart';
+import 'user.dart';
 
 class SmartShedForm {
   final String id;
@@ -17,10 +18,19 @@ class SmartShedForm {
   final int submittedCount;
   final bool lockStatus;
   final List<String> access;
-  final String createdBy;
+  final SmartShedUser createdBy;
   final List<dynamic> history;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  final bool isSignedBySupervisor;
+  final bool isSignedByAuthority;
+
+  final SmartShedUser? signedSupervisor;
+  final SmartShedUser? signedAuthority;
+
+  final DateTime? signedSupervisorAt;
+  final DateTime? signedAuthorityAt;
 
   SmartShedForm({
     required this.id,
@@ -39,6 +49,12 @@ class SmartShedForm {
     required this.history,
     required this.createdAt,
     required this.updatedAt,
+    required this.isSignedBySupervisor,
+    required this.isSignedByAuthority,
+    this.signedSupervisor,
+    this.signedAuthority,
+    this.signedSupervisorAt,
+    this.signedAuthorityAt,
   });
 
   factory SmartShedForm.fromJson(Map<String, dynamic> json) {
@@ -61,10 +77,26 @@ class SmartShedForm {
       submittedCount: json['submittedCount'],
       lockStatus: json['lockStatus'],
       access: json['access'].cast<String>(),
-      createdBy: json['createdBy']['name'],
+      createdBy: SmartShedUser.fromJson(json['createdBy']),
       history: json['history'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      isSignedBySupervisor: json['signedBySupervisor']['isSigned'],
+      isSignedByAuthority: json['signedByAuthority']['isSigned'],
+      signedSupervisor: json['signedBySupervisor']['supervisor'] != null
+          ? SmartShedUser.fromJson(
+              json['signedBySupervisor']['supervisor'] as Map<String, dynamic>)
+          : null,
+      signedAuthority: json['signedByAuthority']['authority'] != null
+          ? SmartShedUser.fromJson(
+              json['signedByAuthority']['authority'] as Map<String, dynamic>)
+          : null,
+      signedSupervisorAt: json['signedBySupervisor']['signedAt'] != null
+          ? DateTime.parse(json['signedBySupervisor']['signedAt'])
+          : null,
+      signedAuthorityAt: json['signedByAuthority']['signedAt'] != null
+          ? DateTime.parse(json['signedByAuthority']['signedAt'])
+          : null,
     );
   }
 
@@ -76,4 +108,14 @@ class SmartShedForm {
 
   String get updatedAtString =>
       DateFormat(UserSettingsController.dateTimeFormat).format(updatedAt);
+
+  String get signedSupervisorAtString => signedSupervisorAt != null
+      ? DateFormat(UserSettingsController.dateTimeFormat)
+          .format(signedSupervisorAt!)
+      : '';
+
+  String get signedAuthorityAtString => signedAuthorityAt != null
+      ? DateFormat(UserSettingsController.dateTimeFormat)
+          .format(signedAuthorityAt!)
+      : '';
 }

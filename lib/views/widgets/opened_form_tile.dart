@@ -26,6 +26,7 @@ class OpenedFormTile extends StatefulWidget {
 class _OpenedFormTileState extends State<OpenedFormTile> {
   bool isHovered = false;
   bool showInfo = false;
+  ExpansionTileController _expansionTileController = ExpansionTileController();
 
   @override
   Widget build(BuildContext context) {
@@ -102,57 +103,89 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
   Widget _buildInfoColumn() {
     return Expanded(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildName(),
           const SizedBox(height: 4),
           _buildLocoDetails(),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                showInfo = !showInfo;
-              });
-            },
-            style: TextButton.styleFrom(
-              splashFactory: NoSplash.splashFactory,
-              visualDensity: VisualDensity.compact,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 12,
-              ),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: const Size(0, 0),
-              backgroundColor: Colors.grey.shade100,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  showInfo
-                      ? Form_LocaleData.hide_details.getString(context)
-                      : Form_LocaleData.show_details.getString(context),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade700,
+          ListTileTheme(
+            contentPadding: const EdgeInsets.all(0),
+            dense: true,
+            minLeadingWidth: 0,
+            minVerticalPadding: 0,
+            child: ExpansionTile(
+              shape: const Border(),
+              backgroundColor: Colors.transparent,
+              collapsedBackgroundColor: Colors.transparent,
+              childrenPadding: const EdgeInsets.all(0),
+              tilePadding: const EdgeInsets.all(0),
+              trailing: const SizedBox(),
+              collapsedIconColor: Colors.grey.shade700,
+              onExpansionChanged: (value) => setState(() {
+                showInfo = value;
+              }),
+              collapsedShape: const Border(),
+              controller: _expansionTileController,
+              expandedAlignment: Alignment.centerLeft,
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              title: TextButton(
+                onPressed: () {
+                  setState(() {
+                    if (showInfo) {
+                      showInfo = false;
+                      _expansionTileController.collapse();
+                    } else {
+                      showInfo = true;
+                      _expansionTileController.expand();
+                    }
+                  });
+                },
+                style: TextButton.styleFrom(
+                  splashFactory: NoSplash.splashFactory,
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 12,
+                  ),
+                  alignment: Alignment.centerLeft,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  minimumSize: const Size(0, 0),
+                  backgroundColor: Colors.grey.shade100,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(width: 5),
-                Icon(
-                  showInfo
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: Colors.grey.shade700,
-                  size: 12,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      showInfo
+                          ? Form_LocaleData.hide_details.getString(context)
+                          : Form_LocaleData.show_details.getString(context),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Icon(
+                      showInfo
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: Colors.grey.shade700,
+                      size: 12,
+                    ),
+                  ],
                 ),
+              ),
+              children: [
+                _buildInfo(),
               ],
             ),
           ),
-          if (showInfo) _buildInfo(),
         ],
       ),
     );
@@ -180,9 +213,9 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
 
   Widget _buildInfo() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 8),
         MyTooltip(
           texts: [
             widget.openedForm.descriptionEnglish,
@@ -212,13 +245,32 @@ class _OpenedFormTileState extends State<OpenedFormTile> {
           ),
         ),
         const SizedBox(height: 2),
-        MyTooltip(
-          text:
-              "${Form_LocaleData.created_by.getString(context)}: ${widget.openedForm.createdBy}",
-          textStyle: const TextStyle(
-            fontSize: 13,
-            color: Colors.black54,
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            MyTooltip(
+              text: "${Form_LocaleData.created_by.getString(context)}: ",
+              textStyle: const TextStyle(
+                fontSize: 13,
+                color: Colors.black54,
+              ),
+            ),
+            MyTooltip(
+              text: widget.openedForm.createdBy.name,
+              textStyle: const TextStyle(
+                fontSize: 13,
+                color: Colors.black54,
+              ),
+              onTap: () {
+                GoRouter.of(context).push(
+                  Pages.profile,
+                  extra: widget.openedForm.createdBy,
+                );
+              },
+            ),
+          ],
         ),
       ],
     );

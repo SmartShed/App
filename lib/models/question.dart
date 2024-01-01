@@ -1,27 +1,25 @@
 import 'package:intl/intl.dart';
 
 import '../controllers/settings/settings.dart';
+import 'user.dart';
 
 class SmartShedQuestionHistory {
-  String editedBy;
+  SmartShedUser editedBy;
   String editedAt;
-  String? section;
   String? oldValue;
   String? newValue;
 
   SmartShedQuestionHistory({
     required this.editedBy,
     required this.editedAt,
-    this.section,
     this.oldValue,
     this.newValue,
   });
 
   factory SmartShedQuestionHistory.fromJson(Map<String, dynamic> json) {
     return SmartShedQuestionHistory(
-      editedBy: json['editedBy'],
+      editedBy: SmartShedUser.fromJson(json['editedBy']),
       editedAt: json['editedAt'],
-      section: json['section'] ?? '',
       oldValue: json['oldValue'] ?? '',
       newValue: json['newValue'] ?? '',
     );

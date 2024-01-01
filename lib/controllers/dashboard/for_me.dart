@@ -21,6 +21,7 @@ class DashboardForMeController {
       for (var form in response['forms']) {
         forms.add(SmartShedOpenedForm.fromJson(form));
       }
+
       return forms;
     }
     return null;

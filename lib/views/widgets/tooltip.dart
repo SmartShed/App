@@ -9,6 +9,7 @@ class MyTooltip extends StatefulWidget {
   final int maxLines;
   final List<String>? texts;
   final void Function()? onDoubleTap;
+  final void Function()? onTap;
 
   const MyTooltip({
     Key? key,
@@ -18,6 +19,7 @@ class MyTooltip extends StatefulWidget {
     this.maxLines = 1,
     this.texts,
     this.onDoubleTap,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -55,6 +57,7 @@ class _MyTooltipState extends State<MyTooltip> {
       child: GestureDetector(
         onTap: () {
           setState(() => _clicked = true);
+          if (widget.onTap != null) widget.onTap!();
         },
         onDoubleTap: widget.onDoubleTap,
         onLongPress: widget.onDoubleTap,
