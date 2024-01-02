@@ -7,14 +7,7 @@ import '../../controllers/auth/login.dart';
 import '../../controllers/toast/toast.dart';
 import '../localization/settings.dart';
 
-String? encodeQueryParameters(Map<String, String> params) {
-  return params.entries
-      .map((MapEntry<String, String> e) =>
-          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-      .join('&');
-}
-
-const String appVersion = '1.1.2';
+const String appVersion = '1.1.3';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
 
 final Uri contactUsEmailUri = Uri(
@@ -251,4 +244,11 @@ class AppInfo extends StatelessWidget {
       ),
     );
   }
+}
+
+String? encodeQueryParameters(Map<String, String> params) {
+  return params.entries
+      .map((MapEntry<String, String> e) =>
+          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+      .join('&');
 }

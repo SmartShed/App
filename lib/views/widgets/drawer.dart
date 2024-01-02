@@ -8,6 +8,7 @@ import '../../constants/images.dart';
 import '../../controllers/auth/login.dart';
 import '../localization/drawer.dart';
 import '../pages.dart';
+import '../responsive/dimensions.dart';
 
 class DrawerItem {
   final String title;
@@ -90,6 +91,15 @@ List<DrawerItem> drawerItems = [
         Pages.manageManageForm,
       ],
     ),
+  DrawerItem(
+    title: Drawer_LocaleData.search,
+    icon: Icons.search,
+    onTap: (BuildContext context) {
+      GoRouter.of(context).push(Pages.search);
+      _popDrawer(context);
+    },
+    pagesToHighlight: [Pages.search],
+  ),
   DrawerItem(
     title: Drawer_LocaleData.settings,
     icon: Icons.settings,
@@ -206,5 +216,7 @@ class MyDrawer extends StatelessWidget {
 }
 
 void _popDrawer(BuildContext context) {
-  if (!kIsWeb) GoRouter.of(context).pop();
+  if (!kIsWeb || MediaQuery.of(context).size.width < mobileWidth) {
+    GoRouter.of(context).pop();
+  }
 }

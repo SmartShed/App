@@ -13,10 +13,6 @@ class RouteController {
     return GoRouter(
       initialLocation: Pages.dashboard,
       routes: [
-        // GoRoute(
-        //   path: Pages.splash,
-        //   builder: (context, state) => const SplashPage(),
-        // ),
         GoRoute(
           path: Pages.dashboard,
           builder: (context, state) => const DashboardPage(),
@@ -124,6 +120,10 @@ class RouteController {
         GoRoute(
           path: Pages.userManual,
           builder: (context, state) => const UserManual(),
+        ),
+        GoRoute(
+          path: Pages.search,
+          builder: (context, state) => const SearchPage(),
         ),
       ],
       errorBuilder: (context, state) => const UnknownRoutePage(),

@@ -92,6 +92,11 @@ mixin Toast_LocaleData {
   static const question_added_successfully = 'question_added_successfully';
   static const error_adding_question = 'error_adding_question';
 
+  // Form Search
+  static const enter_at_least_one_field = 'enter_at_least_one_field';
+  static const no_form_found = 'no_form_found';
+  static const error_searching_forms = 'error_searching_form';
+
   static const Map<String, dynamic> EN = {
     no_section_found: 'No section found',
     error_while_fetching_sections: 'Error while fetching sections',
@@ -138,6 +143,9 @@ mixin Toast_LocaleData {
     error_adding_sub_form: 'Error adding sub form',
     question_added_successfully: 'Question added successfully',
     error_adding_question: 'Error adding question',
+    enter_at_least_one_field: 'Enter at least one field',
+    no_form_found: 'No forms found',
+    error_searching_forms: 'Error searching forms',
   };
 
   static const Map<String, dynamic> HI = {
@@ -187,5 +195,8 @@ mixin Toast_LocaleData {
     error_adding_sub_form: 'सब फॉर्म जोड़ने में त्रुटि',
     question_added_successfully: 'प्रश्न सफलतापूर्वक जोड़ा गया',
     error_adding_question: 'प्रश्न जोड़ने में त्रुटि',
+    enter_at_least_one_field: 'कम से कम एक फ़ील्ड दर्ज करें',
+    no_form_found: 'कोई फॉर्म नहीं मिला',
+    error_searching_forms: 'फॉर्म खोजने में त्रुटि',
   };
 }

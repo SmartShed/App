@@ -15,6 +15,7 @@ import 'manage_forms.dart';
 import 'manage_manage_form.dart';
 import 'notifications.dart';
 import 'profile.dart';
+import 'search.dart';
 import 'section.dart';
 import 'settings.dart';
 import 'toast.dart';
@@ -44,6 +45,7 @@ mixin LocaleData {
     ...Manage_ManageForm_LocaleData.EN,
     ...Notifications_LocaleData.EN,
     ...Profile_LocaleData.EN,
+    ...Search_LocaleData.EN,
     ...Section_LocaleData.EN,
     ...Settings_LocaleData.EN,
     ...Toast_LocaleData.EN,
@@ -63,6 +65,7 @@ mixin LocaleData {
     ...Manage_ManageForm_LocaleData.HI,
     ...Notifications_LocaleData.HI,
     ...Profile_LocaleData.HI,
+    ...Search_LocaleData.HI,
     ...Section_LocaleData.HI,
     ...Settings_LocaleData.HI,
     ...Toast_LocaleData.HI,

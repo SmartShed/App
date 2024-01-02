@@ -17,7 +17,9 @@ class APIConstants {
   static String logout = '$baseUrl/api/auth/logout';
   static String validateToken = '$baseUrl/api/auth/validate-token';
 
+  // SmartShed
   static String getUsers = '$baseUrl/api/users';
+  static String searchForms = '$baseUrl/api/search';
 
   // Dashboard
   static String sections = '$baseUrl/api/sections';

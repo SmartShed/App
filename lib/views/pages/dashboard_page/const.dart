@@ -100,6 +100,12 @@ AppBar buildAppBar() {
     ),
     centerTitle: true,
     actions: [
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: () {
+          GoRouter.of(context).push(Pages.search);
+        },
+      ),
       NotificationIcon(
         key: ValueKey<int>(notificationsController.unreadNotificationsCount),
         iconData: Icons.notifications,

@@ -17,13 +17,14 @@ class NotificationIcon extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 75,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        width: 30,
+        margin: const EdgeInsets.only(right: 10, left: 5),
         child: Stack(
           alignment: Alignment.center,
           children: [
             Positioned(
               bottom: 15,
+              right: 10,
               child: Icon(
                 iconData,
                 size: 25,

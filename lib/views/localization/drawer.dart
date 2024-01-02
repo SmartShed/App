@@ -8,6 +8,7 @@ mixin Drawer_LocaleData {
   static const String profile = 'drawer_profile';
   static const String employees = 'drawer_employees';
   static const String manage_forms = 'drawer_manage_forms';
+  static const String search = 'drawer_search';
   static const String settings = 'drawer_settings';
   static const String help = 'drawer_help';
   static const String logout = 'drawer_logout';
@@ -20,6 +21,7 @@ mixin Drawer_LocaleData {
     profile: 'Profile',
     employees: 'Employees',
     manage_forms: 'Manage Forms',
+    search: 'Search',
     settings: 'Settings',
     help: 'Help',
     logout: 'Logout',
@@ -33,6 +35,7 @@ mixin Drawer_LocaleData {
     profile: 'प्रोफ़ाइल',
     employees: 'कर्मचारी',
     manage_forms: 'फॉर्म प्रबंधित करें',
+    search: 'खोज',
     settings: 'सेटिंग्स',
     help: 'सहायता',
     logout: 'लॉग आउट',
