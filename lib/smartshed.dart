@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import 'constants/colors.dart';
 import 'controllers/auth/login.dart';
-import 'controllers/env/controller.dart';
 import 'controllers/logger/log.dart';
 import 'controllers/routes/router.dart';
 import 'controllers/settings/settings.dart';
@@ -16,7 +15,6 @@ class SmartShed extends StatefulWidget {
   static Future<void> init() async {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     LoggerService.init(Level.off);
-    await EnvController.init();
     await UrlController.setUrls();
     await UserSettingsController.init();
     await LoginController.init();

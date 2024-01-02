@@ -188,7 +188,12 @@ class _QuestionTileState extends State<QuestionTile> {
                               Form_LocaleData.answerd_by_name_on_date_time
                                   .getString(context),
                               [
-                                widget.question.history.first.editedBy.name,
+                                widget.question.history.first.editedBy
+                                            .section ==
+                                        null
+                                    ? widget
+                                        .question.history.first.editedBy.name
+                                    : "${widget.question.history.first.editedBy.name} (${widget.question.history.first.editedBy.section})",
                                 SmartShedQuestion.formattedDate(
                                   widget.question.history.first.editedAt,
                                 ),

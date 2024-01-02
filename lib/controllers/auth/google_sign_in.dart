@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../env/controller.dart';
+import '../env/env.dart';
 import '../logger/log.dart';
 
 class GoogleSignInAPI {
@@ -12,16 +12,12 @@ class GoogleSignInAPI {
   static GoogleSignIn _googleSignIn() {
     if (kIsWeb || Platform.isAndroid) {
       return GoogleSignIn(
-        scopes: [
-          'email',
-        ],
+        scopes: ['email'],
       );
     } else if (Platform.isIOS || Platform.isMacOS) {
       return GoogleSignIn(
-        clientId: EnvController.getEnv('GOOGLE_SIGN_IN_CLIENT_ID'),
-        scopes: [
-          'email',
-        ],
+        clientId: Env.googleSignInClientId,
+        scopes: ['email'],
       );
     } else {
       return GoogleSignIn();

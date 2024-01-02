@@ -645,7 +645,9 @@ Widget buildApprovalIndoBar() {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              isShowDetails ? 'Hide Approval Details' : 'Show Approval Details',
+              isShowDetails
+                  ? Form_LocaleData.hide_approval_details.getString(context)
+                  : Form_LocaleData.show_approval_details.getString(context),
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey.shade700,
@@ -669,7 +671,7 @@ Widget buildApprovalIndoBar() {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "Supervisor Approved By",
+                  Form_LocaleData.supervisor_approved_by.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -695,7 +697,7 @@ Widget buildApprovalIndoBar() {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Supervisor Approved At",
+                  Form_LocaleData.supervisor_approved_at.getString(context),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -714,7 +716,7 @@ Widget buildApprovalIndoBar() {
                 if (form!.isSignedByAuthority) ...[
                   const SizedBox(height: 10),
                   Text(
-                    "Authority Approved By",
+                    Form_LocaleData.authority_approved_by.getString(context),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade700,
@@ -740,7 +742,7 @@ Widget buildApprovalIndoBar() {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Authority Approved At",
+                    Form_LocaleData.authority_approved_at.getString(context),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade700,
@@ -1172,13 +1174,13 @@ void submitForm() async {
   bool? isConfirmed = await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text(
-        "Submit Form",
+      title: Text(
+        Form_LocaleData.submit_form.getString(context),
         textAlign: TextAlign.center,
       ),
-      content: const Text(
-        "Are you sure you want to submit this form?",
-        style: TextStyle(
+      content: Text(
+        Form_LocaleData.submit_form_confirm.getString(context),
+        style: const TextStyle(
           fontSize: 16,
         ),
         textAlign: TextAlign.center,
@@ -1186,18 +1188,18 @@ void submitForm() async {
       actions: [
         TextButton(
           onPressed: () => GoRouter.of(context).pop(false),
-          child: const Text(
-            "No",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.no.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
         TextButton(
           onPressed: () => GoRouter.of(context).pop(true),
-          child: const Text(
-            "Yes",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.yes.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1238,13 +1240,13 @@ void approveForm() async {
   bool? isConfirmed = await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text(
-        "Approve Form",
+      title: Text(
+        Form_LocaleData.approve_form.getString(context),
         textAlign: TextAlign.center,
       ),
-      content: const Text(
-        "Are you sure you want to approve this form?",
-        style: TextStyle(
+      content: Text(
+        Form_LocaleData.approve_form_confirm.getString(context),
+        style: const TextStyle(
           fontSize: 16,
         ),
         textAlign: TextAlign.center,
@@ -1252,18 +1254,18 @@ void approveForm() async {
       actions: [
         TextButton(
           onPressed: () => GoRouter.of(context).pop(false),
-          child: const Text(
-            "No",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.no.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
         TextButton(
           onPressed: () => GoRouter.of(context).pop(true),
-          child: const Text(
-            "Yes",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.yes.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1304,13 +1306,13 @@ void rejectForm() async {
   bool? isConfirmed = await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text(
-        "Reject Form",
+      title: Text(
+        Form_LocaleData.reject_form.getString(context),
         textAlign: TextAlign.center,
       ),
-      content: const Text(
-        "Are you sure you want to reject this form?",
-        style: TextStyle(
+      content: Text(
+        Form_LocaleData.reject_form_confirm.getString(context),
+        style: const TextStyle(
           fontSize: 16,
         ),
         textAlign: TextAlign.center,
@@ -1318,18 +1320,18 @@ void rejectForm() async {
       actions: [
         TextButton(
           onPressed: () => GoRouter.of(context).pop(false),
-          child: const Text(
-            "No",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.no.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
         TextButton(
           onPressed: () => GoRouter.of(context).pop(true),
-          child: const Text(
-            "Yes",
-            style: TextStyle(
+          child: Text(
+            Form_LocaleData.yes.getString(context),
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
           ),

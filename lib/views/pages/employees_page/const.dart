@@ -312,9 +312,6 @@ Widget buildRemoveEmployeeUserList() {
         if (isShowingAuthority) ...[
           buildUserList(authorityUsers),
         ],
-      ],
-      const SizedBox(height: 20),
-      if (LoginController.isAuthority || LoginController.isSupervisor) ...[
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

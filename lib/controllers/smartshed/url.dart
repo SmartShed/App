@@ -1,5 +1,5 @@
 import '../../constants/api.dart';
-import '../../controllers/env/controller.dart';
+import '../env/env.dart';
 import '../../controllers/logger/log.dart';
 import '../../utils/api/google_sheets.dart';
 
@@ -43,17 +43,15 @@ class UrlController {
       APIConstants.setUserManualUrl(userManualUrl);
     } catch (e) {
       _logger.error('Error while setting backend url');
-      _logger.info(
-          'Setting default backend url to ${EnvController.getDefaultBackendUrl()}');
-      APIConstants.setBaseUrl(EnvController.getDefaultBackendUrl());
+      _logger.info('Setting default backend url to ${Env.defaultBackendUrl}');
+      APIConstants.setBaseUrl(Env.defaultBackendUrl);
 
       _logger.error('Error while setting user manual url');
     }
   }
 
   static Future<void> setBackendUrlToDefault() async {
-    _logger.info(
-        'Setting backend url to default to ${EnvController.getDefaultBackendUrl()}');
-    APIConstants.setBaseUrl(EnvController.getDefaultBackendUrl());
+    _logger.info('Setting backend url to default to ${Env.defaultBackendUrl}');
+    APIConstants.setBaseUrl(Env.defaultBackendUrl);
   }
 }

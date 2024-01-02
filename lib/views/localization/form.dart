@@ -11,6 +11,12 @@ mixin Form_LocaleData {
   static const String created_by = 'form_created_by';
   static const String created_at = 'form_created_at';
   static const String updated_at = 'form_updated_at';
+  static const String hide_approval_details = 'form_hide_approval_details';
+  static const String show_approval_details = 'form_show_approval_details';
+  static const String supervisor_approved_by = 'form_supervisor_approved_by';
+  static const String supervisor_approved_at = 'form_supervisor_approved_at';
+  static const String authority_approved_by = 'form_authority_approved_by';
+  static const String authority_approved_at = 'form_authority_approved_at';
   static const String search_question = 'form_search_questions';
   static const String hide_answers = 'form_hide_answers';
   static const String show_answers = 'form_show_answers';
@@ -18,14 +24,19 @@ mixin Form_LocaleData {
   static const String filter_by_section = 'form_filter_by_section';
   static const String save_form = 'form_save_form';
   static const String submit_form = 'form_submit_form';
+  static const String submit_form_confirm = 'form_submit_form_confirm';
   static const String approve_form = 'form_approve_form';
+  static const String approve_form_confirm = 'form_approve_form_confirm';
   static const String reject_form = 'form_reject_form';
+  static const String reject_form_confirm = 'form_reject_form_confirm';
   static const String employee_name = 'form_employee_name';
   static const String employee_section = 'form_employee_section';
   static const String saving_form = 'form_saving_form';
   static const String submitting_form = 'form_submitting_form';
   static const String approving_form = 'form_approving_form';
   static const String rejecting_form = 'form_rejecting_form';
+  static const String no = 'form_no';
+  static const String yes = 'form_yes';
 
   // question_tile
   static const String question_number = 'question_tile_question_number';
@@ -50,6 +61,12 @@ mixin Form_LocaleData {
     created_by: 'Created By',
     created_at: 'Created At',
     updated_at: 'Updated At',
+    hide_approval_details: 'Hide Approval Details',
+    show_approval_details: 'Show Approval Details',
+    supervisor_approved_by: 'Supervisor Approved By',
+    supervisor_approved_at: 'Supervisor Approved At',
+    authority_approved_by: 'Authority Approved By',
+    authority_approved_at: 'Authority Approved At',
     search_question: 'Search Question',
     hide_answers: 'Hide Answers',
     show_answers: 'Show Answers',
@@ -57,14 +74,19 @@ mixin Form_LocaleData {
     filter_by_section: 'Filter by Section',
     save_form: 'Save Form',
     submit_form: 'Submit Form',
+    submit_form_confirm: 'Are you sure you want to submit this form?',
     approve_form: 'Approve Form',
+    approve_form_confirm: 'Are you sure you want to approve this form?',
     reject_form: 'Reject Form',
+    reject_form_confirm: 'Are you sure you want to reject this form?',
     employee_name: 'Employee Name',
     employee_section: 'Employee Section',
     saving_form: 'Saving Form...',
     submitting_form: 'Submitting Form...',
     approving_form: 'Approving Form...',
     rejecting_form: 'Rejecting Form...',
+    no: 'No',
+    yes: 'Yes',
 
     // question_tile
     question_number: 'Q%a.',
@@ -89,6 +111,12 @@ mixin Form_LocaleData {
     created_by: 'द्वारा बनाई गई',
     created_at: 'बनाया गया',
     updated_at: 'अपडेट किया गया',
+    hide_approval_details: 'मंजूरी विवरण छिपाएं',
+    show_approval_details: 'मंजूरी विवरण दिखाएं',
+    supervisor_approved_by: 'पर्यवेक्षक द्वारा स्वीकृत',
+    supervisor_approved_at: 'पर्यवेक्षक द्वारा स्वीकृत',
+    authority_approved_by: 'अधिकारी द्वारा स्वीकृत',
+    authority_approved_at: 'अधिकारी द्वारा स्वीकृत',
     search_question: 'प्रश्न खोजें',
     hide_answers: 'उत्तर छिपाएं',
     show_answers: 'उत्तर दिखाएं',
@@ -96,14 +124,19 @@ mixin Form_LocaleData {
     filter_by_section: 'अनुभाग से फ़िल्टर करें',
     save_form: 'फॉर्म सहेजें',
     submit_form: 'फॉर्म जमा करें',
+    submit_form_confirm: 'क्या आप वाकई इस फॉर्म को जमा करना चाहते हैं?',
     approve_form: 'फॉर्म को स्वीकृत करें',
+    approve_form_confirm: 'क्या आप वाकई इस फॉर्म को स्वीकृत करना चाहते हैं?',
     reject_form: 'फॉर्म को अस्वीकार करें',
+    reject_form_confirm: 'क्या आप वाकई इस फॉर्म को अस्वीकार करना चाहते हैं?',
     employee_name: 'कर्मचारी का नाम',
     employee_section: 'कर्मचारी का अनुभाग',
     saving_form: 'फॉर्म सहेजा जा रहा है ...',
     submitting_form: 'फॉर्म जमा किया जा रहा है ...',
     approving_form: 'फॉर्म स्वीकृत किया जा रहा है ...',
     rejecting_form: 'फॉर्म अस्वीकार किया जा रहा है ...',
+    no: 'नहीं',
+    yes: 'हाँ',
 
     // question_tile
     question_number: 'प्र%a.',
