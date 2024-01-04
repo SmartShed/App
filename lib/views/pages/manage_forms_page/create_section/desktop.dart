@@ -14,6 +14,7 @@ class Manage_CreateSectionPageDesktop extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

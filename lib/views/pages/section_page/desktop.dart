@@ -32,6 +32,7 @@ class _SectionPageDesktopState extends State<SectionPageDesktop> {
       body: RefreshIndicator(
         onRefresh: () async => init(),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const MyDrawer(),
             Expanded(

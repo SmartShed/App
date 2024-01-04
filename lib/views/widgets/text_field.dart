@@ -13,6 +13,7 @@ class MyTextField extends StatelessWidget {
   final void Function()? onEditingComplete;
   final bool? readOnly;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final void Function()? onTap;
   final void Function(String)? onChanged;
   final bool? isTextCentered;
@@ -31,6 +32,7 @@ class MyTextField extends StatelessWidget {
     this.onEditingComplete,
     this.readOnly,
     this.keyboardType,
+    this.textInputAction,
     this.onTap,
     this.onChanged,
     this.isTextCentered,
@@ -66,6 +68,7 @@ class MyTextField extends StatelessWidget {
         onEditingComplete: () => onEditingComplete?.call(),
         readOnly: readOnly ?? false,
         keyboardType: keyboardType ?? TextInputType.text,
+        textInputAction: textInputAction,
         onTap: () => onTap?.call(),
         onChanged: (value) => onChanged?.call(value),
         textAlign: isTextCentered ?? false ? TextAlign.center : TextAlign.start,

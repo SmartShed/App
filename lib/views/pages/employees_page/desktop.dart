@@ -30,6 +30,7 @@ class _EmployeesPageDesktopState extends State<EmployeesPageDesktop> {
           initConst();
         },
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const MyDrawer(),
             Expanded(

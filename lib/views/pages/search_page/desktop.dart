@@ -32,6 +32,7 @@ class _SearchPageDesktopState extends State<SearchPageDesktop> {
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

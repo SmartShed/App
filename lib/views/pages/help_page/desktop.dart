@@ -32,6 +32,7 @@ class _HelpPageDesktopState extends State<HelpPageDesktop> {
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

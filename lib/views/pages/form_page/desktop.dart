@@ -43,6 +43,7 @@ class _FormPageDesktopState extends State<FormPageDesktop>
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

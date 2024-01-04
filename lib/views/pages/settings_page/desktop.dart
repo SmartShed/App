@@ -31,6 +31,7 @@ class _SettingsPageDesktopState extends State<SettingsPageDesktop> {
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

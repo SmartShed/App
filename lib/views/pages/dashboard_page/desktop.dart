@@ -32,6 +32,7 @@ class _DashboardPageDesktopState extends State<DashboardPageDesktop> {
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(

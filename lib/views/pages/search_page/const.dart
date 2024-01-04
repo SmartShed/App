@@ -54,6 +54,7 @@ Future<void> search() async {
   changeState(() {
     isSearchResultsLoading = true;
     isSearched = true;
+    FocusScope.of(context).unfocus();
   });
 
   searchResults = [];
@@ -104,7 +105,7 @@ Widget buildBody() {
       Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white60,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(5),
           boxShadow: [
             BoxShadow(
@@ -141,13 +142,19 @@ Widget buildFormTitleField() {
     child: MyTextField(
       controller: formTitleController,
       hintText: Search_LocaleData.form_title.getString(context),
-      suffixIcon: formTitleController.text.isNotEmpty
-          ? IconButton(
-              onPressed: () => changeState(() => formTitleController.clear()),
-              icon: const Icon(Icons.clear),
-            )
-          : null,
+      suffixIcon: IconButton(
+        onPressed: () => changeState(() => formTitleController.clear()),
+        icon: Icon(
+          Icons.clear,
+          color: formTitleController.text.isNotEmpty
+              ? Colors.black
+              : Colors.black.withOpacity(0.2),
+        ),
+      ),
       onChanged: (_) => changeState(() {}),
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.search,
+      onEditingComplete: search,
     ),
   );
 }
@@ -158,13 +165,18 @@ Widget buildLocoTypeField() {
     child: MyTextField(
       controller: locoTypeController,
       hintText: Search_LocaleData.loco_type.getString(context),
-      suffixIcon: locoTypeController.text.isNotEmpty
-          ? IconButton(
-              onPressed: () => changeState(() => locoTypeController.clear()),
-              icon: const Icon(Icons.clear),
-            )
-          : null,
+      suffixIcon: IconButton(
+        onPressed: () => changeState(() => locoTypeController.clear()),
+        icon: Icon(
+          Icons.clear,
+          color: locoTypeController.text.isNotEmpty
+              ? Colors.black
+              : Colors.black.withOpacity(0.2),
+        ),
+      ),
       onChanged: (_) => changeState(() {}),
+      textInputAction: TextInputAction.search,
+      onEditingComplete: search,
     ),
   );
 }
@@ -175,13 +187,18 @@ Widget buildLocoNumberField() {
     child: MyTextField(
       controller: locoNumberController,
       hintText: Search_LocaleData.loco_number.getString(context),
-      suffixIcon: locoNumberController.text.isNotEmpty
-          ? IconButton(
-              onPressed: () => changeState(() => locoNumberController.clear()),
-              icon: const Icon(Icons.clear),
-            )
-          : null,
+      suffixIcon: IconButton(
+        onPressed: () => changeState(() => locoNumberController.clear()),
+        icon: Icon(
+          Icons.clear,
+          color: locoNumberController.text.isNotEmpty
+              ? Colors.black
+              : Colors.black.withOpacity(0.2),
+        ),
+      ),
       onChanged: (_) => changeState(() {}),
+      textInputAction: TextInputAction.search,
+      onEditingComplete: search,
     ),
   );
 }

@@ -38,6 +38,7 @@ class _Manage_ManageFormPageDesktopState
     return Scaffold(
       appBar: buildAppBar(),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MyDrawer(),
           Expanded(
