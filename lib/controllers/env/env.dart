@@ -2,27 +2,6 @@ import 'package:envied/envied.dart';
 
 part 'env.g.dart';
 
-// class EnvController {
-//   static final _logger = LoggerService.getLogger('EnvController');
-
-//   static Future<void> init() async {
-//     await dotenv.load(fileName: ".env");
-//   }
-
-//   static String getEnv(String key) {
-//     String? value = dotenv.env[key];
-//     if (value == null) {
-//       _logger.error('Environment variable $key not found');
-//       return '';
-//     }
-//     return value;
-//   }
-
-//   static String getDefaultBackendUrl() {
-//     return getEnv('DEFAULT_BACKEND_URL');
-//   }
-// }
-
 @Envied(path: '.env', useConstantCase: true)
 abstract class Env {
   @EnviedField(obfuscate: true)

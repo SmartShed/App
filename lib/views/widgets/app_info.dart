@@ -9,6 +9,8 @@ import '../localization/settings.dart';
 
 const String appVersion = '1.1.3';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
+final Uri latestAppUri =
+    Uri.parse('https://github.com/SmartShed/App/releases/latest');
 
 final Uri contactUsEmailUri = Uri(
   scheme: 'mailto',
@@ -237,6 +239,58 @@ class AppInfo extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              Settings_LocaleData.get_latest_version.getString(context),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  const EdgeInsets.all(0),
+                ),
+                visualDensity: VisualDensity.compact,
+                surfaceTintColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                overlayColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+              ),
+              onPressed: () async {
+                try {
+                  await launchUrl(latestAppUri);
+                } catch (e) {
+                  if (!context.mounted) return;
+                  ToastController.error(context.formatString(
+                      Settings_LocaleData.could_not_launch_url
+                          .getString(context),
+                      [latestAppUri.toString()]));
+                }
+              },
+              child: Row(
+                children: [
+                  Text(
+                    Settings_LocaleData.latest_version.getString(context),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: ColorConstants.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.open_in_new,
+                    size: 16,
+                    color: ColorConstants.primary,
+                  ),
+                ],
               ),
             ),
           ],

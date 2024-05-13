@@ -17,6 +17,8 @@ mixin Settings_LocaleData {
   static const String contact_us_value = 'settings_contact_us_value';
   static const String report_bug = 'settings_report_bug';
   static const String report_bug_value = 'settings_report_bug_value';
+  static const String get_latest_version = 'settings_get_latest_version';
+  static const String latest_version = 'settings_latest_version';
   static const String could_not_launch_url = 'settings_could_not_launch_url';
 
   // HelpPage
@@ -45,6 +47,8 @@ mixin Settings_LocaleData {
     contact_us_value: 'Contact us at %a',
     report_bug: 'Report a bug',
     report_bug_value: 'Report a bug at %a',
+    get_latest_version: 'Get latest version',
+    latest_version: 'Latest version',
     could_not_launch_url: 'Could not launch %a',
 
     // HelpPage
@@ -74,6 +78,8 @@ mixin Settings_LocaleData {
     contact_us_value: '%a पर हमसे संपर्क करें',
     report_bug: 'बग रिपोर्ट करें',
     report_bug_value: '%a पर बग रिपोर्ट करें',
+    get_latest_version: 'नवीनतम संस्करण प्राप्त करें',
+    latest_version: 'नवीनतम संस्करण',
     could_not_launch_url: '%a नहीं चला सका',
 
     // HelpPage
