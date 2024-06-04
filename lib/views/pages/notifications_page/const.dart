@@ -67,10 +67,10 @@ Widget buildButtons() {
     children: [
       ElevatedButton(
         onPressed: () async {
-          changeState(() => {
-                isLoading = true,
-                isShowingAllNotifications = false,
-              });
+          changeState(() {
+            isLoading = true;
+            isShowingAllNotifications = false;
+          });
           await notificationsController.fetchNotifications();
           changeState(() => isLoading = false);
         },

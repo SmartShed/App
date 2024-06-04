@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
+import 'package:smartshed/views/pages/form_page/const.dart';
 
 import '../../../models/full_form.dart';
 import '../../../models/question.dart';
@@ -111,6 +112,10 @@ void printForm(SmartShedForm form) async {
           SizedBox(height: 7),
           buildQuestionEnd(color: PdfColors.grey),
           SizedBox(height: 7),
+          buildApprovalDetails(form),
+          SizedBox(height: 7),
+          buildQuestionEnd(color: PdfColors.grey),
+          SizedBox(height: 7),
           if (form.questions.isNotEmpty) buildQuestionHeader(),
           ...form.questions.map((question) => buildQuestion(question)),
           if (form.questions.isNotEmpty) buildQuestionEnd(),
@@ -185,6 +190,82 @@ Widget buildHeader(SmartShedForm form) {
           ),
         ],
       ),
+    ],
+  );
+}
+
+Widget buildApprovalDetails(SmartShedForm form) {
+  bool isApproved = form.isSignedBySupervisor || form.isSignedByAuthority;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        'Approval Details',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          font: englishFontBold,
+          fontFallback: fallbackFonts,
+        ),
+      ),
+      SizedBox(height: 5),
+      if (!isApproved) ...[
+        Text(
+          'This form is not approved',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 10,
+            font: englishFont,
+            fontFallback: fallbackFonts,
+          ),
+        ),
+      ],
+      if (isApproved) ...[
+        if (form.isSignedBySupervisor) ...[
+          Text(
+            'Approved by Supervisor',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 8,
+              font: englishFont,
+              fontFallback: fallbackFonts,
+            ),
+          ),
+          SizedBox(height: 2),
+          Text(
+            '${form.signedSupervisor!.name} (${form.signedSupervisorAtString})',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10,
+              font: englishFont,
+              fontFallback: fallbackFonts,
+            ),
+          ),
+          SizedBox(height: 5),
+        ],
+        if (form.isSignedByAuthority) ...[
+          Text(
+            'Approved by Authority',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 8,
+              font: englishFont,
+              fontFallback: fallbackFonts,
+            ),
+          ),
+          SizedBox(height: 2),
+          Text(
+            '${form.signedAuthority!.name} (${form.signedAuthorityAtString})',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10,
+              font: englishFont,
+              fontFallback: fallbackFonts,
+            ),
+          ),
+        ],
+      ],
     ],
   );
 }

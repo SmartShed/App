@@ -79,8 +79,8 @@ class SmartShedForm {
       access: json['access'].cast<String>(),
       createdBy: SmartShedUser.fromJson(json['createdBy']),
       history: json['history'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt']).toLocal(),
       isSignedBySupervisor: json['signedBySupervisor']['isSigned'],
       isSignedByAuthority: json['signedByAuthority']['isSigned'],
       signedSupervisor: json['signedBySupervisor']['supervisor'] != null
@@ -92,10 +92,10 @@ class SmartShedForm {
               json['signedByAuthority']['authority'] as Map<String, dynamic>)
           : null,
       signedSupervisorAt: json['signedBySupervisor']['signedAt'] != null
-          ? DateTime.parse(json['signedBySupervisor']['signedAt'])
+          ? DateTime.parse(json['signedBySupervisor']['signedAt']).toLocal()
           : null,
       signedAuthorityAt: json['signedByAuthority']['signedAt'] != null
-          ? DateTime.parse(json['signedByAuthority']['signedAt'])
+          ? DateTime.parse(json['signedByAuthority']['signedAt']).toLocal()
           : null,
     );
   }

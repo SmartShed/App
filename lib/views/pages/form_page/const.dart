@@ -37,6 +37,7 @@ late bool isSearchBoxOpen;
 late bool isEmployeeNameFilter;
 late bool isEmployeeSectionFilter;
 late bool isShowDetails;
+late bool isShowApprovalDetails;
 late bool isDesktop;
 
 late TextEditingController searchController;
@@ -75,6 +76,7 @@ void initConst(
   isEmployeeNameFilter = false;
   isEmployeeSectionFilter = false;
   isShowDetails = false;
+  isShowApprovalDetails = false;
 
   searchController = TextEditingController();
   employeeNameController = TextEditingController();
@@ -347,9 +349,9 @@ Widget buildTopInfoBar({bool fromForm = true}) {
           buildTopInfoDetails(fromForm: fromForm),
           if (fromForm &&
               form!.submittedCount > 0 &&
-              form!.isSignedBySupervisor) ...[
+              (form!.isSignedBySupervisor || form!.isSignedByAuthority)) ...[
             const SizedBox(height: 10),
-            buildApprovalIndoBar(),
+            buildApprovalInfoBar(),
           ]
         ],
       ),
@@ -607,7 +609,7 @@ Widget buildTopInfoDetails({bool fromForm = true}) {
   );
 }
 
-Widget buildApprovalIndoBar() {
+Widget buildApprovalInfoBar() {
   return Container(
     decoration: BoxDecoration(
       color: Colors.white,
@@ -634,7 +636,7 @@ Widget buildApprovalIndoBar() {
         trailing: const SizedBox(),
         collapsedIconColor: Colors.grey.shade700,
         onExpansionChanged: (value) => changeState(() {
-          isShowDetails = value;
+          isShowApprovalDetails = value;
         }),
         collapsedShape: const Border(),
         expandedAlignment: Alignment.centerLeft,
@@ -645,7 +647,7 @@ Widget buildApprovalIndoBar() {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              isShowDetails
+              isShowApprovalDetails
                   ? Form_LocaleData.hide_approval_details.getString(context)
                   : Form_LocaleData.show_approval_details.getString(context),
               style: TextStyle(
@@ -656,7 +658,7 @@ Widget buildApprovalIndoBar() {
             ),
             const SizedBox(width: 5),
             Icon(
-              isShowDetails
+              isShowApprovalDetails
                   ? Icons.keyboard_arrow_up
                   : Icons.keyboard_arrow_down,
               color: Colors.grey.shade700,
@@ -670,51 +672,53 @@ Widget buildApprovalIndoBar() {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  Form_LocaleData.supervisor_approved_by.getString(context),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade700,
+                if (form!.isSignedBySupervisor) ...[
+                  Text(
+                    Form_LocaleData.supervisor_approved_by.getString(context),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 5),
-                GestureDetector(
-                  onTap: () {
-                    GoRouter.of(context).push(
-                      Pages.profile,
-                      extra: form!.signedSupervisor,
-                    );
-                  },
-                  child: Text(
-                    "${form!.signedSupervisor!.name} (${form!.signedSupervisor!.section})",
+                  const SizedBox(height: 5),
+                  GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).push(
+                        Pages.profile,
+                        extra: form!.signedSupervisor,
+                      );
+                    },
+                    child: Text(
+                      "${form!.signedSupervisor!.name} (${form!.signedSupervisor!.section})",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    Form_LocaleData.supervisor_approved_at.getString(context),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    form!.signedSupervisorAtString,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  Form_LocaleData.supervisor_approved_at.getString(context),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  form!.signedSupervisorAtString,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (form!.isSignedByAuthority) ...[
                   const SizedBox(height: 10),
+                ],
+                if (form!.isSignedByAuthority) ...[
                   Text(
                     Form_LocaleData.authority_approved_by.getString(context),
                     style: TextStyle(

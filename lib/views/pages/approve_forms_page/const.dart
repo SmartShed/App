@@ -7,7 +7,9 @@ import '../../../models/opened_form.dart';
 import '../../widgets/opened_form_tile.dart';
 
 List<SmartShedOpenedForm> forms = [];
+List<SmartShedOpenedForm> approvedForms = [];
 bool isFormsLoading = true;
+bool isApprovedFormsLoading = true;
 
 late BuildContext context;
 late void Function(void Function()) changeState;
@@ -19,6 +21,7 @@ void initConst(void Function(void Function()) setState) {
   isFormsLoading = true;
 
   _initForms();
+  _initApprovedForms();
 }
 
 void disposeConst() {
@@ -30,6 +33,12 @@ Future<void> _initForms() async {
   changeState(() => isFormsLoading = true);
   forms = await FormApprovingController.getUnapprovedForms();
   changeState(() => isFormsLoading = false);
+}
+
+Future<void> _initApprovedForms() async {
+  changeState(() => isApprovedFormsLoading = true);
+  approvedForms = await FormApprovingController.getApprovedForms();
+  changeState(() => isApprovedFormsLoading = false);
 }
 
 AppBar buildAppBar() {
@@ -79,6 +88,43 @@ Widget buildBody() {
                 return OpenedFormTile(
                   index: index,
                   openedForm: forms[index],
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 12);
+              },
+            ),
+      const SizedBox(height: 20),
+      Text(
+        !isApprovedFormsLoading && approvedForms.isEmpty
+            ? ApproveForms_LocaleData.approved_forms_empty.getString(context)
+            : ApproveForms_LocaleData.approved_forms.getString(context),
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
+      ),
+      const SizedBox(height: 20),
+      isApprovedFormsLoading
+          ? ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return const OpenedFormTileShimmer();
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 12);
+              },
+            )
+          : ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: approvedForms.length,
+              itemBuilder: (context, index) {
+                return OpenedFormTile(
+                  index: index,
+                  openedForm: approvedForms[index],
                 );
               },
               separatorBuilder: (context, index) {

@@ -105,8 +105,7 @@ Widget buildBody() {
 
 void createForm() async {
   if (formTitleController.text.isEmpty ||
-      descriptionEnglishController.text.isEmpty ||
-      descriptionHindiController.text.isEmpty) {
+      descriptionEnglishController.text.isEmpty) {
     ToastController.error(Toast_LocaleData.enter_all_fields.getString(context));
     return;
   }

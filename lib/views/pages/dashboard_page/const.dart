@@ -110,7 +110,11 @@ AppBar buildAppBar() {
         key: ValueKey<int>(notificationsController.unreadNotificationsCount),
         iconData: Icons.notifications,
         onTap: () {
-          GoRouter.of(context).push(Pages.notifications);
+          GoRouter.of(context)
+              .push(Pages.notifications)
+              .then((value) => notificationsController.fetchNotifications(
+                    onDone: () => changeState(() {}),
+                  ));
         },
         notificationCount: notificationsController.unreadNotificationsCount,
       ),

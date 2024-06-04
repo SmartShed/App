@@ -106,11 +106,10 @@ class NotificationTile extends StatelessWidget {
           onTap: () {
             if (notification.formId != null) {
               GoRouter.of(context).push("${Pages.form}/${notification.formId}");
+            } else if (notification.userId != null) {
+              GoRouter.of(context)
+                  .push("${Pages.profile}/${notification.userId}");
             }
-            // else if (notification.userId != null) {
-            //   GoRouter.of(context)
-            //       .push("${Pages.profile}/${notification.userId}");
-            // }
 
             onNotificationMarkAsRead(notification.id);
           },

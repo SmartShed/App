@@ -7,7 +7,7 @@ import '../../controllers/auth/login.dart';
 import '../../controllers/toast/toast.dart';
 import '../localization/settings.dart';
 
-const String appVersion = '1.1.3';
+const String appVersion = '1.1.4';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
 final Uri latestAppUri =
     Uri.parse('https://github.com/SmartShed/App/releases/latest');

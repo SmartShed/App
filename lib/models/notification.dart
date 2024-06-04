@@ -26,7 +26,7 @@ class SmartShedNotification {
       id: json['_id'],
       contentEnglish: json['contentEnglish'],
       contentHindi: json['contentHindi'],
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
       isRead: json['isRead'],
       formId: json['formId'],
       userId: json['userId'],

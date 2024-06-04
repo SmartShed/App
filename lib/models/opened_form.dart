@@ -36,8 +36,8 @@ class SmartShedOpenedForm {
       descriptionHindi: json['descriptionHindi'],
       locoName: json['locoName'],
       locoNumber: json['locoNumber'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt']).toLocal(),
       createdBy: SmartShedUser.fromJson(json['createdBy']),
       lockStatus: json['lockStatus'],
     );
