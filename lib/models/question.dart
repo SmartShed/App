@@ -63,6 +63,6 @@ class SmartShedQuestion {
 
   static String formattedDate(String date) {
     return DateFormat(UserSettingsController.dateTimeFormat)
-        .format(DateTime.parse(date));
+        .format(DateTime.parse(date).toLocal());
   }
 }

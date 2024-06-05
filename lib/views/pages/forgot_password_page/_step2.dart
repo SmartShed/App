@@ -23,7 +23,7 @@ class ForgotPasswordStep2 extends StatefulWidget {
 }
 
 class _ForgotPasswordStep2State extends State<ForgotPasswordStep2> {
-  int _counter = 60;
+  int _counter = 120;
   bool _isTimerRunning = false;
   late Timer _timer;
 

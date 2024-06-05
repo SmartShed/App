@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,7 +9,7 @@ import '../../controllers/auth/login.dart';
 import '../../controllers/toast/toast.dart';
 import '../localization/settings.dart';
 
-const String appVersion = '1.1.4';
+const String appVersion = 'v1.1.5';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
 final Uri latestAppUri =
     Uri.parse('https://github.com/SmartShed/App/releases/latest');
@@ -30,8 +32,34 @@ final Uri reportBugEmailUri = Uri(
   }),
 );
 
-class AppInfo extends StatelessWidget {
+class AppInfo extends StatefulWidget {
   const AppInfo({super.key});
+
+  @override
+  State<AppInfo> createState() => _AppInfoState();
+}
+
+class _AppInfoState extends State<AppInfo> {
+  String latestVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    setLatestVersion();
+  }
+
+  Future<void> setLatestVersion() async {
+    final Dio dio = Dio();
+    final Response response = await dio.get(
+      'https://api.github.com/repos/SmartShed/App/releases/latest',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      latestVersion = response.data['tag_name'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -241,58 +269,109 @@ class AppInfo extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              Settings_LocaleData.get_latest_version.getString(context),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.all(0),
+            // Only show if it's not the latest version and platform is not web
+            if (!kIsWeb) ...[
+              const SizedBox(height: 20),
+              Text(
+                Settings_LocaleData.get_latest_version.getString(context),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
-                visualDensity: VisualDensity.compact,
-                surfaceTintColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
-                overlayColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
               ),
-              onPressed: () async {
-                try {
-                  await launchUrl(latestAppUri);
-                } catch (e) {
-                  if (!context.mounted) return;
-                  ToastController.error(context.formatString(
-                      Settings_LocaleData.could_not_launch_url
+              if (latestVersion != '' && latestVersion != appVersion) ...[
+                const SizedBox(height: 5),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.primary.withOpacity(0.25),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    context.formatString(
+                      Settings_LocaleData.new_version_available
                           .getString(context),
-                      [latestAppUri.toString()]));
-                }
-              },
-              child: Row(
-                children: [
-                  Text(
-                    Settings_LocaleData.latest_version.getString(context),
+                      [latestVersion],
+                    ),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: ColorConstants.primary,
                     ),
                   ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.open_in_new,
-                    size: 16,
-                    color: ColorConstants.primary,
+                ),
+              ],
+              if (latestVersion == appVersion) ...[
+                const SizedBox(height: 5),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorConstants.primary.withOpacity(0.25),
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                ],
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    Settings_LocaleData.you_are_on_latest_version
+                        .getString(context),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 5),
+              TextButton(
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.all(0),
+                  ),
+                  visualDensity: VisualDensity.compact,
+                  surfaceTintColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                  overlayColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                onPressed: () async {
+                  try {
+                    await launchUrl(latestAppUri);
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    ToastController.error(context.formatString(
+                        Settings_LocaleData.could_not_launch_url
+                            .getString(context),
+                        [latestAppUri.toString()]));
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      context.formatString(
+                        Settings_LocaleData.latest_version.getString(context),
+                        [latestVersion == '' ? '' : '($latestVersion)'],
+                      ),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: ColorConstants.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Icon(
+                      Icons.open_in_new,
+                      size: 16,
+                      color: ColorConstants.primary,
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
