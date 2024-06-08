@@ -9,10 +9,10 @@ import '../../controllers/auth/login.dart';
 import '../../controllers/toast/toast.dart';
 import '../localization/settings.dart';
 
-const String appVersion = 'v1.1.5';
+const String appVersion = 'v1.1.6';
 final Uri devUri = Uri.parse('https://github.com/SmartShed');
-final Uri latestAppUri =
-    Uri.parse('https://github.com/SmartShed/App/releases/latest');
+final Uri latestAppDownload = Uri.parse(
+    'https://github.com/SmartShed/App/releases/latest/download/SmartShed.apk');
 
 final Uri contactUsEmailUri = Uri(
   scheme: 'mailto',
@@ -340,13 +340,13 @@ class _AppInfoState extends State<AppInfo> {
                 ),
                 onPressed: () async {
                   try {
-                    await launchUrl(latestAppUri);
+                    await launchUrl(latestAppDownload);
                   } catch (e) {
                     if (!context.mounted) return;
                     ToastController.error(context.formatString(
                         Settings_LocaleData.could_not_launch_url
                             .getString(context),
-                        [latestAppUri.toString()]));
+                        [latestAppDownload.toString()]));
                   }
                 },
                 child: Row(

@@ -9,9 +9,12 @@ class LoginController {
   static final _logger = LoggerService.getLogger('LoginController');
   static final AuthAPIHandler _authAPIHandler = AuthAPIHandler();
 
+  static bool validatedToken = false;
+
   static Future<void> init() async {
     await XAuthTokenCacheHandler.init();
     await UserCacheHandler.init();
+    await validateToken();
   }
 
   static Future<Map<String, dynamic>?> login(
@@ -80,10 +83,12 @@ class LoginController {
     }
   }
 
-  static bool validatedToken = false;
-
   static Future<bool> get isLoggedIn async {
     if (!(await XAuthTokenCacheHandler.hasToken)) return false;
+    return await validateToken();
+  }
+
+  static Future<bool> validateToken() async {
     if (validatedToken) return true;
 
     try {
