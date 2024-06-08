@@ -10,9 +10,9 @@ import '../../controllers/toast/toast.dart';
 import '../localization/settings.dart';
 
 const String appVersion = 'v1.1.6';
-final Uri devUri = Uri.parse('https://github.com/SmartShed');
-final Uri latestAppDownload = Uri.parse(
-    'https://github.com/SmartShed/App/releases/latest/download/SmartShed.apk');
+const String devUri = 'https://github.com/SmartShed';
+const String latestAppDownload =
+    'https://github.com/SmartShed/App/releases/latest/download/SmartShed_{version}.apk';
 
 final Uri contactUsEmailUri = Uri(
   scheme: 'mailto',
@@ -124,13 +124,17 @@ class _AppInfoState extends State<AppInfo> {
               ),
               onPressed: () async {
                 try {
-                  await launchUrl(devUri);
+                  await launchUrl(
+                    Uri.parse(devUri),
+                    mode: LaunchMode.externalApplication,
+                    webOnlyWindowName: '_blank',
+                  );
                 } catch (e) {
                   if (!context.mounted) return;
                   ToastController.error(context.formatString(
                       Settings_LocaleData.could_not_launch_url
                           .getString(context),
-                      [devUri.toString()]));
+                      [devUri]));
                 }
               },
               child: Row(
@@ -340,13 +344,22 @@ class _AppInfoState extends State<AppInfo> {
                 ),
                 onPressed: () async {
                   try {
-                    await launchUrl(latestAppDownload);
+                    await launchUrl(
+                      Uri.parse(
+                        latestAppDownload.replaceFirst(
+                            '{version}', latestVersion),
+                      ),
+                      mode: LaunchMode.externalApplication,
+                    );
                   } catch (e) {
                     if (!context.mounted) return;
                     ToastController.error(context.formatString(
                         Settings_LocaleData.could_not_launch_url
                             .getString(context),
-                        [latestAppDownload.toString()]));
+                        [
+                          latestAppDownload.replaceFirst(
+                              '{version}', latestVersion)
+                        ]));
                   }
                 },
                 child: Row(
